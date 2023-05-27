@@ -1,0 +1,6 @@
+name: my-vm
+type: azure
+classes: 
+- VirtualMachine
+Parents:
+- AzureCloud

@@ -1,0 +1,9 @@
+name: VMs cannot have data disks
+version: 1.0.0
+code: REQ-01
+class: Security
+category: Internal
+applicableResourceClasses:
+- VirtualMachine
+requiredImplementationClasses:
+- PreventativeControl

@@ -1,0 +1,7 @@
+name: my-attestation
+type: foobar
+commandRef:
+  command: /usr/bin/date
+  args:
+  - "-nonexisting"
+  expectedExitCode: 0
