@@ -21,7 +21,7 @@ func (f *AttestCommand) Attest(a *models.Attestation) (*models.AttestationResult
 	res := models.AttestationResult{}
 	out, err := cmd.CombinedOutput()
 	res.Command = cmd.String()
-	res.Logs = string(out)
+	res.Logs = fmt.Sprintf("$ %v:\n%v", res.Command, string(out))
 	res.RunAt = time.Now()
 	if err != nil {
 		res.Err = err.Error()

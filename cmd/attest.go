@@ -109,6 +109,14 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
 		}
+		err = results.Detailed(config, "tsv")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
+		}
+		err = results.Detailed(config, "json")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
+		}
 	},
 }
 

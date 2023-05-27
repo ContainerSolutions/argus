@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 )
 
 type JSONSummary struct {
@@ -28,6 +29,48 @@ func (t *JSONSummary) Summary(c *models.Configuration) {
 			TotalRequirements       int
 			ImplementedRequirements int
 		}{r.Name, fmt.Sprint(r.Implemented), len(r.Requirements), r.ImplementedRequirements})
+	}
+	w := json.NewEncoder(os.Stdout)
+	w.Encode(d)
+}
+
+func (t *JSONSummary) Detailed(c *models.Configuration) {
+	d := []struct {
+		Resource       string
+		Implementation string
+		Requirement    string
+		Attestation    string
+		EvaluatedAt    time.Time
+		Result         string
+		Logs           string
+	}{}
+	for _, r := range c.Resources {
+		jimp := ""
+		jreq := ""
+		att := ""
+		eval := time.Time{}
+		res := ""
+		logs := ""
+		for _, req := range r.Requirements {
+			jreq = req.Requirement.Name
+			for _, imp := range req.Implementations {
+				jimp = imp.Implementaiton.Name
+				att = imp.Attestation.Name
+				eval = imp.Attestation.Result.RunAt
+				res = imp.Attestation.Result.Result
+				logs = imp.Attestation.Result.Logs
+			}
+		}
+		d = append(d, struct {
+			Resource       string
+			Implementation string
+			Requirement    string
+			Attestation    string
+			EvaluatedAt    time.Time
+			Result         string
+			Logs           string
+		}{Resource: r.Name, Requirement: jreq, Implementation: jimp, Attestation: att, EvaluatedAt: eval, Result: res, Logs: logs})
+
 	}
 	w := json.NewEncoder(os.Stdout)
 	w.Encode(d)

@@ -4,6 +4,7 @@ import "argus/pkg/models"
 
 type ResultDriver interface {
 	Summary(c *models.Configuration)
+	Detailed(c *models.Configuration)
 }
 
 var Registry = make(map[string]ResultDriver)

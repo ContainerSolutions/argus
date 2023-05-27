@@ -16,3 +16,12 @@ func Summary(config *models.Configuration, format string) error {
 	sum.Summary(config)
 	return nil
 }
+
+func Detailed(config *models.Configuration, format string) error {
+	sum, ok := schema.Registry[format]
+	if !ok {
+		return fmt.Errorf("summary format %v is not supported", format)
+	}
+	sum.Detailed(config)
+	return nil
+}
