@@ -4,15 +4,13 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
-	"strings"
 
 	"argus/pkg/models"
 	"argus/pkg/parser"
 	"argus/pkg/resolver"
+	"argus/pkg/storage"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -21,8 +19,8 @@ import (
 var cfgFile string
 
 // runCmd represents the run command
-var runCmd = &cobra.Command{
-	Use:   "run",
+var loadCmd = &cobra.Command{
+	Use:   "load",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -45,52 +43,36 @@ to quickly create a Cobra application.`,
 			os.Exit(1)
 		}
 		fmt.Println(c)
+		db, err := storage.Init(c.Driver)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "could not initialize database: %v\n", err)
+			os.Exit(1)
+		}
+		err = db.Configure(c.DriverConfig)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "could not configure database: %v\n", err)
+			os.Exit(1)
+
+		}
+
 		p, err := parser.Parse(c)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Could not parse config file '%v': %v\n", cfgFile, err)
 			os.Exit(1)
 		}
-		d, err := json.Marshal(p)
+		resolver.Resolve(p)
+		err = db.Save(p)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Could not marshal parsed config file: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Could not save configuration '%v': %v\n", p, err)
 			os.Exit(1)
-		}
-		fmt.Println(string(d))
-		resolver.ResolveRequirements(p)
-		d, _ = json.Marshal(p)
-		fmt.Println(string(d))
-		resolver.ResolveImplementations(p)
-		d, _ = json.Marshal(p)
-		fmt.Println(string(d))
-		resolver.ResolveAttestations(p)
-		d, _ = json.Marshal(p)
-		fmt.Println(string(d))
-		for _, r := range p.Resources {
-			for _, a := range r.VerifiableAttestations {
-				fmt.Printf("Verifying attestation %v\n", a.Name)
-				cmd := exec.Command(a.CommandRef.Command, a.CommandRef.Args...)
-				out, err := cmd.CombinedOutput()
-				if err != nil {
-					fmt.Println("Failed!")
-				}
-				if cmd.ProcessState.ExitCode() != a.CommandRef.ExpectedExitCode {
-					fmt.Printf("Code failed! Got %v But Expected %v\n", cmd.ProcessState.ExitCode(), a.CommandRef.ExpectedExitCode)
-				}
-				if a.CommandRef.ExpectedOutput != "" {
-					if !strings.Contains(string(out), a.CommandRef.ExpectedOutput) {
-						fmt.Printf("Output failed! Got %v\n", string(out))
-					}
-				}
-				fmt.Println("verified!")
-			}
 		}
 	},
 }
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.AddCommand(runCmd)
-	runCmd.Flags().StringVarP(&cfgFile, "config", "c", ".argus-config.yaml", "Configuration file to run")
+	rootCmd.AddCommand(loadCmd)
+	loadCmd.Flags().StringVarP(&cfgFile, "config", "c", ".argus-config.yaml", "Configuration file to run")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

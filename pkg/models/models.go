@@ -1,14 +1,33 @@
 package models
 
+import "time"
+
 // add json labels to the following structures
 type Resource struct {
-	Name                      string   `json:"name"`
-	Type                      string   `json:"type"`
-	Classes                   []string `json:"classes"`
-	Parents                   []string `json:"parents"`
-	ApplicableRequirements    []*Requirement
-	ApplicableImplementations []*Implementation
-	VerifiableAttestations    []*Attestation
+	Name                    string   `json:"name"`
+	Type                    string   `json:"type"`
+	Classes                 []string `json:"classes"`
+	Parents                 []string `json:"parents"`
+	Requirements            map[string]RequirementBlock
+	ImplementedRequirements int
+	Implemented             bool
+}
+
+type RequirementBlock struct {
+	Requirement             *Requirement
+	Implementations         map[string]ImplementationBlock
+	Implemented             bool
+	AttestedImplementations int
+	TotalImplementaitons    int
+	RunAt                   string
+}
+
+type ImplementationBlock struct {
+	Implementaiton *Implementation
+	Attestation    *Attestation
+	Attested       bool
+	RunAt          string
+	Logs           string
 }
 
 type Requirement struct {
@@ -38,6 +57,7 @@ type Implementation struct {
 type Attestation struct {
 	Name       string               `json:"name"`
 	Type       string               `json:"type"`
+	Result     AttestationResult    `json:"result"`
 	CommandRef AttestationByCommand `json:"commandRef"`
 }
 
@@ -56,8 +76,19 @@ type Configuration struct {
 }
 
 type ConfigFile struct {
-	ResourcePath       string `json:"resourcePath"`
-	RequirementPath    string `json:"requirementPath"`
-	ImplementationPath string `json:"implementationPath"`
-	AttestationPath    string `json:"attestationPath"`
+	ResourcePath       string                 `json:"resourcePath"`
+	RequirementPath    string                 `json:"requirementPath"`
+	ImplementationPath string                 `json:"implementationPath"`
+	AttestationPath    string                 `json:"attestationPath"`
+	Driver             string                 `json:"driver"`
+	DriverConfig       map[string]interface{} `json:"driverConfig"`
+}
+
+type AttestationResult struct {
+	Command string
+	Logs    string
+	Result  string
+	Reason  string
+	Err     string
+	RunAt   time.Time
 }

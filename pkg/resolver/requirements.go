@@ -1,7 +1,22 @@
 package resolver
 
-import "argus/pkg/models"
+import (
+	"argus/pkg/models"
+	"argus/pkg/utils"
+)
 
+func Resolve(config *models.Configuration) (*models.Configuration, error) {
+	var err error
+	config, err = ResolveRequirements(config)
+	if err != nil {
+		return nil, err
+	}
+	config, err = ResolveImplementations(config)
+	if err != nil {
+		return nil, err
+	}
+	return ResolveAttestations(config)
+}
 func ResolveRequirements(config *models.Configuration) (*models.Configuration, error) {
 	for k, r := range config.Resources {
 		resolveReqForResource(&r, config.Requirements)
@@ -29,38 +44,45 @@ func ResolveAttestations(config *models.Configuration) (*models.Configuration, e
 
 func resolveAttForResource(current *models.Resource, attestations []models.Attestation) {
 	for _, attestation := range attestations {
-		for _, implementation := range current.ApplicableImplementations {
-			if implementation.AttestationRef == attestation.Name {
-				current.VerifiableAttestations = append(current.VerifiableAttestations, &attestation)
+		for k, reqBlock := range current.Requirements {
+			for kk, impBlock := range reqBlock.Implementations {
+				implementation := impBlock.Implementaiton
+				if implementation.AttestationRef == attestation.Name {
+					impBlock.Attestation = &attestation
+				}
+				reqBlock.Implementations[kk] = impBlock
 			}
+			current.Requirements[k] = reqBlock
 		}
 	}
 }
 func resolveImpForResource(current *models.Resource, implementations []models.Implementation) {
 	for _, implementation := range implementations {
-		for _, requirement := range current.ApplicableRequirements {
-			if implementation.RequirementRef.Code == requirement.Code && implementation.RequirementRef.Version == requirement.Version && (implementation.ResourceRef == current.Name || contains(current.Parents, implementation.ResourceRef)) {
-				current.ApplicableImplementations = append(current.ApplicableImplementations, &implementation)
+		for k, reqBlock := range current.Requirements {
+			requirement := reqBlock.Requirement
+			if implementation.RequirementRef.Code == requirement.Code && implementation.RequirementRef.Version == requirement.Version && (implementation.ResourceRef == current.Name || utils.Contains(current.Parents, implementation.ResourceRef)) {
+				if reqBlock.Implementations == nil {
+					reqBlock.Implementations = make(map[string]models.ImplementationBlock)
+				}
+				reqBlock.Implementations[implementation.Name] = models.ImplementationBlock{
+					Implementaiton: &implementation,
+				}
 			}
+			current.Requirements[k] = reqBlock
 		}
 	}
 }
 func resolveReqForResource(current *models.Resource, requirements []models.Requirement) {
 	for _, requirement := range requirements {
 		for _, class := range current.Classes {
-			if contains(requirement.ApplicableResourceClasses, class) {
-				current.ApplicableRequirements = append(current.ApplicableRequirements, &requirement)
+			if utils.Contains(requirement.ApplicableResourceClasses, class) {
+				if current.Requirements == nil {
+					current.Requirements = make(map[string]models.RequirementBlock)
+				}
+				current.Requirements[requirement.Name] = models.RequirementBlock{
+					Requirement: &requirement,
+				}
 			}
 		}
 	}
-}
-
-func contains(s []string, str string) bool {
-	for _, v := range s {
-		if v == str {
-			return true
-		}
-	}
-
-	return false
 }
