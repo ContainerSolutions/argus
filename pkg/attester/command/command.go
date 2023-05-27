@@ -23,7 +23,9 @@ func (f *AttestCommand) Attest(a *models.Attestation) (*models.AttestationResult
 	res.Command = cmd.String()
 	res.Logs = string(out)
 	res.RunAt = time.Now()
-	res.Err = err.Error()
+	if err != nil {
+		res.Err = err.Error()
+	}
 	if cmd.ProcessState.ExitCode() != a.CommandRef.ExpectedExitCode {
 		res.Result = "FAIL"
 		res.Reason = fmt.Sprintf("Code failed! Got %v But Expected %v\n", cmd.ProcessState.ExitCode(), a.CommandRef.ExpectedExitCode)

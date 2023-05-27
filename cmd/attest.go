@@ -6,9 +6,9 @@ package cmd
 import (
 	"argus/pkg/attester"
 	"argus/pkg/models"
+	"argus/pkg/results"
 	"argus/pkg/storage"
 	"argus/pkg/utils"
-	"encoding/json"
 	"fmt"
 	"os"
 
@@ -101,10 +101,14 @@ to quickly create a Cobra application.`,
 			os.Exit(1)
 		}
 		fmt.Println("Attestation finished. Results:")
-		d, _ := json.MarshalIndent(config.Resources, "", " ")
-		fmt.Println(string(d))
-		// fmt.Println()
-		// fmt.Println(results.Summary(config))
+		err = results.Summary(config, "tsv")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
+		}
+		err = results.Summary(config, "json")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
+		}
 	},
 }
 

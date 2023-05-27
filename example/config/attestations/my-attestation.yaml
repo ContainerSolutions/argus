@@ -2,6 +2,4 @@ name: my-attestation
 type: command
 commandRef:
   command: /usr/bin/date
-  args:
-  - nonexisting=true
   expectedExitCode: 0
