@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"argus/pkg/attester"
-	"argus/pkg/models"
 	"argus/pkg/results"
 	"argus/pkg/storage"
 	"argus/pkg/utils"
@@ -13,7 +12,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // attestCmd represents the attest command
@@ -27,21 +25,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("attest called")
-		fmt.Println("run called")
-		viper.SetConfigFile(cfgFile)
-		viper.AutomaticEnv() // read in environment variables that match
-		if err := viper.ReadInConfig(); cfgFile != "" && err != nil {
-			fmt.Fprintf(os.Stderr, "Could not read file '%v': %v\n", cfgFile, err)
-			os.Exit(1)
-		}
-		c := models.ConfigFile{}
-		err := viper.Unmarshal(&c)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Could not unmarshal config file '%v': %v\n", cfgFile, err)
-			os.Exit(1)
-		}
-		fmt.Println(c)
+		c := loadConfig()
 		db, err := storage.Init(c.Driver)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "could not initialize database: %v\n", err)
@@ -53,13 +37,13 @@ to quickly create a Cobra application.`,
 			os.Exit(1)
 		}
 		config, err := db.Load()
-		fmt.Println("Running Program")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "could not load database: %v\n", err)
+			os.Exit(1)
+		}
 		for kkk, r := range config.Resources {
-			fmt.Println(r.Name)
 			implementedRequirements := 0
 			for kk, req := range r.Requirements {
-				fmt.Println(req.Requirement.Name)
-				fmt.Println(req.Implementations)
 				totalImplementations := 0
 				attestedImplementations := 0
 				for k, i := range req.Implementations {
@@ -67,9 +51,7 @@ to quickly create a Cobra application.`,
 						totalImplementations = totalImplementations + 1
 
 					}
-					fmt.Println(i.Implementaiton.Name)
 					a := i.Attestation
-					fmt.Printf("Verifying attestation %v\n", a.Name)
 					attester, _ := attester.Init(a.Type)
 					res, err := attester.Attest(a)
 					if err != nil {
@@ -100,30 +82,16 @@ to quickly create a Cobra application.`,
 			fmt.Fprintf(os.Stderr, "could not save db after attestation: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Println("Attestation finished. Results:")
 		err = results.Summary(config, "tsv")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
-		}
-		err = results.Summary(config, "json")
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
-		}
-		err = results.Detailed(config, "tsv")
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
-		}
-		err = results.Detailed(config, "json")
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
+			os.Exit(1)
 		}
 	},
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(attestCmd)
-	attestCmd.Flags().StringVarP(&cfgFile, "config", "c", ".argus-config.yaml", "Configuration file to run")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

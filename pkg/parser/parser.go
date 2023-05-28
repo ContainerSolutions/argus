@@ -11,7 +11,7 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-func Parse(config models.ConfigFile) (*models.Configuration, error) {
+func Parse(config *models.ConfigFile) (*models.Configuration, error) {
 	c := models.Configuration{}
 	var err error
 	c.Attestations, err = ParseAttestations(config.AttestationPath)
@@ -120,7 +120,6 @@ func ParseImplementations(config string) ([]models.Implementation, error) {
 func ParseAttestations(config string) ([]models.Attestation, error) {
 	res := []models.Attestation{}
 	walkFn := func(path string, info fs.FileInfo, err error) error {
-		fmt.Println(path)
 		if filepath.Ext(path) == ".yaml" {
 			yamlFile, err := os.Open(path)
 			if err != nil {
