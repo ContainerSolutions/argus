@@ -3,5 +3,5 @@ class: PreventativeControl
 requirementRef:
   Code: REQ-01
   Version: 1.0.0
-AttestationRef: my-attestation
-resourceRef: AzureCloud
+resourceRef:
+- AzureCloud

@@ -23,11 +23,19 @@ type RequirementBlock struct {
 }
 
 type ImplementationBlock struct {
-	Implementaiton *Implementation
-	Attestation    *Attestation
-	Attested       bool
-	RunAt          string
-	Logs           string
+	Implementaiton       *Implementation
+	Attestation          map[string]AttestationBlock
+	TotalAttestations    int
+	Attested             bool
+	VerifiedAttestations int
+	RunAt                string
+}
+
+type AttestationBlock struct {
+	Attestation *Attestation
+	Attested    bool
+	RunAt       string
+	Logs        string
 }
 
 type Requirement struct {
@@ -49,16 +57,16 @@ type Implementation struct {
 	Name                    string         `json:"name"`
 	Class                   string         `json:"class"`
 	RequirementRef          RequirementRef `json:"requirementRef"`
-	ResourceRef             string         `json:"resourceRef"`
+	ResourceRef             []string       `json:"resourceRef"`
 	boundRequirementVersion string
-	AttestationRef          string `json:"attestationRef"`
 }
 
 type Attestation struct {
-	Name       string               `json:"name"`
-	Type       string               `json:"type"`
-	Result     AttestationResult    `json:"result"`
-	CommandRef AttestationByCommand `json:"commandRef"`
+	Name              string               `json:"name"`
+	Type              string               `json:"type"`
+	Result            AttestationResult    `json:"result"`
+	CommandRef        AttestationByCommand `json:"commandRef"`
+	ImplementationRef string               `json:"implementationRef"`
 }
 
 type AttestationByCommand struct {

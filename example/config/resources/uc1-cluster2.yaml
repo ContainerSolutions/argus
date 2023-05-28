@@ -1,0 +1,5 @@
+name: UseCase1Cluster2
+type: AKS
+classes: 
+- Kubernetes
+parents: []

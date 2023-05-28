@@ -51,25 +51,60 @@ func (t *JSONSummary) Detailed(c *models.Configuration) {
 		eval := time.Time{}
 		res := ""
 		logs := ""
+		if len(r.Requirements) == 0 {
+			d = append(d, struct {
+				Resource       string
+				Implementation string
+				Requirement    string
+				Attestation    string
+				EvaluatedAt    time.Time
+				Result         string
+				Logs           string
+			}{Resource: r.Name, Requirement: jreq, Implementation: jimp, Attestation: att, EvaluatedAt: eval, Result: res, Logs: logs})
+		}
 		for _, req := range r.Requirements {
 			jreq = req.Requirement.Name
+			if len(req.Implementations) == 0 {
+				d = append(d, struct {
+					Resource       string
+					Implementation string
+					Requirement    string
+					Attestation    string
+					EvaluatedAt    time.Time
+					Result         string
+					Logs           string
+				}{Resource: r.Name, Requirement: jreq, Implementation: jimp, Attestation: att, EvaluatedAt: eval, Result: res, Logs: logs})
+			}
 			for _, imp := range req.Implementations {
 				jimp = imp.Implementaiton.Name
-				att = imp.Attestation.Name
-				eval = imp.Attestation.Result.RunAt
-				res = imp.Attestation.Result.Result
-				logs = imp.Attestation.Result.Logs
+				if len(imp.Attestation) == 0 {
+					d = append(d, struct {
+						Resource       string
+						Implementation string
+						Requirement    string
+						Attestation    string
+						EvaluatedAt    time.Time
+						Result         string
+						Logs           string
+					}{Resource: r.Name, Requirement: jreq, Implementation: jimp, Attestation: att, EvaluatedAt: eval, Result: res, Logs: logs})
+				}
+				for _, ats := range imp.Attestation {
+					att = ats.Attestation.Name
+					eval = ats.Attestation.Result.RunAt
+					res = ats.Attestation.Result.Result
+					logs = ats.Attestation.Result.Logs
+					d = append(d, struct {
+						Resource       string
+						Implementation string
+						Requirement    string
+						Attestation    string
+						EvaluatedAt    time.Time
+						Result         string
+						Logs           string
+					}{Resource: r.Name, Requirement: jreq, Implementation: jimp, Attestation: att, EvaluatedAt: eval, Result: res, Logs: logs})
+				}
 			}
 		}
-		d = append(d, struct {
-			Resource       string
-			Implementation string
-			Requirement    string
-			Attestation    string
-			EvaluatedAt    time.Time
-			Result         string
-			Logs           string
-		}{Resource: r.Name, Requirement: jreq, Implementation: jimp, Attestation: att, EvaluatedAt: eval, Result: res, Logs: logs})
 
 	}
 	w := json.NewEncoder(os.Stdout)

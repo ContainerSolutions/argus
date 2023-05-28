@@ -43,12 +43,18 @@ func ResolveAttestations(config *models.Configuration) (*models.Configuration, e
 }
 
 func resolveAttForResource(current *models.Resource, attestations []models.Attestation) {
-	for _, attestation := range attestations {
+	for ak, attestation := range attestations {
 		for k, reqBlock := range current.Requirements {
 			for kk, impBlock := range reqBlock.Implementations {
 				implementation := impBlock.Implementaiton
-				if implementation.AttestationRef == attestation.Name {
-					impBlock.Attestation = &attestation
+				if attestation.ImplementationRef == implementation.Name {
+					if impBlock.Attestation == nil {
+						impBlock.Attestation = make(map[string]models.AttestationBlock)
+					}
+
+					impBlock.Attestation[attestation.Name] = models.AttestationBlock{
+						Attestation: &attestations[ak],
+					}
 				}
 				reqBlock.Implementations[kk] = impBlock
 			}
@@ -57,30 +63,32 @@ func resolveAttForResource(current *models.Resource, attestations []models.Attes
 	}
 }
 func resolveImpForResource(current *models.Resource, implementations []models.Implementation) {
-	for _, implementation := range implementations {
+	for ai, implementation := range implementations {
 		for k, reqBlock := range current.Requirements {
 			requirement := reqBlock.Requirement
-			if implementation.RequirementRef.Code == requirement.Code && implementation.RequirementRef.Version == requirement.Version && (implementation.ResourceRef == current.Name || utils.Contains(current.Parents, implementation.ResourceRef)) {
-				if reqBlock.Implementations == nil {
-					reqBlock.Implementations = make(map[string]models.ImplementationBlock)
+			for _, ref := range implementation.ResourceRef {
+				if implementation.RequirementRef.Code == requirement.Code && implementation.RequirementRef.Version == requirement.Version && (ref == current.Name || utils.Contains(current.Parents, ref)) {
+					if reqBlock.Implementations == nil {
+						reqBlock.Implementations = make(map[string]models.ImplementationBlock)
+					}
+					reqBlock.Implementations[implementation.Name] = models.ImplementationBlock{
+						Implementaiton: &implementations[ai],
+					}
 				}
-				reqBlock.Implementations[implementation.Name] = models.ImplementationBlock{
-					Implementaiton: &implementation,
-				}
+				current.Requirements[k] = reqBlock
 			}
-			current.Requirements[k] = reqBlock
 		}
 	}
 }
 func resolveReqForResource(current *models.Resource, requirements []models.Requirement) {
-	for _, requirement := range requirements {
+	for ar, requirement := range requirements {
 		for _, class := range current.Classes {
 			if utils.Contains(requirement.ApplicableResourceClasses, class) {
 				if current.Requirements == nil {
 					current.Requirements = make(map[string]models.RequirementBlock)
 				}
 				current.Requirements[requirement.Name] = models.RequirementBlock{
-					Requirement: &requirement,
+					Requirement: &requirements[ar],
 				}
 			}
 		}

@@ -1,0 +1,9 @@
+name: RunAsRoot should not be allowed on Kubernetes clusters
+version: 1.0.0
+code: UC1-REQ-01
+class: Security
+category: Internal
+applicableResourceClasses:
+- Kubernetes
+requiredImplementationClasses:
+- PreventativeControl

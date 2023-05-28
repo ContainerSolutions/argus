@@ -37,19 +37,30 @@ func (t *TSVSummary) Detailed(c *models.Configuration) {
 		ranAt := "N/A"
 		result := "N/A"
 		logs := "N/A"
+		if len(r.Requirements) == 0 {
+			records = append(records, []string{r.Name, printReq, printImp, printAtt, ranAt, result, logs})
+		}
 		for _, req := range r.Requirements {
 			printReq = req.Requirement.Name
+			if len(req.Implementations) == 0 {
+				records = append(records, []string{r.Name, printReq, printImp, printAtt, ranAt, result, logs})
+			}
 			for _, imp := range req.Implementations {
 				printImp = imp.Implementaiton.Name
-				printAtt = imp.Attestation.Name
-				ranAt = fmt.Sprint(imp.Attestation.Result.RunAt)
-				result = imp.Attestation.Result.Result
-				logs = imp.Attestation.Result.Logs
+				if len(imp.Attestation) == 0 {
+					records = append(records, []string{r.Name, printReq, printImp, printAtt, ranAt, result, logs})
+				}
+				for _, ats := range imp.Attestation {
+					printAtt = ats.Attestation.Name
+					ranAt = fmt.Sprint(ats.Attestation.Result.RunAt)
+					result = ats.Attestation.Result.Result
+					logs = ats.Attestation.Result.Logs
+					records = append(records, []string{r.Name, printReq, printImp, printAtt, ranAt, result, logs})
+				}
 			}
 		}
-		records = append(records, []string{r.Name, printReq, printImp, printAtt, ranAt, result, logs})
 	}
 	w := csv.NewWriter(os.Stdout)
-	w.Comma = '\t'
+	w.Comma = ';'
 	w.WriteAll(records) // calls Flush internally
 }

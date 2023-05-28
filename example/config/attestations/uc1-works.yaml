@@ -1,6 +1,6 @@
-name: my-attestation
+name: "UseCase1WorksAsExpected"
 type: command
 commandRef:
   command: /usr/bin/date
   expectedExitCode: 0
-ImplementationRef: my-implementation
+ImplementationRef: UseCase1

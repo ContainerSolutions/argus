@@ -47,17 +47,27 @@ to quickly create a Cobra application.`,
 				totalImplementations := 0
 				attestedImplementations := 0
 				for k, i := range req.Implementations {
+					verifiedAttestations := 0
 					if utils.Contains(req.Requirement.RequiredImplementationClasses, i.Implementaiton.Class) {
 						totalImplementations = totalImplementations + 1
-
 					}
-					a := i.Attestation
-					attester, _ := attester.Init(a.Type)
-					res, err := attester.Attest(a)
-					if err != nil {
-						os.Exit(1)
+					for _, a := range i.Attestation {
+						attester, _ := attester.Init(a.Attestation.Type)
+						res, err := attester.Attest(a.Attestation)
+						if err != nil {
+							os.Exit(1)
+						}
+						a.Attested = res.Result == "PASS"
+						if a.Attested {
+							verifiedAttestations = verifiedAttestations + 1
+						}
 					}
-					i.Attested = res.Result == "PASS"
+					i.TotalAttestations = len(i.Attestation)
+					i.Attested = false
+					i.VerifiedAttestations = verifiedAttestations
+					if i.VerifiedAttestations == i.TotalAttestations {
+						i.Attested = true
+					}
 					if i.Attested && utils.Contains(req.Requirement.RequiredImplementationClasses, i.Implementaiton.Class) {
 						attestedImplementations = attestedImplementations + 1
 					}
@@ -82,7 +92,7 @@ to quickly create a Cobra application.`,
 			fmt.Fprintf(os.Stderr, "could not save db after attestation: %v\n", err)
 			os.Exit(1)
 		}
-		err = results.Summary(config, "tsv")
+		err = results.Detailed(config, "tsv")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
 			os.Exit(1)
