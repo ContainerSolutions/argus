@@ -52,12 +52,14 @@ to quickly create a Cobra application.`,
 						totalImplementations = totalImplementations + 1
 					}
 					for _, a := range i.Attestation {
+						fmt.Printf("Resource: %v\nRequirement:'%v'\nImplementation: '%v'\nAttestation: '%v'\nResult: ", r.Name, req.Requirement.Name, i.Implementaiton.Name, a.Attestation.Name)
 						attester, _ := attester.Init(a.Attestation.Type)
 						res, err := attester.Attest(a.Attestation)
 						if err != nil {
 							os.Exit(1)
 						}
 						a.Attested = res.Result == "PASS"
+						fmt.Printf("%v\n\n", res.Result)
 						if a.Attested {
 							verifiedAttestations = verifiedAttestations + 1
 						}

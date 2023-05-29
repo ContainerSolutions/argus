@@ -1,5 +1,6 @@
 name: UseCase1Cluster2
-type: AKS
+type: VMSS
 classes: 
-- Kubernetes
-parents: []
+- ScaleSets
+parents:
+- AzureCloud
