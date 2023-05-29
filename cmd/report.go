@@ -55,6 +55,12 @@ to quickly create a Cobra application.`,
 				fmt.Fprintf(os.Stderr, "could not generate report: %v\n", err)
 				os.Exit(1)
 			}
+		case "all":
+			err := results.All(config, output)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "could not generate report: %v\n", err)
+				os.Exit(1)
+			}
 		default:
 			fmt.Fprintf(os.Stderr, "'%v' is not a valid report type\n", mode)
 			os.Exit(1)

@@ -110,3 +110,8 @@ func (t *JSONSummary) Detailed(c *models.Configuration) {
 	w := json.NewEncoder(os.Stdout)
 	w.Encode(d)
 }
+
+func (t *JSONSummary) All(c *models.Configuration) {
+	w := json.NewEncoder(os.Stdout)
+	w.Encode(c.Resources)
+}

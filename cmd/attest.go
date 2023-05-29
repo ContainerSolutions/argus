@@ -92,7 +92,7 @@ to quickly create a Cobra application.`,
 			fmt.Fprintf(os.Stderr, "could not save db after attestation: %v\n", err)
 			os.Exit(1)
 		}
-		err = results.Detailed(config, "tsv")
+		err = results.Summary(config, "tsv")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "could not generate summary: %v\n", err)
 			os.Exit(1)
