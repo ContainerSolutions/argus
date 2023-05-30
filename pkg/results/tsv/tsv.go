@@ -29,6 +29,7 @@ func (t *TSVSummary) Summary(c *models.Configuration) {
 func (t *TSVSummary) All(c *models.Configuration) {
 
 }
+
 func (t *TSVSummary) Detailed(c *models.Configuration) {
 	records := [][]string{
 		{"Resource", "Requirement", "Implementation", "Attestation", "EvaluatedAt", "Result", "Logs"},
