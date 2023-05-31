@@ -1,0 +1,8 @@
+name: "Stop One VM Does not Stop Application"
+type: command
+commandRef:
+  command: az
+  args: ["vmss", "create", "-n", "MyVmss", "-g", "peering-test" ,"--instance-count", "5", "--image", "Win2016Datacenter", "--admin-password", "@123Foobar123A@!3", "--data-disk-sizes-gb", "2", "--os-disk-size-gb", "40"]
+  expectedExitCode: 1
+  expectedOutput: "RequestDisallowedByPolicy"
+ImplementationRef: UseCase1

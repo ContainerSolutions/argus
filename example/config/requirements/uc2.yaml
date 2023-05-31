@@ -1,0 +1,9 @@
+name: "Web app1 should work behind a load balancer"
+version: 1.0.0
+code: OC-REQ-01
+class: OperationalResilience
+category: Internal
+applicableResourceClasses:
+- WebAppSolution
+requiredImplementationClasses:
+- Verification
