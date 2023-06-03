@@ -1,12 +1,9 @@
 # ARGUS
 This is My Personal Attempt on Argus
 
-This is a PoC - refer to the forked project to see how the actual development looks like.
+This is a PoC - refer to the main branch to see how the actual development looks like.
 
 Should be close to this one anyways.
-
-
-
 
 # TODO for me to be happy with this PoC
 
@@ -16,3 +13,13 @@ Should be close to this one anyways.
 - [ ] Make a dependency report where parents status are flagged by the looks of their children status.
 - [ ] Add Versioning validation when loading (i.e. old implementations to updated requirements should be invalid - requirement should be also updated from version - refuse to load if that happens)
 - [ ] Add a 'show' command that only shows what's loaded in the program
+
+## Running it
+
+```
+# Load the state versus the configuration files
+./bin/argus load -c ./example/.argus-config.yaml
+# Attest resources according to current state
+./bin/argus attest -c ./example/.argus-config.yaml
+# Reports on the attestation
+./bin/argus report -m detailed -o json -c ./example/.argus-config.yaml
