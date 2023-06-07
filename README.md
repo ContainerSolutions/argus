@@ -4,6 +4,9 @@ While many tools are actually available to implement compliance requirements, al
 
 The goal of Argus is to overseer and continuously Attest Requirement Implementations across multiple Resources, and feed that information back with observability metrics. 
 
+# Project Objective
+
+To have something Attesting (reconciling) Implementations and Rerquirements continuously, generating metrics to be consumed with observability tools (i.e. be able to create a compliance SLO/SLI)
 
 # Use Cases
 
@@ -24,3 +27,4 @@ Use Case Details: [#6](https://github.com/ContainerSolutions/argus/issues/6)
 
 ## Objects overview
 ![Object View](pics/argus.drawio.png)
+
