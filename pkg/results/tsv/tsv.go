@@ -50,7 +50,7 @@ func (t *TSVSummary) Detailed(c *models.Configuration) {
 				records = append(records, []string{r.Name, printReq, printImp, printAtt, ranAt, result, logs})
 			}
 			for _, imp := range req.Implementations {
-				printImp = imp.Implementaiton.Name
+				printImp = imp.Implementation.Name
 				if len(imp.Attestation) == 0 {
 					records = append(records, []string{r.Name, printReq, printImp, printAtt, ranAt, result, logs})
 				}
