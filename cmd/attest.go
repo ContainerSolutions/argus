@@ -17,7 +17,7 @@ import (
 // attestCmd represents the attest command
 var attestCmd = &cobra.Command{
 	Use:   "attest",
-	Short: "A brief description of your command",
+	Short: "Run an attestation",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -48,11 +48,11 @@ to quickly create a Cobra application.`,
 				attestedImplementations := 0
 				for k, i := range req.Implementations {
 					verifiedAttestations := 0
-					if utils.Contains(req.Requirement.RequiredImplementationClasses, i.Implementaiton.Class) {
+					if utils.Contains(req.Requirement.RequiredImplementationClasses, i.Implementation.Class) {
 						totalImplementations = totalImplementations + 1
 					}
 					for _, a := range i.Attestation {
-						fmt.Printf("Resource: %v\nRequirement:'%v'\nImplementation: '%v'\nAttestation: '%v'\nResult: ", r.Name, req.Requirement.Name, i.Implementaiton.Name, a.Attestation.Name)
+						fmt.Printf("Resource: %v\nRequirement:'%v'\nImplementation: '%v'\nAttestation: '%v'\nResult: ", r.Name, req.Requirement.Name, i.Implementation.Name, a.Attestation.Name)
 						attester, _ := attester.Init(a.Attestation.Type)
 						res, err := attester.Attest(a.Attestation)
 						if err != nil {
@@ -70,13 +70,13 @@ to quickly create a Cobra application.`,
 					if i.VerifiedAttestations == i.TotalAttestations {
 						i.Attested = true
 					}
-					if i.Attested && utils.Contains(req.Requirement.RequiredImplementationClasses, i.Implementaiton.Class) {
+					if i.Attested && utils.Contains(req.Requirement.RequiredImplementationClasses, i.Implementation.Class) {
 						attestedImplementations = attestedImplementations + 1
 					}
 					req.Implementations[k] = i
 				}
 				req.AttestedImplementations = attestedImplementations
-				req.TotalImplementaitons = totalImplementations
+				req.TotalImplementations = totalImplementations
 				if len(req.Requirement.RequiredImplementationClasses) <= req.AttestedImplementations {
 					req.Implemented = true
 					implementedRequirements = implementedRequirements + 1

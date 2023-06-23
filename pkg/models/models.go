@@ -18,12 +18,12 @@ type RequirementBlock struct {
 	Implementations         map[string]ImplementationBlock
 	Implemented             bool
 	AttestedImplementations int
-	TotalImplementaitons    int
+	TotalImplementations    int
 	RunAt                   string
 }
 
 type ImplementationBlock struct {
-	Implementaiton       *Implementation
+	Implementation       *Implementation
 	Attestation          map[string]AttestationBlock
 	TotalAttestations    int
 	Attested             bool

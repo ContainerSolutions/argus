@@ -46,7 +46,7 @@ func resolveAttForResource(current *models.Resource, attestations []models.Attes
 	for ak, attestation := range attestations {
 		for k, reqBlock := range current.Requirements {
 			for kk, impBlock := range reqBlock.Implementations {
-				implementation := impBlock.Implementaiton
+				implementation := impBlock.Implementation
 				if attestation.ImplementationRef == implementation.Name {
 					if impBlock.Attestation == nil {
 						impBlock.Attestation = make(map[string]models.AttestationBlock)
@@ -72,7 +72,7 @@ func resolveImpForResource(current *models.Resource, implementations []models.Im
 						reqBlock.Implementations = make(map[string]models.ImplementationBlock)
 					}
 					reqBlock.Implementations[implementation.Name] = models.ImplementationBlock{
-						Implementaiton: &implementations[ai],
+						Implementation: &implementations[ai],
 					}
 				}
 				current.Requirements[k] = reqBlock
