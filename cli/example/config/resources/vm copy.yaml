@@ -1,0 +1,6 @@
+name: my-aws-vm
+type: aws
+classes: 
+- VirtualMachine
+Parents:
+- AwsCloud

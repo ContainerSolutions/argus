@@ -1,0 +1,8 @@
+name: "Stop VM1 Does not Stop Application"
+type: command
+commandRef:
+  command: bash
+  args: ["./scripts/break_verify_and_fix.sh", "myapp1vm1"]
+  expectedExitCode: 0
+  expectedOutput: ""
+ImplementationRef: WebAppIsBehindLoadBalancer

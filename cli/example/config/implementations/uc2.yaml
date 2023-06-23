@@ -1,0 +1,7 @@
+name: "WebAppIsBehindLoadBalancer"
+class: Verification
+requirementRef:
+  Code: OC-REQ-01
+  Version: 1.0.0
+resourceRef: 
+- MyWebApp

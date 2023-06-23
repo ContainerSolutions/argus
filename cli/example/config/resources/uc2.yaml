@@ -1,0 +1,6 @@
+name: MyWebApp
+type: AzureApp
+classes: 
+- WebAppSolution
+parents:
+- AzureCloud
