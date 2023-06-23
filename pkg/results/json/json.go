@@ -76,7 +76,7 @@ func (t *JSONSummary) Detailed(c *models.Configuration) {
 				}{Resource: r.Name, Requirement: jreq, Implementation: jimp, Attestation: att, EvaluatedAt: eval, Result: res, Logs: logs})
 			}
 			for _, imp := range req.Implementations {
-				jimp = imp.Implementaiton.Name
+				jimp = imp.Implementation.Name
 				if len(imp.Attestation) == 0 {
 					d = append(d, struct {
 						Resource       string
