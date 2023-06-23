@@ -1,4 +1,4 @@
-module argus
+module github.com/ContainerSolutions/argus/cli
 
 go 1.19
 

@@ -1,11 +1,12 @@
 package results
 
 import (
-	"argus/pkg/models"
-	_ "argus/pkg/results/json"
-	"argus/pkg/results/schema"
-	_ "argus/pkg/results/tsv"
 	"fmt"
+
+	"github.com/ContainerSolutions/argus/cli/pkg/models"
+	_ "github.com/ContainerSolutions/argus/cli/pkg/results/json"
+	"github.com/ContainerSolutions/argus/cli/pkg/results/schema"
+	_ "github.com/ContainerSolutions/argus/cli/pkg/results/tsv"
 )
 
 func Summary(config *models.Configuration, format string) error {

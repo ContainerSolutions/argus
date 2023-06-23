@@ -1,8 +1,8 @@
 package resolver
 
 import (
-	"argus/pkg/models"
-	"argus/pkg/utils"
+	"github.com/ContainerSolutions/argus/cli/pkg/models"
+	"github.com/ContainerSolutions/argus/cli/pkg/utils"
 )
 
 func Resolve(config *models.Configuration) (*models.Configuration, error) {

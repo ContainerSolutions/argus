@@ -1,9 +1,10 @@
 package attester
 
 import (
-	_ "argus/pkg/attester/command"
-	"argus/pkg/attester/schema"
 	"fmt"
+
+	_ "github.com/ContainerSolutions/argus/cli/pkg/attester/command"
+	"github.com/ContainerSolutions/argus/cli/pkg/attester/schema"
 )
 
 func Init(name string) (schema.AttestDriver, error) {

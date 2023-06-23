@@ -1,6 +1,6 @@
 package schema
 
-import "argus/pkg/models"
+import "github.com/ContainerSolutions/argus/cli/pkg/models"
 
 type AttestDriver interface {
 	Attest(c *models.Attestation) (*models.AttestationResult, error)

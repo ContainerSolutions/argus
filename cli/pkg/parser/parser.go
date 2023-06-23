@@ -1,12 +1,13 @@
 package parser
 
 import (
-	"argus/pkg/models"
 	"fmt"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
+
+	"github.com/ContainerSolutions/argus/cli/pkg/models"
 
 	"sigs.k8s.io/yaml"
 )

@@ -1,12 +1,13 @@
 package command
 
 import (
-	"argus/pkg/attester/schema"
-	"argus/pkg/models"
 	"fmt"
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/ContainerSolutions/argus/cli/pkg/attester/schema"
+	"github.com/ContainerSolutions/argus/cli/pkg/models"
 )
 
 type AttestCommand struct {

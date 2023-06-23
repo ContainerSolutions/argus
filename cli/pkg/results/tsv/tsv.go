@@ -1,11 +1,12 @@
 package tsv
 
 import (
-	"argus/pkg/models"
-	"argus/pkg/results/schema"
 	"encoding/csv"
 	"fmt"
 	"os"
+
+	"github.com/ContainerSolutions/argus/cli/pkg/models"
+	"github.com/ContainerSolutions/argus/cli/pkg/results/schema"
 )
 
 type TSVSummary struct {

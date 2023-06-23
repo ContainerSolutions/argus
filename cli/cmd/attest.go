@@ -4,12 +4,13 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"argus/pkg/attester"
-	"argus/pkg/results"
-	"argus/pkg/storage"
-	"argus/pkg/utils"
 	"fmt"
 	"os"
+
+	"github.com/ContainerSolutions/argus/cli/pkg/attester"
+	"github.com/ContainerSolutions/argus/cli/pkg/results"
+	"github.com/ContainerSolutions/argus/cli/pkg/storage"
+	"github.com/ContainerSolutions/argus/cli/pkg/utils"
 
 	"github.com/spf13/cobra"
 )

@@ -1,12 +1,13 @@
 package json
 
 import (
-	"argus/pkg/models"
-	"argus/pkg/results/schema"
 	"encoding/json"
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/ContainerSolutions/argus/cli/pkg/models"
+	"github.com/ContainerSolutions/argus/cli/pkg/results/schema"
 )
 
 type JSONSummary struct {

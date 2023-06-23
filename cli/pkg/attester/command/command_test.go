@@ -1,8 +1,8 @@
 package command
 
 import (
-	"argus/pkg/models"
 	"errors"
+	"github.com/ContainerSolutions/argus/cli/pkg/models"
 	"testing"
 
 	"gotest.tools/v3/assert"

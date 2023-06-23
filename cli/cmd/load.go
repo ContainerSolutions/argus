@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"os"
 
-	"argus/pkg/parser"
-	"argus/pkg/resolver"
-	"argus/pkg/storage"
+	"github.com/ContainerSolutions/argus/cli/pkg/parser"
+	"github.com/ContainerSolutions/argus/cli/pkg/resolver"
+	"github.com/ContainerSolutions/argus/cli/pkg/storage"
 
 	"github.com/spf13/cobra"
 )

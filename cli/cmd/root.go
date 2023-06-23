@@ -4,9 +4,10 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"argus/pkg/models"
 	"fmt"
 	"os"
+
+	"github.com/ContainerSolutions/argus/cli/pkg/models"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -18,7 +19,7 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "argus",
 	Short: "Cloud Control Framework CLI",
-	Long: `Cloud Control Framework CLI`,
+	Long:  `Cloud Control Framework CLI`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

@@ -1,11 +1,12 @@
 package file
 
 import (
-	"argus/pkg/models"
-	"argus/pkg/storage/schema"
 	"encoding/gob"
 	"fmt"
 	"os"
+
+	"github.com/ContainerSolutions/argus/cli/pkg/models"
+	"github.com/ContainerSolutions/argus/cli/pkg/storage/schema"
 )
 
 func init() {
