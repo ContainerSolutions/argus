@@ -28,3 +28,52 @@ Use Case Details: [#6](https://github.com/ContainerSolutions/argus/issues/6)
 ## Objects overview
 ![Object View](pics/argus.drawio.png)
 
+
+# Kubernetes Implementation
+As part of the MVP for Compliance Framework, we will be creating a kubernetes operator. this is to leverage the following benefits that it provides OOTB:
+
+ * Reconcile loops (so that we get asynchronous constant attestation)
+
+ * Frontend (via prometheus metrics + grafana Dashboard)
+
+In order to do that, the proposed architecture to follow is described in the picture below:
+
+![Kubernetes Design](pics/argus-breakdown.png)
+
+(PS this is a living diagram. It has been outdated 3 times while writing this document, please bear with the general idea)
+
+It composes the following proposed Controllers:
+
+* Resources Controller
+    * Responsible from keeping track of resource implementation, including nesting resolution (Implementation on Parent cascading to Child) 
+    * Responsible from keeping track of resource compliance, including nesting resolution (Compliance on Child cascading to Parent)
+    * Responsible from Keeping track of Valid implementations from ResourceImplementation Manifests
+
+* Implementations Controller
+    * Responsible to invalidate a given Attestation set if a Requirement ResourceVersion changes
+    * Creates child "ResourceImplementation" manifests and manages their lifecycle
+
+* ResourceImplementation Controller
+    * Responsible for keeping track if a given set of ResourceAttestation results validate a given Implementation for a given resource
+
+
+* Attestations Controller
+    * Responsible to map out Resources needed to Attest.
+    * Creates child "ResourceAttestation" manifests (aka pod to replicaset) and manages their lifecycle
+
+* ResourceAttestations Controller
+    * Based on a Resource, and on a provider, executes the provider call and gets the output
+    * Tracks the output of the Attestation with logs, execution date, etc.
+
+* Requirements Controller
+    * Responsible for keeping track of Requirement Version.
+    * Creates child "ResourceRequirement" manifests (aka pod to replicaset) and manages their lifecycle
+
+* ResourceRequirements Controller
+    * Keeps track of Resource compliance to individual Requirement based on The ResourceAttestations
+    available for that Resource
+
+## Current Status
+
+Right now the Kubernetes implementation only contains part of the CRDs defined for these 
+controllers. Work is needed to help define the CRDs and each individual Controller implementation.

@@ -1,0 +1,27 @@
+# permissions for end users to view implementations.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: implementation-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: operator
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+  name: implementation-viewer-role
+rules:
+- apiGroups:
+  - argus.io
+  resources:
+  - implementations
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - implementations/status
+  verbs:
+  - get
