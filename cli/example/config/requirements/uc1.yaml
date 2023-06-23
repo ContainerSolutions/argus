@@ -1,0 +1,9 @@
+name: VM ScaleSets cannot have Data Disks
+version: 1.0.0
+code: UC1-REQ-01
+class: Security
+category: Internal
+applicableResourceClasses:
+- ScaleSets
+requiredImplementationClasses:
+- PreventativeControl

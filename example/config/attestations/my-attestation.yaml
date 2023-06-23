@@ -1,6 +1,0 @@
-name: my-attestation
-type: command
-commandRef:
-  command: /usr/bin/date
-  expectedExitCode: 0
-ImplementationRef: my-implementation

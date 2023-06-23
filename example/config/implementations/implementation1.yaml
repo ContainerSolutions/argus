@@ -1,7 +1,0 @@
-name: my-implementation
-class: PreventativeControl
-requirementRef:
-  Code: REQ-01
-  Version: 1.0.0
-resourceRef:
-- AzureCloud

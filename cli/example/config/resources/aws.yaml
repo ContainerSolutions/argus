@@ -1,0 +1,5 @@
+name: AwsCloud
+type: aws
+classes: 
+- Platform
+parents: []

@@ -1,0 +1,6 @@
+name: UseCase1Cluster2
+type: VMSS
+classes: 
+- ScaleSets
+parents:
+- AzureCloud

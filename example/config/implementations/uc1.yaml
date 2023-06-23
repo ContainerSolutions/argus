@@ -1,8 +1,0 @@
-name: "UseCase1"
-class: PreventativeControl
-requirementRef:
-  Code: UC1-REQ-01
-  Version: 1.0.0
-resourceRef: 
-- UseCase1Cluster1
-- UseCase1Cluster2

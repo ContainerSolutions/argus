@@ -1,0 +1,8 @@
+name: "UseCase1Deployed"
+type: command
+commandRef:
+  command: "az"
+  args: ["policy", "assignment", "show", "--name", "this-policy-for-vmss-data-disks", "-o", "json"]
+  expectedExitCode: 0
+  expectedOutput: "\"enforcementMode\": \"Default\""
+ImplementationRef: UseCase1

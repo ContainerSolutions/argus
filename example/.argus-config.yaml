@@ -1,7 +1,0 @@
-resourcePath: "./example/config/resources"
-attestationPath: "./example/config/attestations"
-requirementPath: "./example/config/requirements"
-implementationPath: "./example/config/implementations"
-driver: file
-driverConfig:
-  file: "./example/.argus.state"
