@@ -1,0 +1,12 @@
+apiVersion: argus.io/v1alpha1
+kind: Implementation
+metadata:
+  labels:
+    app.kubernetes.io/name: implementation
+    app.kubernetes.io/instance: implementation-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: implementation-sample
+spec:
+  # TODO(user): Add fields here
