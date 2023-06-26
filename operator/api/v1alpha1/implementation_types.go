@@ -25,9 +25,9 @@ import (
 
 // ImplementationSpec defines the desired state of Implementation
 type ImplementationSpec struct {
-	Class          string                       `json:"class"`
-	RequirementRef ImplementationRequirementRef `json:"requirementRef"`
-	ResourceRef    []ImplementationResourceRef  `json:"resourceRef"`
+	Class          string                         `json:"class"`
+	RequirementRef ImplementationRequirementRef   `json:"requirementRef"`
+	ResourceRef    []ImplementationRequirementRef `json:"resourceRef"`
 }
 
 // TODO - Use NamespacedName here
