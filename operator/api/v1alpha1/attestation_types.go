@@ -17,8 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"time"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -48,7 +46,7 @@ type AttestationResult struct {
 	Result AttestationResultType
 	Reason string
 	Err    string
-	RunAt  time.Time
+	RunAt  metav1.Time
 }
 type AttestationResultType string
 
