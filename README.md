@@ -2,7 +2,7 @@
 
 While many tools are actually available to implement compliance requirements, almost none of them actually focus on tracking the implementation themselves.
 
-The goal of Argus is to overseer and continuously Attest Requirement Implementations across multiple Resources, and feed that information back with observability metrics. 
+The goal of Argus is to oversee and continuously Attest Requirement Implementations across multiple Resources, and feed that information back with observability metrics. 
 
 # Project Objective
 
@@ -30,7 +30,7 @@ Use Case Details: [#6](https://github.com/ContainerSolutions/argus/issues/6)
 
 
 # Kubernetes Implementation
-As part of the MVP for Compliance Framework, we will be creating a kubernetes operator. this is to leverage the following benefits that it provides OOTB:
+As part of the MVP for Compliance Framework, we will be creating a kubernetes operator. This is to leverage the following benefits that it provides OOTB:
 
  * Reconcile loops (so that we get asynchronous constant attestation)
 
@@ -45,20 +45,19 @@ In order to do that, the proposed architecture to follow is described in the pic
 It composes the following proposed Controllers:
 
 * Resources Controller
-    * Responsible from keeping track of resource compliance, including nesting resolution (Compliance on Child cascading to Parent)
-    * Responsible from Keeping track of Valid implementations from ResourceImplementation Manifests
+    * Responsible for keeping track of resource compliance, including nesting resolution (Compliance on Child cascading to Parent)
+    * Responsible for keeping track of valid implementations from ResourceImplementation Manifests
 
 * Implementations Controller
-    * Responsible to invalidate a given Attestation set if a Requirement ResourceVersion changes
-    * Responsible from keeping track of resource implementation, including nesting resolution (Implementation on Parent cascading to Child) 
+    * Responsible for invalidating a given Attestation set if a Requirement ResourceVersion changes.
+    * Responsible for keeping track of resource implementation, including nesting resolution (Implementation on Parent cascading to Child) 
     * Creates child "ResourceImplementation" manifests and manages their lifecycle
 
 * ResourceImplementation Controller
     * Responsible for keeping track if a given set of ResourceAttestation results validate a given Implementation for a given resource
 
-
 * Attestations Controller
-    * Responsible to map out Resources needed to Attest.
+    * Responsible for mapping out Resources needed to Attest.
     * Creates child "ResourceAttestation" manifests (aka pod to replicaset) and manages their lifecycle
 
 * ResourceAttestations Controller
