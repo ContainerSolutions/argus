@@ -20,13 +20,17 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // AttestationSpec defines the desired state of Attestation
 type AttestationSpec struct {
-	Type              AttestationType `json:"type"`
-	ImplementationRef string          `json:"implementationRef"`
+	Type              AttestationType     `json:"type"`
+	ImplementationRef string              `json:"implementationRef"`
+	ProviderRef       AttestationProvider `json:"providerRef"`
+}
+
+type AttestationProvider struct {
+	Kind      string `json:"kind"`
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
 }
 
 type AttestationType struct {
@@ -37,25 +41,14 @@ type AttestationType struct {
 
 // AttestationStatus defines the observed state of Attestation
 type AttestationStatus struct {
-	Result map[string]AttestationResult `json:"result"`
-	Status string                       `json:"status"`
+	Childs []ResourceAttestationChild `json:"result"`
+	Status string                     `json:"status"`
 }
 
-type AttestationResult struct {
-	Logs   string
-	Result AttestationResultType
-	Reason string
-	Err    string
-	RunAt  metav1.Time
+type ResourceAttestationChild struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
 }
-type AttestationResultType string
-
-const (
-	AttestationResultTypePass       AttestationResultType = "Pass"
-	AttestationResultTypeFail       AttestationResultType = "Fail"
-	AttestationResultTypeUnknown    AttestationResultType = "Unknown"
-	AttestationResultTypeNotStarted AttestationResultType = "Not Started"
-)
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status

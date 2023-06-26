@@ -20,23 +20,30 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // RequirementSpec defines the desired state of Requirement
 type RequirementSpec struct {
-	Version  string `json:"version"`
-	Code     string `json:"code"`
-	Class    string `json:"class"`
-	Category string `json:"category"`
+	Definition RequirementDefinition `json:"definition"`
 	// TODO define classes objects instead of a free string? Strong typing means better validation
 	ApplicableResourceClasses     []string `json:"applicableResourceClasses"`
 	RequiredImplementationClasses []string `json:"requiredImplementationClasses"`
 }
 
+type RequirementDefinition struct {
+	Version  string `json:"version"`
+	Code     string `json:"code"`
+	Class    string `json:"class"`
+	Category string `json:"category"`
+}
+
 // RequirementStatus defines the observed state of Requirement
 type RequirementStatus struct {
-	RequirementHash string `json:"requirementHash"`
+	Childs          []ResourceRequirementChilds `json:"childs"`
+	RequirementHash string                      `json:"requirementHash"`
+}
+
+type ResourceRequirementChilds struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
 }
 
 //+kubebuilder:object:root=true

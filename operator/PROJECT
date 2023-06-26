@@ -56,4 +56,12 @@ resources:
   kind: ResourceAttestation
   path: github.com/ContainerSolutions/argus/operator/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: argus.io
+  kind: ResourceImplementation
+  path: github.com/ContainerSolutions/argus/operator/api/v1alpha1
+  version: v1alpha1
 version: "3"

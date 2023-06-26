@@ -45,12 +45,12 @@ In order to do that, the proposed architecture to follow is described in the pic
 It composes the following proposed Controllers:
 
 * Resources Controller
-    * Responsible from keeping track of resource implementation, including nesting resolution (Implementation on Parent cascading to Child) 
     * Responsible from keeping track of resource compliance, including nesting resolution (Compliance on Child cascading to Parent)
     * Responsible from Keeping track of Valid implementations from ResourceImplementation Manifests
 
 * Implementations Controller
     * Responsible to invalidate a given Attestation set if a Requirement ResourceVersion changes
+    * Responsible from keeping track of resource implementation, including nesting resolution (Implementation on Parent cascading to Child) 
     * Creates child "ResourceImplementation" manifests and manages their lifecycle
 
 * ResourceImplementation Controller
@@ -70,7 +70,7 @@ It composes the following proposed Controllers:
     * Creates child "ResourceRequirement" manifests (aka pod to replicaset) and manages their lifecycle
 
 * ResourceRequirements Controller
-    * Keeps track of Resource compliance to individual Requirement based on The ResourceAttestations
+    * Keeps track of Resource compliance to individual Requirement based on The ResourceImplementations
     available for that Resource
 
 ## Current Status

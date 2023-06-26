@@ -25,18 +25,35 @@ import (
 
 // ResourceAttestationSpec defines the desired state of ResourceAttestation
 type ResourceAttestationSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	ProviderRef AttestationProvider `json:"providerRef"`
+	ResourceRef ResourceRef         `json:"resourceRef"`
+}
 
-	// Foo is an example field of ResourceAttestation. Edit resourceattestation_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+type ResourceRef struct {
+	Name string `json:"name"`
 }
 
 // ResourceAttestationStatus defines the observed state of ResourceAttestation
 type ResourceAttestationStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Result AttestationResult `json:"result"`
+	Status string            `json:"status"`
 }
+
+type AttestationResult struct {
+	Logs   string                `json:"logs"`
+	Result AttestationResultType `json:"result"`
+	Reason string                `json:"reason"`
+	Err    string                `json:"err"`
+	RunAt  metav1.Time           `json:"runAt"`
+}
+type AttestationResultType string
+
+const (
+	AttestationResultTypePass       AttestationResultType = "Pass"
+	AttestationResultTypeFail       AttestationResultType = "Fail"
+	AttestationResultTypeUnknown    AttestationResultType = "Unknown"
+	AttestationResultTypeNotStarted AttestationResultType = "Not Started"
+)
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status

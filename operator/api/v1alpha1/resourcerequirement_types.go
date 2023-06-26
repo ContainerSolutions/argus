@@ -20,22 +20,19 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // ResourceRequirementSpec defines the desired state of ResourceRequirement
 type ResourceRequirementSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of ResourceRequirement. Edit resourcerequirement_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Definition                    RequirementDefinition `json:"definition"`
+	RequiredImplementationClasses []string              `json:"requiredImplementationClasses"`
 }
 
 // ResourceRequirementStatus defines the observed state of ResourceRequirement
 type ResourceRequirementStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	ApplicableResourceImplementations []ResourceRequirementChilds `json:"applicableResourceImplementations"`
+	TotalImplementations              int                         `json:"totalImplementations"`
+	ValidImplementations              int                         `json:"validImplementations"`
+	Status                            string                      `json:"status"`
+	RequirementHash                   string                      `json:"requirementHash"`
 }
 
 //+kubebuilder:object:root=true
