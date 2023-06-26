@@ -32,8 +32,19 @@ type ResourceSpec struct {
 
 // ResourceStatus defines the observed state of Resource
 type ResourceStatus struct {
-	TotalRequirements       int `json:"totalRequirements"`
-	ImplementedRequirements int `json:"implementedRequirements"`
+	TotalRequirements       int                      `json:"totalRequirements"`
+	ImplementedRequirements int                      `json:"implementedRequirements"`
+	Children                map[string]ResourceChild `json:"children"`
+	TotalChildren           int                      `json:"totalChildren"`
+	CompliantChildren       int                      `json:"compliantChildren"`
+}
+
+// All parent relationship is flattened. TODO - maybe we want to have the whole hierarchy here?
+// TODO - If the child has a requirement the parent does not have (and it is non compliant to that requirement)
+// Should the parent be marked as non compliant? Or rather just as having Non compliant Children?
+// TODO - Need a way to check compliance based on requirement Classes
+type ResourceChild struct {
+	Compliant bool `json:"compliant"`
 }
 
 //+kubebuilder:object:root=true

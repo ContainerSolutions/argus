@@ -25,7 +25,9 @@ import (
 
 // ImplementationSpec defines the desired state of Implementation
 type ImplementationSpec struct {
-	Class          string                       `json:"class"`
+	Class string `json:"class"`
+	//+default="Cascade"
+	CascadePolicy  ImplementationCascadePolicy  `json:"cascadePolicy"`
 	RequirementRef ImplementationRequirementRef `json:"requirementRef"`
 	ResourceRef    []ImplementationResourceRef  `json:"resourceRef"`
 }
@@ -35,13 +37,27 @@ type ImplementationRequirementRef struct {
 	Name      string `json:"name"`
 	Namespace string `json:"namespace"`
 }
+type ImplementationResourceRef struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
+}
+
+type ImplementationCascadePolicy string
+
+const (
+	CascadingPolicyCascade ImplementationCascadePolicy = "Cascade"
+	CascadingPolicyNone    ImplementationCascadePolicy = "None"
+)
 
 // ImplementationStatus defines the observed state of Implementation
 type ImplementationStatus struct {
-	// to which requirement Resource Version has this Impelmentation be bound to
-	BoundRequirementVersion string `json:"boundRequirementVersion"`
-	TotalAttestations       int    `json:"totalAttestations"`
-	VerifiedAttestations    int    `json:"verifiedAttestations"`
+	Childs []ResourceImplementationChilds `json:"childs"`
+	Status string                         `json:"status"`
+}
+
+type ResourceImplementationChilds struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
 }
 
 //+kubebuilder:object:root=true

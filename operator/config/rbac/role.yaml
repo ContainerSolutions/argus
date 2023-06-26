@@ -1,0 +1,189 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - argus.io
+  resources:
+  - attestations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - attestations/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - attestations/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - implementations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - implementations/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - implementations/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - requirements
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - requirements/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - requirements/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - resourceattestations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - resourceattestations/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - resourceattestations/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - resourceimplementations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - resourceimplementations/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - resourceimplementations/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - resourcerequirements
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - resourcerequirements/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - resourcerequirements/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - resources
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - resources/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - resources/status
+  verbs:
+  - get
+  - patch
+  - update

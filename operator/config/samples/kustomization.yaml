@@ -4,4 +4,7 @@ resources:
 - _v1alpha1_implementation.yaml
 - _v1alpha1_requirement.yaml
 - _v1alpha1_resource.yaml
+- _v1alpha1_resourcerequirement.yaml
+- _v1alpha1_resourceattestation.yaml
+- _v1alpha1_resourceimplementation.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
