@@ -6,6 +6,7 @@ import (
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -93,7 +94,8 @@ func TestUpdateRequirements(t *testing.T) {
 }
 
 func TestUpdateChild(t *testing.T) {
-	argusiov1alpha1.AddToScheme(scheme.Scheme)
+	err := argusiov1alpha1.AddToScheme(scheme.Scheme)
+	require.Nil(t, err)
 	testCases := []struct {
 		name           string
 		expectedOutput string
