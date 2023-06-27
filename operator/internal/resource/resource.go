@@ -16,7 +16,7 @@ func UpdateRequirements(resourceRequirementList argusiov1alpha1.ResourceRequirem
 	for _, resourceRequirement := range resourceRequirementList.Items {
 		status := argusiov1alpha1.ResourceRequirementCompliance{}
 		status.Implemented = false
-		if (resourceRequirement.Status.ValidImplementations == resourceRequirement.Status.TotalImplementations) || resourceRequirement.Status.TotalImplementations > 0 {
+		if (resourceRequirement.Status.ValidImplementations == resourceRequirement.Status.TotalImplementations) && resourceRequirement.Status.TotalImplementations > 0 {
 			status.Implemented = true
 			validRequirements = validRequirements + 1
 		}
@@ -38,13 +38,9 @@ func UpdateChild(ctx context.Context, cl client.Client, resource *argusiov1alpha
 			Name:      parentName,
 			Namespace: resource.Namespace,
 		}
-		// TODO
-		// Update Compliant status based on ResourceRequirement Status
-		// TODO
-		// Update parent adding current as a Child
 		err := cl.Get(ctx, namespacedName, &parentResource)
 		if err != nil {
-			errorsA = append(errorsA, err)
+			errorsA = append(errorsA, fmt.Errorf("parent resource %v not found: %w", parentName, err))
 		}
 		original := parentResource.DeepCopy()
 		if parentResource.Status.Children == nil {
@@ -59,7 +55,7 @@ func UpdateChild(ctx context.Context, cl client.Client, resource *argusiov1alpha
 		parentResource.Status.TotalChildren = 1
 		err = cl.Status().Patch(ctx, &parentResource, client.MergeFrom(original))
 		if err != nil {
-			errorsA = append(errorsA, err)
+			errorsA = append(errorsA, fmt.Errorf("failed updating status for parent resource %v: %w", parentName, err))
 		}
 	}
 	if errorsA != nil {
