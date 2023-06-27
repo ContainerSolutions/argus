@@ -38,7 +38,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version-file: "go.mod"
+          go-version-file: "operator/go.mod"
 
       - name: Find the Go Cache
         id: go
@@ -62,6 +62,7 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: ${{ env.GOLANGCI_VERSION }}
+          working-directory: operator
           skip-pkg-cache: true
           skip-build-cache: true
 
@@ -80,7 +81,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version-file: "go.mod"
+          go-version-file: "operator/go.mod"
 
       - name: Find the Go Cache
         id: go
