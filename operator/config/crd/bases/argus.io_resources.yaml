@@ -72,16 +72,19 @@ spec:
                 type: integer
               implementedRequirements:
                 type: integer
+              requirements:
+                additionalProperties:
+                  properties:
+                    implemented:
+                      type: boolean
+                  required:
+                  - implemented
+                  type: object
+                type: object
               totalChildren:
                 type: integer
               totalRequirements:
                 type: integer
-            required:
-            - children
-            - compliantChildren
-            - implementedRequirements
-            - totalChildren
-            - totalRequirements
             type: object
         type: object
     served: true

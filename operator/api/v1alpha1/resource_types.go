@@ -29,11 +29,22 @@ type ResourceSpec struct {
 
 // ResourceStatus defines the observed state of Resource
 type ResourceStatus struct {
-	TotalRequirements       int                      `json:"totalRequirements"`
-	ImplementedRequirements int                      `json:"implementedRequirements"`
-	Children                map[string]ResourceChild `json:"children"`
-	TotalChildren           int                      `json:"totalChildren"`
-	CompliantChildren       int                      `json:"compliantChildren"`
+	//+optional
+	TotalRequirements int `json:"totalRequirements,omitempty"`
+	//+optional
+	ImplementedRequirements int `json:"implementedRequirements,omitempty"`
+	//+optional
+	Children map[string]ResourceChild `json:"children,omitempty"`
+	//+optional
+	Requirements map[string]*ResourceRequirementCompliance `json:"requirements,omitempty"`
+	//+optional
+	TotalChildren int `json:"totalChildren,omitempty"`
+	//+optional
+	CompliantChildren int `json:"compliantChildren,omitempty"`
+}
+
+type ResourceRequirementCompliance struct {
+	Implemented bool `json:"implemented"`
 }
 
 // All parent relationship is flattened. TODO - maybe we want to have the whole hierarchy here?

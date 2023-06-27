@@ -13,4 +13,4 @@ spec:
   classes:
   - Myclass
   parents:
-  - resource2
+  - resource1

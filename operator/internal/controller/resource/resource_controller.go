@@ -20,9 +20,9 @@ import (
 	"context"
 	"time"
 
+	res "github.com/ContainerSolutions/argus/operator/internal/resource"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -45,47 +45,33 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
 	// Get Resource
 	resource := argusiov1alpha1.Resource{}
-	err := r.Get(ctx, req.NamespacedName, &resource)
+	err := r.Client.Get(ctx, req.NamespacedName, &resource)
 	if apierrors.IsNotFound(err) {
 		return ctrl.Result{}, nil
 	} else if err != nil {
 		log.Error(err, "could not get resource")
 		return ctrl.Result{}, nil
 	}
-
-	// Check Parents
-	for _, parentName := range resource.Spec.Parents {
-		parentResource := argusiov1alpha1.Resource{}
-		namespacedName := types.NamespacedName{
-			Name:      parentName,
-			Namespace: resource.Namespace,
-		}
-		// Get ResourceRequirements with labels matching this Resource
-		// TODO
-		// Update Compliant status based on ResourceRequirement Status
-		// TODO
-		// Update parent adding current as a Child
-		err := r.Get(ctx, namespacedName, &parentResource)
-		if err != nil {
-			log.Error(err, "could not get parent resource")
-			return ctrl.Result{}, err
-		}
-		original := parentResource.DeepCopy()
-		if parentResource.Status.Children == nil {
-			parentResource.Status.Children = make(map[string]argusiov1alpha1.ResourceChild)
-		}
-		parentResource.Status.Children[resource.Name] = argusiov1alpha1.ResourceChild{
-			Compliant: false,
-		}
-		parentResource.Status.CompliantChildren = 1
-		parentResource.Status.ImplementedRequirements = 1
-		parentResource.Status.TotalRequirements = 1
-		parentResource.Status.TotalChildren = 1
-		err = r.Status().Patch(ctx, &parentResource, client.MergeFrom(original))
-		if err != nil {
-			log.Error(err, "could not update parent resource children")
-		}
+	originalRes := resource.DeepCopy()
+	// Get ResourceRequirements with labels matching this Resource
+	resourceRequirementList := argusiov1alpha1.ResourceRequirementList{}
+	err = r.Client.List(ctx, &resourceRequirementList, client.MatchingLabels{"argus.io/resource": resource.Name})
+	if err != nil {
+		log.Error(err, "could not list ResourceRequirements to update compliance status for %v", resource.Name)
+		return ctrl.Result{}, err
 	}
+	res.UpdateRequirements(resourceRequirementList, &resource)
+	err = r.Client.Status().Patch(ctx, &resource, client.MergeFrom(originalRes))
+	if err != nil {
+		// Should we error here?
+		log.Error(err, "could not update resource Requirements")
+	}
+	err = res.UpdateChild(ctx, r.Client, &resource)
+	if err != nil {
+		// Should we error here?
+		log.Error(err, "could not update parent child definition")
+	}
+	// Check Parents
 	// TODO Make this a configuration
 	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
 }
