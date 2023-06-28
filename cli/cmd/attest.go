@@ -57,7 +57,10 @@ to quickly create a Cobra application.`,
 					}
 					for _, a := range i.Attestation {
 						line = fmt.Sprintf("Resource:\t%v\nRequirement:\t'%v'\nImplementation:\t'%v'\nAttestation:\t'%v'\nResult:\t", r.Name, req.Requirement.Name, i.Implementation.Name, a.Attestation.Name)
-						w.Write([]byte(line))
+						_, err := w.Write([]byte(line))
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "error happened while printing to output:%v", err)
+						}
 						attester, _ := attester.Init(a.Attestation.Type)
 						res, err := attester.Attest(a.Attestation)
 						if err != nil {
@@ -65,7 +68,10 @@ to quickly create a Cobra application.`,
 						}
 						a.Attested = res.Result == "PASS"
 						line = fmt.Sprintf("%v\n\n", res.Result)
-						w.Write([]byte(line))
+						_, err = w.Write([]byte(line))
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "error happened while printing to output:%v", err)
+						}
 						if a.Attested {
 							verifiedAttestations = verifiedAttestations + 1
 						}

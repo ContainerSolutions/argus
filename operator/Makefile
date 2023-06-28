@@ -10,11 +10,11 @@ RED          := $(shell printf "\033[31m")
 GREEN        := $(shell printf "\033[32m")
 CNone        := $(shell printf "\033[0m")
 
-INFO	= echo ${TIME} ${BLUE}[ .. ]${CNone}
-WARN	= echo ${TIME} ${YELLOW}[WARN]${CNone}
-ERR		= echo ${TIME} ${RED}[FAIL]${CNone}
-OK		= echo ${TIME} ${GREEN}[ OK ]${CNone}
-FAIL	= (echo ${TIME} ${RED}[FAIL]${CNone} && false)
+INFO    = echo ${TIME} ${BLUE}[ .. ]${CNone}
+WARN    = echo ${TIME} ${YELLOW}[WARN]${CNone}
+ERR     = echo ${TIME} ${RED}[FAIL]${CNone}
+OK      = echo ${TIME} ${GREEN}[ OK ]${CNone}
+FAIL    = (echo ${TIME} ${RED}[FAIL]${CNone} && false)
 
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)

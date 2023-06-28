@@ -32,7 +32,10 @@ func (t *JSONSummary) Summary(c *models.Configuration) {
 		}{r.Name, fmt.Sprint(r.Implemented), len(r.Requirements), r.ImplementedRequirements})
 	}
 	w := json.NewEncoder(os.Stdout)
-	w.Encode(d)
+	err := w.Encode(d)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error happened encoding:%v", err)
+	}
 }
 
 func (t *JSONSummary) Detailed(c *models.Configuration) {
@@ -109,10 +112,16 @@ func (t *JSONSummary) Detailed(c *models.Configuration) {
 
 	}
 	w := json.NewEncoder(os.Stdout)
-	w.Encode(d)
+	err := w.Encode(d)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error happened while encoding:%v", err)
+	}
 }
 
 func (t *JSONSummary) All(c *models.Configuration) {
 	w := json.NewEncoder(os.Stdout)
-	w.Encode(c.Resources)
+	err := w.Encode(c.Resources)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error happened while encoding:%v", err)
+	}
 }
