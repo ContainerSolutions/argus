@@ -119,7 +119,7 @@ jobs:
         run: |
           make -C ./operator test
 
-  ci-lint:
+  cli-lint:
     runs-on: ubuntu-latest
     needs: detect-noop
     if: needs.detect-noop.outputs.cli-noop != 'true'
