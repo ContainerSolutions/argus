@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"text/tabwriter"
 
 	"github.com/ContainerSolutions/argus/cli/pkg/attester"
 	"github.com/ContainerSolutions/argus/cli/pkg/results"
@@ -42,6 +43,8 @@ to quickly create a Cobra application.`,
 			fmt.Fprintf(os.Stderr, "could not load database: %v\n", err)
 			os.Exit(1)
 		}
+		w := tabwriter.NewWriter(os.Stdout, 10, 4, 2, ' ', 0)
+		var line string
 		for kkk, r := range config.Resources {
 			implementedRequirements := 0
 			for kk, req := range r.Requirements {
@@ -53,14 +56,16 @@ to quickly create a Cobra application.`,
 						totalImplementations = totalImplementations + 1
 					}
 					for _, a := range i.Attestation {
-						fmt.Printf("Resource: %v\nRequirement:'%v'\nImplementation: '%v'\nAttestation: '%v'\nResult: ", r.Name, req.Requirement.Name, i.Implementation.Name, a.Attestation.Name)
+						line = fmt.Sprintf("Resource:\t%v\nRequirement:\t'%v'\nImplementation:\t'%v'\nAttestation:\t'%v'\nResult:\t", r.Name, req.Requirement.Name, i.Implementation.Name, a.Attestation.Name)
+						w.Write([]byte(line))
 						attester, _ := attester.Init(a.Attestation.Type)
 						res, err := attester.Attest(a.Attestation)
 						if err != nil {
 							os.Exit(1)
 						}
 						a.Attested = res.Result == "PASS"
-						fmt.Printf("%v\n\n", res.Result)
+						line = fmt.Sprintf("%v\n\n", res.Result)
+						w.Write([]byte(line))
 						if a.Attested {
 							verifiedAttestations = verifiedAttestations + 1
 						}
@@ -90,6 +95,7 @@ to quickly create a Cobra application.`,
 			}
 			config.Resources[kkk] = r
 		}
+		w.Flush()
 		err = db.Save(config)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "could not save db after attestation: %v\n", err)
