@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/bash 
 
 fail=0
 az vm stop -g vm-lb-test -n $1
