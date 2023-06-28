@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"text/tabwriter"
 
 	"github.com/ContainerSolutions/argus/cli/pkg/models"
 	"github.com/ContainerSolutions/argus/cli/pkg/results/schema"
@@ -16,15 +17,15 @@ func init() {
 	schema.Register("tsv", &TSVSummary{})
 }
 func (t *TSVSummary) Summary(c *models.Configuration) {
-	records := [][]string{
-		{"Resource", "Status", "Total Requirements", "Implemented Requirements"},
-	}
+	w := tabwriter.NewWriter(os.Stdout, 10, 4, 2, ' ', 0)
+	var line string
+	line = fmt.Sprintf("Resource\tStatus\tTotal Requirements\tImplemented Requirements\n")
+	w.Write([]byte(line))
 	for _, r := range c.Resources {
-		records = append(records, []string{r.Name, fmt.Sprint(r.Implemented), fmt.Sprint(len(r.Requirements)), fmt.Sprint(r.ImplementedRequirements)})
+		line = fmt.Sprintf("%v\t%v\t%v\t%v\t\n", r.Name, r.Implemented, len(r.Requirements), r.ImplementedRequirements)
+		w.Write([]byte(line))
 	}
-	w := csv.NewWriter(os.Stdout)
-	w.Comma = '\t'
-	w.WriteAll(records) // calls Flush internally
+	w.Flush()
 }
 
 func (t *TSVSummary) All(c *models.Configuration) {
