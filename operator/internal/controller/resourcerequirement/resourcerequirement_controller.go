@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controller
+package resourcerequirement
 
 import (
 	"context"
@@ -27,26 +27,26 @@ import (
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 )
 
-// AttestationReconciler reconciles a Attestation object
-type AttestationReconciler struct {
+// ResourceRequirementReconciler reconciles a ResourceRequirement object
+type ResourceRequirementReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=argus.io,resources=attestations,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=argus.io,resources=attestations/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=argus.io,resources=attestations/finalizers,verbs=update
+//+kubebuilder:rbac:groups=argus.io,resources=resourcerequirements,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=argus.io,resources=resourcerequirements/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=argus.io,resources=resourcerequirements/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the Attestation object against the actual cluster state, and then
+// the ResourceRequirement object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.4/pkg/reconcile
-func (r *AttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *ResourceRequirementReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
@@ -55,8 +55,8 @@ func (r *AttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *AttestationReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *ResourceRequirementReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&argusiov1alpha1.Attestation{}).
+		For(&argusiov1alpha1.ResourceRequirement{}).
 		Complete(r)
 }

@@ -32,7 +32,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
-	"github.com/ContainerSolutions/argus/operator/internal/controller"
+	"github.com/ContainerSolutions/argus/operator/internal/controller/attestation"
+	"github.com/ContainerSolutions/argus/operator/internal/controller/implementation"
+	"github.com/ContainerSolutions/argus/operator/internal/controller/requirement"
+	"github.com/ContainerSolutions/argus/operator/internal/controller/resource"
+	"github.com/ContainerSolutions/argus/operator/internal/controller/resourceattestation"
+	"github.com/ContainerSolutions/argus/operator/internal/controller/resourceimplementation"
+	"github.com/ContainerSolutions/argus/operator/internal/controller/resourcerequirement"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -89,49 +95,49 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controller.AttestationReconciler{
+	if err = (&attestation.AttestationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Attestation")
 		os.Exit(1)
 	}
-	if err = (&controller.ImplementationReconciler{
+	if err = (&implementation.ImplementationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Implementation")
 		os.Exit(1)
 	}
-	if err = (&controller.RequirementReconciler{
+	if err = (&requirement.RequirementReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Requirement")
 		os.Exit(1)
 	}
-	if err = (&controller.ResourceReconciler{
+	if err = (&resource.Reconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Resource")
 		os.Exit(1)
 	}
-	if err = (&controller.ResourceRequirementReconciler{
+	if err = (&resourcerequirement.ResourceRequirementReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ResourceRequirement")
 		os.Exit(1)
 	}
-	if err = (&controller.ResourceAttestationReconciler{
+	if err = (&resourceattestation.ResourceAttestationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ResourceAttestation")
 		os.Exit(1)
 	}
-	if err = (&controller.ResourceImplementationReconciler{
+	if err = (&resourceimplementation.ResourceImplementationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
