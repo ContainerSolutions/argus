@@ -37,7 +37,11 @@ Must be run before program will work.`,
 			fmt.Fprintf(os.Stderr, "could not configure database: %v\n", err)
 			os.Exit(1)
 		}
-		resolver.Resolve(p)
+		_, err = resolver.Resolve(p)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Could not resolve configuration '%v': %v\n", p, err)
+			os.Exit(1)
+		}
 		err = db.Save(p)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Could not save configuration '%v': %v\n", p, err)

@@ -18,11 +18,17 @@ func init() {
 func (t *TSVSummary) Summary(c *models.Configuration) {
 	w := tabwriter.NewWriter(os.Stdout, 10, 4, 2, ' ', 0)
 	var line string
-	line = fmt.Sprintf("Resource\tStatus\tTotal Requirements\tImplemented Requirements\n")
-	w.Write([]byte(line))
+	line = "Resource\tStatus\tTotal Requirements\tImplemented Requirements\n"
+	_, err := w.Write([]byte(line))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error happened while printing to output:%v", err)
+	}
 	for _, r := range c.Resources {
 		line = fmt.Sprintf("%v\t%v\t%v\t%v\t\n", r.Name, r.Implemented, len(r.Requirements), r.ImplementedRequirements)
-		w.Write([]byte(line))
+		_, err := w.Write([]byte(line))
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error happened while printing to output:%v", err)
+		}
 	}
 	w.Flush()
 }
@@ -34,8 +40,11 @@ func (t *TSVSummary) All(c *models.Configuration) {
 func (t *TSVSummary) Detailed(c *models.Configuration) {
 	w := tabwriter.NewWriter(os.Stdout, 10, 4, 2, ' ', 0)
 	var line string
-	line = fmt.Sprintf("Resource\tRequirement\tImplementation\tAttestation\tEvaluated At\tResult\tLogs\n")
-	w.Write([]byte(line))
+	line = "Resource\tRequirement\tImplementation\tAttestation\tEvaluated At\tResult\tLogs\n"
+	_, err := w.Write([]byte(line))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error happened while printing to output:%v", err)
+	}
 	for _, r := range c.Resources {
 		printReq := "N/A"
 		printImp := "N/A"
@@ -45,19 +54,28 @@ func (t *TSVSummary) Detailed(c *models.Configuration) {
 		logs := "N/A"
 		if len(r.Requirements) == 0 {
 			line = fmt.Sprintf("%v\t%v\t%v\t%v\t%v\t%v\t%v\t\n", r.Name, printReq, printImp, printAtt, ranAt, result, logs)
-			w.Write([]byte(line))
+			_, err := w.Write([]byte(line))
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "error happened while printing to output:%v", err)
+			}
 		}
 		for _, req := range r.Requirements {
 			printReq = req.Requirement.Name
 			if len(req.Implementations) == 0 {
 				line = fmt.Sprintf("%v\t%v\t%v\t%v\t%v\t%v\t%v\t\n", r.Name, printReq, printImp, printAtt, ranAt, result, logs)
-				w.Write([]byte(line))
+				_, err := w.Write([]byte(line))
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "error happened while printing to output:%v", err)
+				}
 			}
 			for _, imp := range req.Implementations {
 				printImp = imp.Implementation.Name
 				if len(imp.Attestation) == 0 {
 					line = fmt.Sprintf("%v\t%v\t%v\t%v\t%v\t%v\t%v\t\n", r.Name, printReq, printImp, printAtt, ranAt, result, logs)
-					w.Write([]byte(line))
+					_, err := w.Write([]byte(line))
+					if err != nil {
+						fmt.Fprintf(os.Stderr, "error happened while printing to output:%v", err)
+					}
 				}
 				for _, ats := range imp.Attestation {
 					printAtt = ats.Attestation.Name
@@ -65,7 +83,10 @@ func (t *TSVSummary) Detailed(c *models.Configuration) {
 					result = ats.Attestation.Result.Result
 					logs = ats.Attestation.Result.Logs
 					line = fmt.Sprintf("%v\t%v\t%v\t%v\t%v\t%v\t%v\t\n", r.Name, printReq, printImp, printAtt, ranAt, result, logs)
-					w.Write([]byte(line))
+					_, err := w.Write([]byte(line))
+					if err != nil {
+						fmt.Fprintf(os.Stderr, "error happened while printing to output:%v", err)
+					}
 				}
 			}
 		}

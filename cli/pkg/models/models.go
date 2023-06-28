@@ -46,7 +46,6 @@ type Requirement struct {
 	Category                      string   `json:"category"`
 	ApplicableResourceClasses     []string `json:"applicableResourceClasses"`
 	RequiredImplementationClasses []string `json:"requiredImplementationClasses"`
-	requirementVersion            string
 }
 
 type RequirementRef struct {
@@ -54,11 +53,10 @@ type RequirementRef struct {
 	Version string `json:"version"`
 }
 type Implementation struct {
-	Name                    string         `json:"name"`
-	Class                   string         `json:"class"`
-	RequirementRef          RequirementRef `json:"requirementRef"`
-	ResourceRef             []string       `json:"resourceRef"`
-	boundRequirementVersion string
+	Name           string         `json:"name"`
+	Class          string         `json:"class"`
+	RequirementRef RequirementRef `json:"requirementRef"`
+	ResourceRef    []string       `json:"resourceRef"`
 }
 
 type Attestation struct {
