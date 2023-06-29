@@ -18,6 +18,9 @@ package requirement
 
 import (
 	"context"
+	"crypto/sha512"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -66,11 +69,23 @@ func (r *RequirementReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not remove uneeded resourcerequirements: %w", err)
 	}
-	err = reqlib.CreateOrUpdateResourceRequirements(ctx, r.Client, &requirement, resources)
+	children, err := reqlib.CreateOrUpdateResourceRequirements(ctx, r.Client, &requirement, resources)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not create ResourceRequirement for requirement '%v': %w", requirement.Name, err)
 	}
-	// TODO - Updating Requirement status from ResourceRequirement list
+	// Update Requirement Status
+	original := requirement.DeepCopy()
+	requirement.Status.Childs = children
+	requirementSpecbytes, err := json.Marshal(requirement.Spec)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not marshal requirement spec: %w", err)
+	}
+	hexSHA := sha512.Sum512(requirementSpecbytes)
+	requirement.Status.RequirementHash = hex.EncodeToString(hexSHA[:])
+	err = r.Client.Status().Patch(ctx, &requirement, client.MergeFrom(original))
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)
+	}
 	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
 }
 
