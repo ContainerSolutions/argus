@@ -11,26 +11,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func GetResourcesFromRequirement(ctx context.Context, cl client.Client, requirement *argusiov1alpha1.Requirement) ([]argusiov1alpha1.Resource, error) {
-	resourceList := argusiov1alpha1.ResourceList{}
-	err := cl.List(ctx, &resourceList)
-	if err != nil {
-		return nil, fmt.Errorf("could not list Resources CR: %w", err)
-	}
-	resList := []argusiov1alpha1.Resource{}
-	for _, resource := range resourceList.Items {
-		// if utils.ContainsOne(requirement.Spec.ApplicableResourceClasses, resource.Spec.Classes) {
-		resList = append(resList, resource)
-		// }
-	}
-	return resList, nil
-}
-
 func GetResourceRequirementsFromRequirement(ctx context.Context, cl client.Client, requirement *argusiov1alpha1.Requirement) (map[string]argusiov1alpha1.ResourceRequirement, error) {
 	resourceRequirementList := argusiov1alpha1.ResourceRequirementList{}
 	err := cl.List(ctx, &resourceRequirementList, client.MatchingLabels{"argus.io/requirement": fmt.Sprintf("%v_%v", requirement.Spec.Definition.Code, requirement.Spec.Definition.Version)})
 	if err != nil {
-		return nil, fmt.Errorf("could not list ResourceRequirement CR: %w", err)
+		return nil, fmt.Errorf("could not list ResourceRequirements: %w", err)
 	}
 	resReqs := make(map[string]argusiov1alpha1.ResourceRequirement)
 	for _, resourceRequirement := range resourceRequirementList.Items {

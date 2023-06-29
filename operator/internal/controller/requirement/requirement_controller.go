@@ -52,10 +52,12 @@ func (r *RequirementReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "could not get resource")
 		return ctrl.Result{}, nil
 	}
-	resources, err := reqlib.GetResourcesFromRequirement(ctx, r.Client, &requirement)
+	resourceList := argusiov1alpha1.ResourceList{}
+	err = r.Client.List(ctx, &resourceList)
 	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("could not get resources for requirement '%v': %w", requirement.Name, err)
+		return ctrl.Result{}, fmt.Errorf("could not list Resources CR: %w", err)
 	}
+	resources := resourceList.Items
 	currentResReqs, err := reqlib.GetResourceRequirementsFromRequirement(ctx, r.Client, &requirement)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not get resourcesrequiements for requirement '%v': %w", requirement.Name, err)
