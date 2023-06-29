@@ -54,10 +54,6 @@ func LifecycleResourceRequirements(ctx context.Context, cl client.Client, classe
 		}
 		// If resource Class has changed, we need to delete ResourceRequirement
 		for _, resource := range resources {
-			refResource, ok := resourceRequirement.ObjectMeta.Labels["argus.io/resource"]
-			if !ok {
-				return fmt.Errorf("object '%v' does not contain expected label 'argus.io/resource'", resourceRequirement.Name)
-			}
 			if refResource == resource.Name && !utils.Contains(resource.Spec.Classes, class) {
 				err := cl.Delete(ctx, &resourceRequirement)
 				if err != nil {
