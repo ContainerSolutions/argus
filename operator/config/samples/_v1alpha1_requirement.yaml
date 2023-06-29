@@ -9,4 +9,13 @@ metadata:
     app.kubernetes.io/created-by: operator
   name: requirement-sample
 spec:
-  # TODO(user): Add fields here
+  definition: 
+    version: 1.0.0
+    code: REQ-01
+    class: "Security"
+    category: "Internal"
+  applicableResourceClasses:
+  - Myclass
+  - Myclass2
+  requiredImplementationClasses:
+  - PreventativeControl

@@ -18,40 +18,58 @@ package requirement
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	reqlib "github.com/ContainerSolutions/argus/operator/internal/requirement"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
+	"github.com/go-logr/logr"
 )
 
 // RequirementReconciler reconciles a Requirement object
 type RequirementReconciler struct {
 	client.Client
+	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=argus.io,resources=requirements,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=argus.io,resources=requirements/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=argus.io,resources=requirements/finalizers,verbs=update
-
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
-// move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the Requirement object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.4/pkg/reconcile
+// +kubebuilder:rbac:groups=argus.io,resources=requirements,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=argus.io,resources=requirements/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=argus.io,resources=requirements/finalizers,verbs=update
 func (r *RequirementReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
-
-	// TODO(user): your logic here
-
-	return ctrl.Result{}, nil
+	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
+	// Get Resource
+	requirement := argusiov1alpha1.Requirement{}
+	err := r.Client.Get(ctx, req.NamespacedName, &requirement)
+	if apierrors.IsNotFound(err) {
+		return ctrl.Result{}, nil
+	} else if err != nil {
+		log.Error(err, "could not get resource")
+		return ctrl.Result{}, nil
+	}
+	resources, err := reqlib.GetResourcesFromRequirement(ctx, r.Client, &requirement)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not get resources for requirement '%v': %w", requirement.Name, err)
+	}
+	currentResReqs, err := reqlib.GetResourceRequirementsFromRequirement(ctx, r.Client, &requirement)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not get resourcesrequiements for requirement '%v': %w", requirement.Name, err)
+	}
+	err = reqlib.LifecycleResourceRequirements(ctx, r.Client, requirement.Spec.ApplicableResourceClasses, resources, currentResReqs)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not remove uneeded resourcerequirements: %w", err)
+	}
+	err = reqlib.CreateOrUpdateResourceRequirements(ctx, r.Client, &requirement, resources)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not create ResourceRequirement for requirement '%v': %w", requirement.Name, err)
+	}
+	// TODO - Updating Requirement status from ResourceRequirement list
+	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

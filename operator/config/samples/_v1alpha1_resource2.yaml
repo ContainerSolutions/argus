@@ -11,6 +11,6 @@ metadata:
 spec:
   type: my-resource
   classes:
-  - Myclass
+  - Myclass2
   parents:
   - resource1
