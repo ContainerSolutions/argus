@@ -149,6 +149,7 @@ func makeNewResourceImplementation(f ...implementationFn) *argusiov1alpha1.Resou
 			APIVersion: "argus.io/v1alpha1",
 		},
 		Spec: argusiov1alpha1.ResourceImplementationSpec{
+			Class: "implementation",
 			RequirementRef: argusiov1alpha1.ImplementationRequirementDefinition{
 				Code:    "test",
 				Version: "v1",
