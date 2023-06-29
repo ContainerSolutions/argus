@@ -255,6 +255,65 @@ func TestLifecycleResourceRequirements(t *testing.T) {
 	}
 }
 
+func TestCreateOrUpdateResourceRequirements(t *testing.T) {
+	commonScheme := runtime.NewScheme()
+	err := argusiov1alpha1.AddToScheme(commonScheme)
+	require.Nil(t, err)
+	testCases := []struct {
+		name          string
+		requirement   *argusiov1alpha1.Requirement
+		resources     []argusiov1alpha1.Resource
+		expectedError string
+		cl            client.Client
+	}{
+		{
+			name:        "no requirements, no resources",
+			cl:          fake.NewClientBuilder().WithScheme(commonScheme).Build(),
+			requirement: &argusiov1alpha1.Requirement{},
+			resources:   []argusiov1alpha1.Resource{},
+		},
+		{
+			name:        "no resources",
+			cl:          fake.NewClientBuilder().WithScheme(commonScheme).Build(),
+			requirement: makeRequirement(),
+			resources:   []argusiov1alpha1.Resource{},
+		},
+		{
+			name:        "resource does not contain class",
+			cl:          fake.NewClientBuilder().WithScheme(commonScheme).Build(),
+			requirement: makeRequirement(),
+			resources:   []argusiov1alpha1.Resource{*makeResource(WithClasses([]string{"class2"}))},
+		},
+		{
+			name:        "resourcerequirement is created",
+			cl:          fake.NewClientBuilder().WithScheme(commonScheme).Build(),
+			requirement: makeRequirement(),
+			resources:   []argusiov1alpha1.Resource{*makeResource()},
+		},
+		{
+			name:          "resourcerequirement creation error",
+			cl:            fake.NewClientBuilder().WithScheme(runtime.NewScheme()).Build(),
+			requirement:   makeRequirement(),
+			resources:     []argusiov1alpha1.Resource{*makeResource()},
+			expectedError: "could not create resourcerequirement 'foo-resource'",
+		},
+	}
+	for i := range testCases {
+		testCase := testCases[i]
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			err := CreateOrUpdateResourceRequirements(context.Background(), testCase.cl, testCase.requirement, testCase.resources)
+			if testCase.expectedError == "" {
+				require.NoError(t, err)
+			} else {
+				assert.ErrorContains(t, err, testCase.expectedError)
+			}
+		})
+	}
+}
+
+// Helpers
+
 type mutateFunc func(*argusiov1alpha1.ResourceRequirement)
 
 func WithLabels(labels map[string]string) mutateFunc {
@@ -310,6 +369,33 @@ func makeResource(f ...resourceMutateFn) *argusiov1alpha1.Resource {
 		Spec: argusiov1alpha1.ResourceSpec{
 			Parents: []string{"parent"},
 			Classes: []string{"class1"},
+		},
+	}
+	for _, fn := range f {
+		fn(a)
+	}
+	return a
+}
+
+type requirementMutateFn func(*argusiov1alpha1.Requirement)
+
+func makeRequirement(f ...requirementMutateFn) *argusiov1alpha1.Requirement {
+	a := &argusiov1alpha1.Requirement{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "foo",
+			Namespace: "bar",
+		},
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Requirement",
+			APIVersion: "argus.io/v1alpha1",
+		},
+		Spec: argusiov1alpha1.RequirementSpec{
+			Definition: argusiov1alpha1.RequirementDefinition{
+				Code:    "foo",
+				Version: "v1",
+			},
+			ApplicableResourceClasses:     []string{"class1"},
+			RequiredImplementationClasses: []string{"implementation"},
 		},
 	}
 	for _, fn := range f {
