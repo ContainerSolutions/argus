@@ -73,13 +73,4 @@ func init() {
 	rootCmd.AddCommand(reportCmd)
 	reportCmd.Flags().StringVarP(&mode, "mode", "m", "summary", "type of report. Possible values are 'summary' or 'detailed'")
 	reportCmd.Flags().StringVarP(&output, "output", "o", "tsv", "command output. possible values are 'tsv' or 'json'")
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// reportCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// reportCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
