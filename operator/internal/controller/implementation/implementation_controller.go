@@ -18,40 +18,66 @@ package implementation
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
+	lib "github.com/ContainerSolutions/argus/operator/internal/implementation"
+	"github.com/go-logr/logr"
 )
 
 // ImplementationReconciler reconciles a Implementation object
 type ImplementationReconciler struct {
 	client.Client
+	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=argus.io,resources=implementations,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=argus.io,resources=implementations/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=argus.io,resources=implementations/finalizers,verbs=update
-
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
-// move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the Implementation object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.4/pkg/reconcile
+// +kubebuilder:rbac:groups=argus.io,resources=implementations,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=argus.io,resources=implementations/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=argus.io,resources=implementations/finalizers,verbs=update
 func (r *ImplementationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
-
-	// TODO(user): your logic here
-
-	return ctrl.Result{}, nil
+	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
+	// Get Resource
+	res := argusiov1alpha1.Implementation{}
+	err := r.Client.Get(ctx, req.NamespacedName, &res)
+	if apierrors.IsNotFound(err) {
+		return ctrl.Result{}, nil
+	} else if err != nil {
+		log.Error(err, "could not get resource")
+		return ctrl.Result{}, nil
+	}
+	resourceList := argusiov1alpha1.ResourceList{}
+	err = r.Client.List(ctx, &resourceList)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not list Resources CR: %w", err)
+	}
+	resources := resourceList.Items
+	currentImplementations, err := lib.GetResourceImplementations(ctx, r.Client, &res)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not get ResourceImplementation for requirement '%v': %w", res.Name, err)
+	}
+	err = lib.LifecycleResourceImplementations(ctx, r.Client, resources, currentImplementations)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not remove uneeded resourcerequirements: %w", err)
+	}
+	children, err := lib.CreateOrUpdateResourceImplementations(ctx, r.Client, &res, resources)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not create ResourceImplementation for requirement '%v': %w", res.Name, err)
+	}
+	// Update Requirement Status
+	original := res.DeepCopy()
+	res.Status.Childs = children
+	err = r.Client.Status().Patch(ctx, &res, client.MergeFrom(original))
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)
+	}
+	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

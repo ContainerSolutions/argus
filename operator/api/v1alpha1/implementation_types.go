@@ -27,12 +27,10 @@ import (
 type ImplementationSpec struct {
 	Class string `json:"class"`
 	//+default="Cascade"
-	CascadePolicy  ImplementationCascadePolicy `json:"cascadePolicy"`
-	RequirementRef NamespacedName              `json:"requirementRef"`
-	ResourceRef    []NamespacedName            `json:"resourceRef"`
+	CascadePolicy  ImplementationCascadePolicy         `json:"cascadePolicy"`
+	RequirementRef ImplementationRequirementDefinition `json:"requirementRef"`
+	ResourceRef    []NamespacedName                    `json:"resourceRef"`
 }
-
-// TODO - Use NamespacedName here
 
 type ImplementationCascadePolicy string
 
@@ -43,13 +41,8 @@ const (
 
 // ImplementationStatus defines the observed state of Implementation
 type ImplementationStatus struct {
-	Childs []ResourceImplementationChilds `json:"childs"`
-	Status string                         `json:"status"`
-}
-
-type ResourceImplementationChilds struct {
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
+	Childs []NamespacedName `json:"childs"`
+	Status string           `json:"status"`
 }
 
 //+kubebuilder:object:root=true

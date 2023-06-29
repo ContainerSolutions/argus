@@ -24,7 +24,6 @@ import (
 type ResourceImplementationSpec struct {
 	Class          string                              `json:"class"`
 	RequirementRef ImplementationRequirementDefinition `json:"requirementRef"`
-	ResourceRef    NamespacedName                      `json:"resourceRef"`
 }
 
 type ImplementationRequirementDefinition struct {

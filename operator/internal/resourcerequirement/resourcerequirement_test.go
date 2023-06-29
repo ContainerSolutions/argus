@@ -154,10 +154,6 @@ func makeNewResourceImplementation(f ...implementationFn) *argusiov1alpha1.Resou
 				Code:    "test",
 				Version: "v1",
 			},
-			ResourceRef: argusiov1alpha1.NamespacedName{
-				Name:      "resource",
-				Namespace: "test",
-			},
 		},
 		Status: argusiov1alpha1.ResourceImplementationStatus{
 			TotalAttestations:  1,
