@@ -40,7 +40,6 @@ spec:
               class:
                 type: string
               requirementRef:
-                description: TODO - Use NamespacedName here
                 properties:
                   name:
                     type: string

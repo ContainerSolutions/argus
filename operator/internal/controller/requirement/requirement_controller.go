@@ -76,7 +76,7 @@ func (r *RequirementReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	// Update Requirement Status
 	original := requirement.DeepCopy()
 	requirement.Status.Childs = children
-	requirementSpecbytes, err := json.Marshal(requirement.Spec)
+	requirementSpecbytes, err := json.Marshal(requirement.Spec.Definition)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not marshal requirement spec: %w", err)
 	}

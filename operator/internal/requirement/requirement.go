@@ -65,8 +65,8 @@ func LifecycleResourceRequirements(ctx context.Context, cl client.Client, classe
 	return nil
 }
 
-func CreateOrUpdateResourceRequirements(ctx context.Context, cl client.Client, req *argusiov1alpha1.Requirement, resources []argusiov1alpha1.Resource) ([]argusiov1alpha1.ResourceRequirementChilds, error) {
-	all := []argusiov1alpha1.ResourceRequirementChilds{}
+func CreateOrUpdateResourceRequirements(ctx context.Context, cl client.Client, req *argusiov1alpha1.Requirement, resources []argusiov1alpha1.Resource) ([]argusiov1alpha1.NamespacedName, error) {
+	all := []argusiov1alpha1.NamespacedName{}
 	for _, class := range req.Spec.ApplicableResourceClasses {
 		for _, resource := range resources {
 			if utils.Contains(resource.Spec.Classes, class) {
@@ -90,7 +90,7 @@ func CreateOrUpdateResourceRequirements(ctx context.Context, cl client.Client, r
 				if err != nil {
 					return nil, fmt.Errorf("could not create resourcerequirement '%v': %w", resReq.Name, err)
 				}
-				child := argusiov1alpha1.ResourceRequirementChilds{
+				child := argusiov1alpha1.NamespacedName{
 					Name:      resReq.Name,
 					Namespace: resReq.Namespace,
 				}

@@ -27,20 +27,12 @@ import (
 type ImplementationSpec struct {
 	Class string `json:"class"`
 	//+default="Cascade"
-	CascadePolicy  ImplementationCascadePolicy  `json:"cascadePolicy"`
-	RequirementRef ImplementationRequirementRef `json:"requirementRef"`
-	ResourceRef    []ImplementationResourceRef  `json:"resourceRef"`
+	CascadePolicy  ImplementationCascadePolicy `json:"cascadePolicy"`
+	RequirementRef NamespacedName              `json:"requirementRef"`
+	ResourceRef    []NamespacedName            `json:"resourceRef"`
 }
 
 // TODO - Use NamespacedName here
-type ImplementationRequirementRef struct {
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
-}
-type ImplementationResourceRef struct {
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
-}
 
 type ImplementationCascadePolicy string
 

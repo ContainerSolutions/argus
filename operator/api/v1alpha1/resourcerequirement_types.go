@@ -28,11 +28,16 @@ type ResourceRequirementSpec struct {
 
 // ResourceRequirementStatus defines the observed state of ResourceRequirement
 type ResourceRequirementStatus struct {
-	ApplicableResourceImplementations []ResourceRequirementChilds `json:"applicableResourceImplementations"`
-	TotalImplementations              int                         `json:"totalImplementations"`
-	ValidImplementations              int                         `json:"validImplementations"`
-	Status                            string                      `json:"status"`
-	RequirementHash                   string                      `json:"requirementHash"`
+	//+optional
+	ApplicableResourceImplementations []NamespacedName `json:"applicableResourceImplementations,omitempty"`
+	//+optional
+	TotalImplementations int `json:"totalImplementations,omitempty"`
+	//+optional
+	ValidImplementations int `json:"validImplementations,omitempty"`
+	//+optional
+	Status string `json:"status,omitempty"`
+	//+optional
+	RequirementHash string `json:"requirementHash,omitempty"`
 }
 
 //+kubebuilder:object:root=true

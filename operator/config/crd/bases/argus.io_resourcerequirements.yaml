@@ -83,12 +83,6 @@ spec:
                 type: integer
               validImplementations:
                 type: integer
-            required:
-            - applicableResourceImplementations
-            - requirementHash
-            - status
-            - totalImplementations
-            - validImplementations
             type: object
         type: object
     served: true

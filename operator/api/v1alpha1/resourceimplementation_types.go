@@ -22,9 +22,14 @@ import (
 
 // ResourceImplementationSpec defines the desired state of ResourceImplementation
 type ResourceImplementationSpec struct {
-	Class          string                       `json:"class"`
-	RequirementRef ImplementationRequirementRef `json:"requirementRef"`
-	ResourceRef    ImplementationResourceRef    `json:"resourceRef"`
+	Class          string                              `json:"class"`
+	RequirementRef ImplementationRequirementDefinition `json:"requirementRef"`
+	ResourceRef    NamespacedName                      `json:"resourceRef"`
+}
+
+type ImplementationRequirementDefinition struct {
+	Code    string `json:"code"`
+	Version string `json:"version"`
 }
 
 // ResourceImplementationStatus defines the observed state of ResourceImplementation
