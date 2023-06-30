@@ -646,10 +646,8 @@ func (in *ResourceImplementationStatus) DeepCopyInto(out *ResourceImplementation
 	*out = *in
 	if in.ResourceAttestations != nil {
 		in, out := &in.ResourceAttestations, &out.ResourceAttestations
-		*out = make([]ResourceAttestation, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
+		*out = make([]NamespacedName, len(*in))
+		copy(*out, *in)
 	}
 }
 

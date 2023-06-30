@@ -33,7 +33,7 @@ func GetValidResourceImplementations(ctx context.Context, cl client.Client, res 
 				if implementation.Status.TotalAttestations == implementation.Status.PassedAttestations && implementation.Status.TotalAttestations > 0 {
 					valid = valid + 1
 				}
-			}	
+			}
 		}
 	}
 	return total, valid, nil

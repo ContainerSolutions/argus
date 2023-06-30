@@ -33,9 +33,12 @@ type ImplementationRequirementDefinition struct {
 
 // ResourceImplementationStatus defines the observed state of ResourceImplementation
 type ResourceImplementationStatus struct {
-	ResourceAttestations []ResourceAttestation `json:"resourceAttestations"`
-	TotalAttestations    int                   `json:"totalAttestations"`
-	PassedAttestations   int                   `json:"passedAttestations"`
+	//+optional
+	ResourceAttestations []NamespacedName `json:"resourceAttestations,omitempty"`
+	//+optional
+	TotalAttestations int `json:"totalAttestations,omitempty"`
+	//+optional
+	PassedAttestations int `json:"passedAttestations,omitempty"`
 }
 
 //+kubebuilder:object:root=true

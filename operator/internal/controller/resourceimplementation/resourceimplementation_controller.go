@@ -18,18 +18,22 @@ package resourceimplementation
 
 import (
 	"context"
+	"fmt"
 
+	lib "github.com/ContainerSolutions/argus/operator/internal/resourceimplementation"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
+	"github.com/go-logr/logr"
 )
 
 // ResourceImplementationReconciler reconciles a ResourceImplementation object
 type ResourceImplementationReconciler struct {
 	client.Client
+	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
@@ -37,20 +41,30 @@ type ResourceImplementationReconciler struct {
 //+kubebuilder:rbac:groups=argus.io,resources=resourceimplementations/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=argus.io,resources=resourceimplementations/finalizers,verbs=update
 
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
-// move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the ResourceImplementation object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.4/pkg/reconcile
 func (r *ResourceImplementationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
-
-	// TODO(user): your logic here
-
+	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
+	// Get Resource
+	res := argusiov1alpha1.ResourceImplementation{}
+	err := r.Client.Get(ctx, req.NamespacedName, &res)
+	if apierrors.IsNotFound(err) {
+		return ctrl.Result{}, nil
+	} else if err != nil {
+		log.Error(err, "could not get resource")
+		return ctrl.Result{}, nil
+	}
+	attestations, err := lib.ListResourceAttestations(ctx, r.Client, &res)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not list ResourceAttestations: %w", err)
+	}
+	children, valid := lib.GetValidResourceAttestations(ctx, attestations)
+	original := res.DeepCopy()
+	res.Status.ResourceAttestations = children
+	res.Status.TotalAttestations = len(children)
+	res.Status.PassedAttestations = valid
+	err = r.Client.Status().Patch(ctx, &res, client.MergeFrom(original))
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)
+	}
 	return ctrl.Result{}, nil
 }
 

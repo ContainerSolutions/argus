@@ -41,8 +41,10 @@ const (
 
 // ImplementationStatus defines the observed state of Implementation
 type ImplementationStatus struct {
-	Childs []NamespacedName `json:"childs"`
-	Status string           `json:"status"`
+	//+optional
+	Childs []NamespacedName `json:"childs,omitempty"`
+	//+optional
+	Status string `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

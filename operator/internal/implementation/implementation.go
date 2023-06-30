@@ -70,7 +70,7 @@ func CreateOrUpdateResourceImplementations(ctx context.Context, cl client.Client
 	}
 	for _, resourceName := range resourceNameList {
 		resource := resourceMap[resourceName]
-		resImp := &argusiov1alpha1.Implementation{
+		resImp := &argusiov1alpha1.ResourceImplementation{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      fmt.Sprintf("%v-%v", res.Name, resource.Name),
 				Namespace: res.Namespace,
@@ -78,7 +78,6 @@ func CreateOrUpdateResourceImplementations(ctx context.Context, cl client.Client
 		}
 		emptyMutation := func() error {
 			resImp.Spec.RequirementRef = res.Spec.RequirementRef
-			resImp.Spec.CascadePolicy = res.Spec.CascadePolicy
 			resImp.Spec.Class = res.Spec.Class
 			resImp.ObjectMeta.Labels = map[string]string{
 				"argus.io/implementation": res.Name,
