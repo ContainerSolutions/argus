@@ -15,7 +15,7 @@ jobs:
   detect-noop:
     runs-on: ubuntu-latest
     outputs:
-      cli-noop: ${{ steps.ci-noop.outputs.should_skip }}
+      cli-noop: ${{ steps.cli-noop.outputs.should_skip }}
       operator-noop: ${{ steps.operator-noop.outputs.should_skip }}
     steps:
       - name: Detect CLI Noop Changes
