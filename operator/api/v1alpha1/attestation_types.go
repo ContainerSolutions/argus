@@ -22,18 +22,11 @@ import (
 
 // AttestationSpec defines the desired state of Attestation
 type AttestationSpec struct {
-	Type              AttestationType     `json:"type"`
-	ImplementationRef string              `json:"implementationRef"`
-	ProviderRef       AttestationProvider `json:"providerRef"`
+	ImplementationRef string                 `json:"implementationRef"`
+	ProviderRef       AttestationProviderRef `json:"providerRef"`
 }
 
-type AttestationProvider struct {
-	Kind      string `json:"kind"`
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
-}
-
-type AttestationType struct {
+type AttestationProviderRef struct {
 	Kind      string `json:"kind"`
 	Name      string `json:"name"`
 	Namespace string `json:"namespace"`

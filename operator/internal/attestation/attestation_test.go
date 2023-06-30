@@ -234,12 +234,7 @@ func makeAttestation(f ...attestationMutationFn) *argusiov1alpha1.Attestation {
 		},
 		Spec: argusiov1alpha1.AttestationSpec{
 			ImplementationRef: "implementation",
-			Type: argusiov1alpha1.AttestationType{
-				Kind:      "foo",
-				Name:      "bar",
-				Namespace: "weird",
-			},
-			ProviderRef: argusiov1alpha1.AttestationProvider{
+			ProviderRef: argusiov1alpha1.AttestationProviderRef{
 				Kind:      "foo",
 				Name:      "bar",
 				Namespace: "bing",
@@ -288,7 +283,7 @@ func makeResourceAttestation(f ...resourceAttestationMutationFn) *argusiov1alpha
 			APIVersion: "argus.io/v1alpha1",
 		},
 		Spec: argusiov1alpha1.ResourceAttestationSpec{
-			ProviderRef: argusiov1alpha1.AttestationProvider{
+			ProviderRef: argusiov1alpha1.AttestationProviderRef{
 				Name:      "test",
 				Kind:      "fake",
 				Namespace: "test",

@@ -22,8 +22,8 @@ import (
 
 // ResourceAttestationSpec defines the desired state of ResourceAttestation
 type ResourceAttestationSpec struct {
-	ProviderRef AttestationProvider `json:"providerRef"`
-	ResourceRef ResourceRef         `json:"resourceRef"`
+	ProviderRef AttestationProviderRef `json:"providerRef"`
+	ResourceRef ResourceRef            `json:"resourceRef"`
 }
 
 type ResourceRef struct {
