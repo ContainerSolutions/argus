@@ -9,4 +9,13 @@ metadata:
     app.kubernetes.io/created-by: operator
   name: attestation-sample
 spec:
-  # TODO(user): Add fields here
+  implementationRef: "implementation-sample"
+  providerRef: 
+    kind: foo
+    name: bar
+    namespace: baz
+  type:
+    kind: foo
+    name: bar
+    namespace: baz
+

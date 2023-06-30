@@ -62,7 +62,11 @@ func (r *ImplementationReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not get ResourceImplementation for requirement '%v': %w", res.Name, err)
 	}
-	err = lib.LifecycleResourceImplementations(ctx, r.Client, resources, currentImplementations)
+	newList, err := lib.BuildResourceImplementationList(ctx, &res, resources)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not build list : %w", err)
+	}
+	err = lib.LifecycleResourceImplementations(ctx, r.Client, newList, currentImplementations)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not remove uneeded resourcerequirements: %w", err)
 	}

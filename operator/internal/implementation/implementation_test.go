@@ -70,45 +70,39 @@ func TestLifecycleResourceImplementations(t *testing.T) {
 	testCases := []struct {
 		name          string
 		resources     []argusiov1alpha1.Resource
-		items         map[string]argusiov1alpha1.ResourceImplementation
-		expectedError string
+		old           map[string]argusiov1alpha1.ResourceImplementation
+		new           map[string]argusiov1alpha1.ResourceImplementation
 		cl            client.Client
+		expectedError string
 	}{
 		{
 			name:      "noop",
 			resources: []argusiov1alpha1.Resource{},
-			items:     map[string]argusiov1alpha1.ResourceImplementation{},
+			old:       map[string]argusiov1alpha1.ResourceImplementation{},
+			new:       map[string]argusiov1alpha1.ResourceImplementation{},
 			cl:        fake.NewClientBuilder().WithScheme(commonScheme).Build(),
 		},
 		{
-			name:      "noop with resource",
-			resources: []argusiov1alpha1.Resource{*makeResource()},
-			items:     map[string]argusiov1alpha1.ResourceImplementation{},
-			cl:        fake.NewClientBuilder().WithScheme(commonScheme).Build(),
+			name: "noop with resource",
+			old:  map[string]argusiov1alpha1.ResourceImplementation{},
+			new: map[string]argusiov1alpha1.ResourceImplementation{
+				"test": *makeResourceImplementation()},
+			cl: fake.NewClientBuilder().WithScheme(commonScheme).Build(),
 		},
 		{
 			name:      "no resources",
 			resources: []argusiov1alpha1.Resource{},
-			items: map[string]argusiov1alpha1.ResourceImplementation{
-				"foo": *makeResourceImplementation(),
-			},
+			new:       map[string]argusiov1alpha1.ResourceImplementation{},
+			old: map[string]argusiov1alpha1.ResourceImplementation{
+				"test": *makeResourceImplementation()},
 			cl: fake.NewClientBuilder().WithScheme(commonScheme).WithObjects(makeResourceImplementation()).Build(),
-		},
-		{
-			name:      "implementation with no label",
-			resources: []argusiov1alpha1.Resource{},
-			items: map[string]argusiov1alpha1.ResourceImplementation{
-				"foo": *makeResourceImplementation(WithLabels(map[string]string{})),
-			},
-			cl:            fake.NewClientBuilder().WithScheme(commonScheme).WithObjects(makeResourceImplementation()).Build(),
-			expectedError: "object 'test' does not contain expected label 'argus.io/resource'",
 		},
 		{
 			name:      "delete failure",
 			resources: []argusiov1alpha1.Resource{},
-			items: map[string]argusiov1alpha1.ResourceImplementation{
-				"foo": *makeResourceImplementation(),
-			},
+			new:       map[string]argusiov1alpha1.ResourceImplementation{},
+			old: map[string]argusiov1alpha1.ResourceImplementation{
+				"test": *makeResourceImplementation()},
 			cl:            fake.NewClientBuilder().WithScheme(runtime.NewScheme()).Build(),
 			expectedError: "could not delete ResourceImplementation",
 		},
@@ -117,7 +111,7 @@ func TestLifecycleResourceImplementations(t *testing.T) {
 		testCase := testCases[i]
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			err := LifecycleResourceImplementations(context.Background(), testCase.cl, testCase.resources, testCase.items)
+			err := LifecycleResourceImplementations(context.Background(), testCase.cl, testCase.new, testCase.old)
 			if testCase.expectedError == "" {
 				require.NoError(t, err)
 			} else {

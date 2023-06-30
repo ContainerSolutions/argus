@@ -41,13 +41,10 @@ type AttestationType struct {
 
 // AttestationStatus defines the observed state of Attestation
 type AttestationStatus struct {
-	Childs []ResourceAttestationChild `json:"result"`
-	Status string                     `json:"status"`
-}
-
-type ResourceAttestationChild struct {
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
+	//+optional
+	Childs []NamespacedName `json:"result,omitempty"`
+	//+optional
+	Status string `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
