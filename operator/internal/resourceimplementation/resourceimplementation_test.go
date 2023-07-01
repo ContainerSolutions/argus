@@ -197,7 +197,6 @@ func makeResourceAttestation(f ...resourceAttestationMutationFn) *argusiov1alpha
 		Spec: argusiov1alpha1.ResourceAttestationSpec{
 			ProviderRef: argusiov1alpha1.AttestationProviderRef{
 				Name:      "test",
-				Kind:      "fake",
 				Namespace: "test",
 			},
 		},

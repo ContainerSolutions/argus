@@ -27,7 +27,6 @@ type AttestationSpec struct {
 }
 
 type AttestationProviderRef struct {
-	Kind      string `json:"kind"`
 	Name      string `json:"name"`
 	Namespace string `json:"namespace"`
 }

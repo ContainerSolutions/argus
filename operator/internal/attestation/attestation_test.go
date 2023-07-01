@@ -235,7 +235,6 @@ func makeAttestation(f ...attestationMutationFn) *argusiov1alpha1.Attestation {
 		Spec: argusiov1alpha1.AttestationSpec{
 			ImplementationRef: "implementation",
 			ProviderRef: argusiov1alpha1.AttestationProviderRef{
-				Kind:      "foo",
 				Name:      "bar",
 				Namespace: "bing",
 			},
@@ -285,7 +284,6 @@ func makeResourceAttestation(f ...resourceAttestationMutationFn) *argusiov1alpha
 		Spec: argusiov1alpha1.ResourceAttestationSpec{
 			ProviderRef: argusiov1alpha1.AttestationProviderRef{
 				Name:      "test",
-				Kind:      "fake",
 				Namespace: "test",
 			},
 		},

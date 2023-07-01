@@ -11,11 +11,5 @@ metadata:
 spec:
   implementationRef: "implementation-sample"
   providerRef: 
-    kind: foo
-    name: bar
-    namespace: baz
-  type:
-    kind: foo
-    name: bar
-    namespace: baz
-
+    name: fake
+    namespace: default

@@ -36,10 +36,15 @@ spec:
           spec:
             description: AttestationProviderSpec defines the desired state of AttestationProvider
             properties:
-              foo:
-                description: Foo is an example field of AttestationProvider. Edit
-                  attestationprovider_types.go to remove/update
+              providerConfig:
+                additionalProperties:
+                  type: string
+                type: object
+              type:
                 type: string
+            required:
+            - providerConfig
+            - type
             type: object
           status:
             description: AttestationProviderStatus defines the observed state of AttestationProvider

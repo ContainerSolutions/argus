@@ -47,12 +47,8 @@ func UpdateChild(ctx context.Context, cl client.Client, resource *argusiov1alpha
 			parentResource.Status.Children = make(map[string]argusiov1alpha1.ResourceChild)
 		}
 		parentResource.Status.Children[resource.Name] = argusiov1alpha1.ResourceChild{
-			Compliant: false,
+			Compliant: resource.Status.TotalRequirements == resource.Status.ImplementedRequirements,
 		}
-		parentResource.Status.CompliantChildren = 1
-		parentResource.Status.ImplementedRequirements = 1
-		parentResource.Status.TotalRequirements = 1
-		parentResource.Status.TotalChildren = 1
 		err = cl.Status().Patch(ctx, &parentResource, client.MergeFrom(original))
 		if err != nil {
 			allErrors = multierror.Append(allErrors, fmt.Errorf("failed updating status for parent resource %v: %w", parentName, err))

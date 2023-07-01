@@ -23,11 +23,6 @@ import (
 // ResourceAttestationSpec defines the desired state of ResourceAttestation
 type ResourceAttestationSpec struct {
 	ProviderRef AttestationProviderRef `json:"providerRef"`
-	ResourceRef ResourceRef            `json:"resourceRef"`
-}
-
-type ResourceRef struct {
-	Name string `json:"name"`
 }
 
 // ResourceAttestationStatus defines the observed state of ResourceAttestation
@@ -40,8 +35,9 @@ type AttestationResult struct {
 	Logs   string                `json:"logs"`
 	Result AttestationResultType `json:"result"`
 	Reason string                `json:"reason"`
-	Err    string                `json:"err"`
-	RunAt  metav1.Time           `json:"runAt"`
+	//+optional
+	Err   string      `json:"err,omitempty"`
+	RunAt metav1.Time `json:"runAt"`
 }
 type AttestationResultType string
 
