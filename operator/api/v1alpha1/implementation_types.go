@@ -20,9 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // ImplementationSpec defines the desired state of Implementation
 type ImplementationSpec struct {
 	Class string `json:"class"`
@@ -42,7 +39,7 @@ const (
 // ImplementationStatus defines the observed state of Implementation
 type ImplementationStatus struct {
 	//+optional
-	Childs []NamespacedName `json:"childs,omitempty"`
+	Children []NamespacedName `json:"children,omitempty"`
 	//+optional
 	Status string `json:"status,omitempty"`
 }

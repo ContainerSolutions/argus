@@ -6,8 +6,10 @@ import (
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
 func GetResourceImplementations(ctx context.Context, cl client.Client, res *argusiov1alpha1.Implementation) (map[string]argusiov1alpha1.ResourceImplementation, error) {
@@ -71,7 +73,7 @@ func LifecycleResourceImplementations(ctx context.Context, cl client.Client, new
 	return nil
 }
 
-func CreateOrUpdateResourceImplementations(ctx context.Context, cl client.Client, res *argusiov1alpha1.Implementation, resources []argusiov1alpha1.Resource) ([]argusiov1alpha1.NamespacedName, error) {
+func CreateOrUpdateResourceImplementations(ctx context.Context, cl client.Client, scheme *runtime.Scheme, res *argusiov1alpha1.Implementation, resources []argusiov1alpha1.Resource) ([]argusiov1alpha1.NamespacedName, error) {
 	all := []argusiov1alpha1.NamespacedName{}
 	// Treat Cascading policy. In order to do that, we need to add every child which this implementation targets.
 	resourceNameList := []string{}
@@ -112,6 +114,7 @@ func CreateOrUpdateResourceImplementations(ctx context.Context, cl client.Client
 			}
 			return nil
 		}
+		controllerutil.SetControllerReference(res, &resImp.ObjectMeta, scheme)
 		_, err := ctrl.CreateOrUpdate(ctx, cl, resImp, emptyMutation)
 		if err != nil {
 			return nil, fmt.Errorf("could not create resourceImplementation '%v': %w", resImp.Name, err)

@@ -11,4 +11,4 @@ metadata:
 spec:
   type: fake
   providerConfig:
-    foo: bar
+    result: Fail

@@ -173,7 +173,7 @@ func TestCreateOrUpdateResourceImplementations(t *testing.T) {
 		testCase := testCases[i]
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			output, err := CreateOrUpdateResourceImplementations(context.Background(), testCase.cl, testCase.implementation, testCase.resources)
+			output, err := CreateOrUpdateResourceImplementations(context.Background(), testCase.cl, commonScheme, testCase.implementation, testCase.resources)
 			if testCase.expectedError == "" {
 				require.NoError(t, err)
 				assert.Equal(t, testCase.expectedOutput, output)

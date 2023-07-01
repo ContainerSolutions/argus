@@ -70,13 +70,13 @@ func (r *ImplementationReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not remove uneeded resourcerequirements: %w", err)
 	}
-	children, err := lib.CreateOrUpdateResourceImplementations(ctx, r.Client, &res, resources)
+	children, err := lib.CreateOrUpdateResourceImplementations(ctx, r.Client, r.Scheme, &res, resources)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not create ResourceImplementation for requirement '%v': %w", res.Name, err)
 	}
 	// Update Requirement Status
 	original := res.DeepCopy()
-	res.Status.Childs = children
+	res.Status.Children = children
 	err = r.Client.Status().Patch(ctx, &res, client.MergeFrom(original))
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)

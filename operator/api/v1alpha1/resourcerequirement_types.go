@@ -30,10 +30,10 @@ type ResourceRequirementSpec struct {
 type ResourceRequirementStatus struct {
 	//+optional
 	ApplicableResourceImplementations []NamespacedName `json:"applicableResourceImplementations,omitempty"`
-	//+optional
-	TotalImplementations int `json:"totalImplementations,omitempty"`
-	//+optional
-	ValidImplementations int `json:"validImplementations,omitempty"`
+	//+kubebuilder:default=0
+	TotalImplementations int `json:"totalImplementations"`
+	//+kubebuilder:default=0
+	ValidImplementations int `json:"validImplementations"`
 	//+optional
 	Status string `json:"status,omitempty"`
 	//+optional

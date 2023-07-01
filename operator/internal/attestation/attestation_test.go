@@ -209,7 +209,7 @@ func TestCreateOrUpdateResourceAttestations(t *testing.T) {
 		testCase := testCases[i]
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			ouput, err := CreateOrUpdateResourceAttestations(context.Background(), testCase.cl, testCase.attestation, testCase.resources)
+			ouput, err := CreateOrUpdateResourceAttestations(context.Background(), testCase.cl, commonScheme, testCase.attestation, testCase.resources)
 			if testCase.expectedError == "" {
 				require.NoError(t, err)
 				assert.Equal(t, testCase.expectedOutput, ouput)

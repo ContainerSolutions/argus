@@ -54,7 +54,7 @@ spec:
           status:
             description: AttestationStatus defines the observed state of Attestation
             properties:
-              result:
+              children:
                 items:
                   properties:
                     name:

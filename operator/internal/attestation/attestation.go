@@ -7,8 +7,10 @@ import (
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 	"github.com/ContainerSolutions/argus/operator/internal/utils"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
 func GetResourceAttestations(ctx context.Context, cl client.Client, res *argusiov1alpha1.Attestation) (map[string]argusiov1alpha1.ResourceAttestation, error) {
@@ -58,7 +60,7 @@ func LifecycleResourceAttestations(ctx context.Context, cl client.Client, implem
 
 }
 
-func CreateOrUpdateResourceAttestations(ctx context.Context, cl client.Client, res *argusiov1alpha1.Attestation, resources []argusiov1alpha1.ResourceImplementation) ([]argusiov1alpha1.NamespacedName, error) {
+func CreateOrUpdateResourceAttestations(ctx context.Context, cl client.Client, scheme *runtime.Scheme, res *argusiov1alpha1.Attestation, resources []argusiov1alpha1.ResourceImplementation) ([]argusiov1alpha1.NamespacedName, error) {
 	all := []argusiov1alpha1.NamespacedName{}
 	for _, resource := range resources {
 		implementationName, ok := resource.ObjectMeta.Labels["argus.io/implementation"]
@@ -80,6 +82,7 @@ func CreateOrUpdateResourceAttestations(ctx context.Context, cl client.Client, r
 					Namespace: res.Namespace,
 				},
 			}
+			controllerutil.SetControllerReference(res, &resAtt.ObjectMeta, scheme)
 			emptyMutation := func() error {
 				resAtt.Spec.ProviderRef = res.Spec.ProviderRef
 				resAtt.ObjectMeta.Labels = map[string]string{

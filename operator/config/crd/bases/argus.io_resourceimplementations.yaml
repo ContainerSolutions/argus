@@ -57,6 +57,7 @@ spec:
               ResourceImplementation
             properties:
               passedAttestations:
+                default: 0
                 type: integer
               resourceAttestations:
                 items:
@@ -71,7 +72,11 @@ spec:
                   type: object
                 type: array
               totalAttestations:
+                default: 0
                 type: integer
+            required:
+            - passedAttestations
+            - totalAttestations
             type: object
         type: object
     served: true

@@ -302,7 +302,7 @@ func TestCreateOrUpdateResourceRequirements(t *testing.T) {
 		testCase := testCases[i]
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			_, err := CreateOrUpdateResourceRequirements(context.Background(), testCase.cl, testCase.requirement, testCase.resources)
+			_, err := CreateOrUpdateResourceRequirements(context.Background(), testCase.cl, commonScheme, testCase.requirement, testCase.resources)
 			if testCase.expectedError == "" {
 				require.NoError(t, err)
 			} else {

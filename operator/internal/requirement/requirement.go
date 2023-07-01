@@ -7,8 +7,10 @@ import (
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 	"github.com/ContainerSolutions/argus/operator/internal/utils"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
 func GetResourceRequirementsFromRequirement(ctx context.Context, cl client.Client, requirement *argusiov1alpha1.Requirement) (map[string]argusiov1alpha1.ResourceRequirement, error) {
@@ -65,7 +67,7 @@ func LifecycleResourceRequirements(ctx context.Context, cl client.Client, classe
 	return nil
 }
 
-func CreateOrUpdateResourceRequirements(ctx context.Context, cl client.Client, req *argusiov1alpha1.Requirement, resources []argusiov1alpha1.Resource) ([]argusiov1alpha1.NamespacedName, error) {
+func CreateOrUpdateResourceRequirements(ctx context.Context, cl client.Client, scheme *runtime.Scheme, req *argusiov1alpha1.Requirement, resources []argusiov1alpha1.Resource) ([]argusiov1alpha1.NamespacedName, error) {
 	all := []argusiov1alpha1.NamespacedName{}
 	for _, class := range req.Spec.ApplicableResourceClasses {
 		for _, resource := range resources {
@@ -86,6 +88,7 @@ func CreateOrUpdateResourceRequirements(ctx context.Context, cl client.Client, r
 					}
 					return nil
 				}
+				controllerutil.SetControllerReference(req, &resReq.ObjectMeta, scheme)
 				_, err := ctrl.CreateOrUpdate(ctx, cl, resReq, emptyMutation)
 				if err != nil {
 					return nil, fmt.Errorf("could not create resourcerequirement '%v': %w", resReq.Name, err)

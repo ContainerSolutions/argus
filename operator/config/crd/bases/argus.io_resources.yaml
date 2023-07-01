@@ -69,8 +69,10 @@ spec:
                   type: object
                 type: object
               compliantChildren:
+                default: 0
                 type: integer
               implementedRequirements:
+                default: 0
                 type: integer
               requirements:
                 additionalProperties:
@@ -82,9 +84,16 @@ spec:
                   type: object
                 type: object
               totalChildren:
+                default: 0
                 type: integer
               totalRequirements:
+                default: 0
                 type: integer
+            required:
+            - compliantChildren
+            - implementedRequirements
+            - totalChildren
+            - totalRequirements
             type: object
         type: object
     served: true

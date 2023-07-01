@@ -69,13 +69,13 @@ func (r *RequirementReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not remove uneeded resourcerequirements: %w", err)
 	}
-	children, err := reqlib.CreateOrUpdateResourceRequirements(ctx, r.Client, &requirement, resources)
+	children, err := reqlib.CreateOrUpdateResourceRequirements(ctx, r.Client, r.Scheme, &requirement, resources)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not create ResourceRequirement for requirement '%v': %w", requirement.Name, err)
 	}
 	// Update Requirement Status
 	original := requirement.DeepCopy()
-	requirement.Status.Childs = children
+	requirement.Status.Children = children
 	requirementSpecbytes, err := json.Marshal(requirement.Spec.Definition)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not marshal requirement spec: %w", err)

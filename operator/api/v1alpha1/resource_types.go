@@ -29,18 +29,18 @@ type ResourceSpec struct {
 
 // ResourceStatus defines the observed state of Resource
 type ResourceStatus struct {
-	//+optional
-	TotalRequirements int `json:"totalRequirements,omitempty"`
-	//+optional
-	ImplementedRequirements int `json:"implementedRequirements,omitempty"`
+	//+kubebuilder:default=0
+	TotalRequirements int `json:"totalRequirements"`
+	//+kubebuilder:default=0
+	ImplementedRequirements int `json:"implementedRequirements"`
 	//+optional
 	Children map[string]ResourceChild `json:"children,omitempty"`
 	//+optional
 	Requirements map[string]*ResourceRequirementCompliance `json:"requirements,omitempty"`
-	//+optional
-	TotalChildren int `json:"totalChildren,omitempty"`
-	//+optional
-	CompliantChildren int `json:"compliantChildren,omitempty"`
+	//+kubebuilder:default=0
+	TotalChildren int `json:"totalChildren"`
+	//+kubebuilder:default=0
+	CompliantChildren int `json:"compliantChildren"`
 }
 
 type ResourceRequirementCompliance struct {

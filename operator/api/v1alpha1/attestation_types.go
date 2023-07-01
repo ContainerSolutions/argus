@@ -34,7 +34,7 @@ type AttestationProviderRef struct {
 // AttestationStatus defines the observed state of Attestation
 type AttestationStatus struct {
 	//+optional
-	Childs []NamespacedName `json:"result,omitempty"`
+	Children []NamespacedName `json:"children,omitempty"`
 	//+optional
 	Status string `json:"status,omitempty"`
 }

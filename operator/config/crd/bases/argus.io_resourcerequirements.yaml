@@ -80,9 +80,14 @@ spec:
               status:
                 type: string
               totalImplementations:
+                default: 0
                 type: integer
               validImplementations:
+                default: 0
                 type: integer
+            required:
+            - totalImplementations
+            - validImplementations
             type: object
         type: object
     served: true

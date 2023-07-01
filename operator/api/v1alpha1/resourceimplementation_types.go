@@ -35,10 +35,10 @@ type ImplementationRequirementDefinition struct {
 type ResourceImplementationStatus struct {
 	//+optional
 	ResourceAttestations []NamespacedName `json:"resourceAttestations,omitempty"`
-	//+optional
-	TotalAttestations int `json:"totalAttestations,omitempty"`
-	//+optional
-	PassedAttestations int `json:"passedAttestations,omitempty"`
+	//+kubebuilder:default=0
+	TotalAttestations int `json:"totalAttestations"`
+	//+kubebuilder:default=0
+	PassedAttestations int `json:"passedAttestations"`
 }
 
 //+kubebuilder:object:root=true
