@@ -5,20 +5,21 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.3
   creationTimestamp: null
-  name: attestations.argus.io
+  name: attestationproviders.argus.io
 spec:
   group: argus.io
   names:
-    kind: Attestation
-    listKind: AttestationList
-    plural: attestations
-    singular: attestation
+    kind: AttestationProvider
+    listKind: AttestationProviderList
+    plural: attestationproviders
+    singular: attestationprovider
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Attestation is the Schema for the attestations API
+        description: AttestationProvider is the Schema for the attestationproviders
+          API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,44 +34,15 @@ spec:
           metadata:
             type: object
           spec:
-            description: AttestationSpec defines the desired state of Attestation
+            description: AttestationProviderSpec defines the desired state of AttestationProvider
             properties:
-              implementationRef:
+              foo:
+                description: Foo is an example field of AttestationProvider. Edit
+                  attestationprovider_types.go to remove/update
                 type: string
-              providerRef:
-                properties:
-                  kind:
-                    type: string
-                  name:
-                    type: string
-                  namespace:
-                    type: string
-                required:
-                - kind
-                - name
-                - namespace
-                type: object
-            required:
-            - implementationRef
-            - providerRef
             type: object
           status:
-            description: AttestationStatus defines the observed state of Attestation
-            properties:
-              result:
-                items:
-                  properties:
-                    name:
-                      type: string
-                    namespace:
-                      type: string
-                  required:
-                  - name
-                  - namespace
-                  type: object
-                type: array
-              status:
-                type: string
+            description: AttestationProviderStatus defines the observed state of AttestationProvider
             type: object
         type: object
     served: true
