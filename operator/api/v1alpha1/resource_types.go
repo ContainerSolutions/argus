@@ -55,10 +55,12 @@ type ResourceChild struct {
 	Compliant bool `json:"compliant"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
 // Resource is the Schema for the resources API
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Total Requirements",type=integer,JSONPath=`.status.totalRequirements`
+// +kubebuilder:printcolumn:name="Implemented Requirements",type=integer,JSONPath=`.status.implementedRequirements`
 type Resource struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

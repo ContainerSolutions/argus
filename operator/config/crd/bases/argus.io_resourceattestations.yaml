@@ -15,7 +15,14 @@ spec:
     singular: resourceattestation
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.result.result
+      name: Result
+      type: string
+    - jsonPath: .status.result.runAt
+      name: Last Run
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: ResourceAttestation is the Schema for the resourceattestations

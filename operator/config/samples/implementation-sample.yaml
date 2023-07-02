@@ -17,5 +17,5 @@ spec:
   resourceRef:
   - name: resource1
     namespace: default
-  - name: resource2
-    namespace: default
+#  - name: resource2
+#    namespace: default

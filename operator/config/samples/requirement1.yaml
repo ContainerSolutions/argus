@@ -16,6 +16,6 @@ spec:
     category: "Internal"
   applicableResourceClasses:
   - Myclass
-  - Myclass2
+# - Myclass2
   requiredImplementationClasses:
   - PreventativeControl

@@ -48,10 +48,11 @@ const (
 	AttestationResultTypeNotStarted AttestationResultType = "Not Started"
 )
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
 // ResourceAttestation is the Schema for the resourceattestations API
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Result",type=string,JSONPath=`.status.result.result`
+// +kubebuilder:printcolumn:name="Last Run",type=string,JSONPath=`.status.result.runAt`
 type ResourceAttestation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

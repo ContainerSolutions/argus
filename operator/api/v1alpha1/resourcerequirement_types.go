@@ -40,10 +40,11 @@ type ResourceRequirementStatus struct {
 	RequirementHash string `json:"requirementHash,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
 // ResourceRequirement is the Schema for the resourcerequirements API
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Total Implementations",type=integer,JSONPath=`.status.totalImplementations`
+// +kubebuilder:printcolumn:name="Valid Implementations",type=integer,JSONPath=`.status.validImplementations`
 type ResourceRequirement struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

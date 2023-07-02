@@ -41,10 +41,11 @@ type ResourceImplementationStatus struct {
 	PassedAttestations int `json:"passedAttestations"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
 // ResourceImplementation is the Schema for the resourceimplementations API
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Total Attestations",type=integer,JSONPath=`.status.totalAttestations`
+// +kubebuilder:printcolumn:name="Passed Attestations",type=integer,JSONPath=`.status.passedAttestations`
 type ResourceImplementation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

@@ -15,7 +15,14 @@ spec:
     singular: resourceimplementation
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.totalAttestations
+      name: Total Attestations
+      type: integer
+    - jsonPath: .status.passedAttestations
+      name: Passed Attestations
+      type: integer
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: ResourceImplementation is the Schema for the resourceimplementations
