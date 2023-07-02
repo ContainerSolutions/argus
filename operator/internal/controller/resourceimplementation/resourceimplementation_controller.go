@@ -19,6 +19,7 @@ package resourceimplementation
 import (
 	"context"
 	"fmt"
+	"time"
 
 	lib "github.com/ContainerSolutions/argus/operator/internal/resourceimplementation"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -42,7 +43,7 @@ type ResourceImplementationReconciler struct {
 //+kubebuilder:rbac:groups=argus.io,resources=resourceimplementations/finalizers,verbs=update
 
 func (r *ResourceImplementationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
+	log := r.Log.WithValues("ResourceImplementation", req.NamespacedName)
 	// Get Resource
 	res := argusiov1alpha1.ResourceImplementation{}
 	err := r.Client.Get(ctx, req.NamespacedName, &res)
@@ -52,6 +53,7 @@ func (r *ResourceImplementationReconciler) Reconcile(ctx context.Context, req ct
 		log.Error(err, "could not get resource")
 		return ctrl.Result{}, nil
 	}
+	log.Info("Reconciling ResourceImplementation", "ResourceImplementation", res.Name)
 	attestations, err := lib.ListResourceAttestations(ctx, r.Client, &res)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not list ResourceAttestations: %w", err)
@@ -65,7 +67,7 @@ func (r *ResourceImplementationReconciler) Reconcile(ctx context.Context, req ct
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)
 	}
-	return ctrl.Result{}, nil
+	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

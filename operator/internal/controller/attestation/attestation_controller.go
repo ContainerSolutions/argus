@@ -46,7 +46,7 @@ type AttestationReconciler struct {
 //+kubebuilder:rbac:groups=argus.io,resources=attestations/finalizers,verbs=update
 
 func (r *AttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
+	log := r.Log.WithValues("Attestation", req.NamespacedName)
 	res := argusiov1alpha1.Attestation{}
 	err := r.Client.Get(ctx, req.NamespacedName, &res)
 	if apierrors.IsNotFound(err) {
@@ -55,6 +55,7 @@ func (r *AttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "could not get resource")
 		return ctrl.Result{}, nil
 	}
+	log.Info("Reconciling Attestation", "Attestation", res.Name)
 	resourceList := argusiov1alpha1.ResourceImplementationList{}
 	err = r.Client.List(ctx, &resourceList)
 	if err != nil {

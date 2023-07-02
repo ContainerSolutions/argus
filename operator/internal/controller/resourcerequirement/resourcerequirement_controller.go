@@ -42,7 +42,7 @@ type ResourceRequirementReconciler struct {
 //+kubebuilder:rbac:groups=argus.io,resources=resourcerequirements/finalizers,verbs=update
 
 func (r *ResourceRequirementReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
+	log := r.Log.WithValues("ResourceRequirement", req.NamespacedName)
 	// Get Resource
 	res := argusiov1alpha1.ResourceRequirement{}
 	err := r.Client.Get(ctx, req.NamespacedName, &res)
@@ -52,6 +52,7 @@ func (r *ResourceRequirementReconciler) Reconcile(ctx context.Context, req ctrl.
 		log.Error(err, "could not get resource")
 		return ctrl.Result{}, nil
 	}
+	log.Info("Reconciling ResourceRequirement", "ResourceRequirement", res.Name)
 	implementations, valid, err := lib.GetValidResourceImplementations(ctx, r.Client, res)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not get resource implementations for requirement '%v': %w", res.Name, err)

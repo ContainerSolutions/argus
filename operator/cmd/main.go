@@ -22,6 +22,7 @@ import (
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
+	"go.uber.org/zap/zapcore"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -58,6 +59,19 @@ func main() {
 	var metricsAddr string
 	var enableLeaderElection bool
 	var probeAddr string
+	var lvl zapcore.Level
+	var enc zapcore.TimeEncoder
+	lvlErr := lvl.UnmarshalText([]byte("info"))
+	if lvlErr != nil {
+		setupLog.Error(lvlErr, "error unmarshalling loglevel")
+		os.Exit(1)
+	}
+	encErr := enc.UnmarshalText([]byte("epoch"))
+	if encErr != nil {
+		setupLog.Error(encErr, "error unmarshalling timeEncoding")
+		os.Exit(1)
+	}
+
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
@@ -65,6 +79,8 @@ func main() {
 			"Enabling this will ensure there is only one active controller manager.")
 	opts := zap.Options{
 		Development: true,
+		Level:       lvl,
+		TimeEncoder: enc,
 	}
 	opts.BindFlags(flag.CommandLine)
 	flag.Parse()
@@ -98,6 +114,7 @@ func main() {
 	if err = (&attestation.AttestationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Attestation")
 		os.Exit(1)
@@ -105,6 +122,7 @@ func main() {
 	if err = (&implementation.ImplementationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Implementation")
 		os.Exit(1)
@@ -112,6 +130,7 @@ func main() {
 	if err = (&requirement.RequirementReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Requirement")
 		os.Exit(1)
@@ -119,6 +138,7 @@ func main() {
 	if err = (&resource.Reconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Resource")
 		os.Exit(1)
@@ -126,6 +146,7 @@ func main() {
 	if err = (&resourcerequirement.ResourceRequirementReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ResourceRequirement")
 		os.Exit(1)
@@ -133,6 +154,7 @@ func main() {
 	if err = (&resourceattestation.ResourceAttestationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ResourceAttestation")
 		os.Exit(1)
@@ -140,6 +162,7 @@ func main() {
 	if err = (&resourceimplementation.ResourceImplementationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ResourceImplementation")
 		os.Exit(1)

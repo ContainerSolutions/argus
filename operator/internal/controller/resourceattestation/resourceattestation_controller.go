@@ -46,7 +46,7 @@ type ResourceAttestationReconciler struct {
 
 func (r *ResourceAttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	var err error
-	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
+	log := r.Log.WithValues("ResourceAttestation", req.NamespacedName)
 	// Get Resource
 	res := argusiov1alpha1.ResourceAttestation{}
 	err = r.Client.Get(ctx, req.NamespacedName, &res)
@@ -56,6 +56,7 @@ func (r *ResourceAttestationReconciler) Reconcile(ctx context.Context, req ctrl.
 		log.Error(err, "could not get resource")
 		return ctrl.Result{}, nil
 	}
+	log.Info("Reconciling ResourceAttestation", "ResourceAttestation", res.Name)
 	// Get Attestation Client
 	attestationClient, err := lib.GetAttestationClient(ctx, r.Client, &res)
 	if err != nil {

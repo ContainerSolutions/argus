@@ -42,9 +42,10 @@ type Reconciler struct {
 //+kubebuilder:rbac:groups=argus.io,resources=resources/finalizers,verbs=update
 
 func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
+	log := r.Log.WithValues("Resource", req.NamespacedName)
 	// Get Resource
 	resource := argusiov1alpha1.Resource{}
+	log.Info("Reconciling Resource", "Resource", resource.Name)
 	err := r.Client.Get(ctx, req.NamespacedName, &resource)
 	if apierrors.IsNotFound(err) {
 		return ctrl.Result{}, nil

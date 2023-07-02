@@ -43,7 +43,7 @@ type ImplementationReconciler struct {
 // +kubebuilder:rbac:groups=argus.io,resources=implementations/finalizers,verbs=update
 
 func (r *ImplementationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
+	log := r.Log.WithValues("Implementation", req.NamespacedName)
 	// Get Resource
 	res := argusiov1alpha1.Implementation{}
 	err := r.Client.Get(ctx, req.NamespacedName, &res)
@@ -53,6 +53,7 @@ func (r *ImplementationReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 		log.Error(err, "could not get resource")
 		return ctrl.Result{}, nil
 	}
+	log.Info("Reconciling Implementation", "Implementation", res.Name)
 	resourceList := argusiov1alpha1.ResourceList{}
 	err = r.Client.List(ctx, &resourceList)
 	if err != nil {
@@ -63,6 +64,7 @@ func (r *ImplementationReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not get ResourceImplementation for requirement '%v': %w", res.Name, err)
 	}
+	// TODO - If Requirement Resource Class does not match current Resources, no need to create new ResourceImplementations
 	newList, err := lib.BuildResourceImplementationList(ctx, &res, resources)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not build list : %w", err)
