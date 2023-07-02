@@ -88,8 +88,11 @@ func CreateOrUpdateResourceRequirements(ctx context.Context, cl client.Client, s
 					}
 					return nil
 				}
-				controllerutil.SetControllerReference(req, &resReq.ObjectMeta, scheme)
-				_, err := ctrl.CreateOrUpdate(ctx, cl, resReq, emptyMutation)
+				err := controllerutil.SetControllerReference(req, &resReq.ObjectMeta, scheme)
+				if err != nil {
+					return nil, fmt.Errorf("could not set controller reference for resourceImplementation '%v': %w", resReq.Name, err)
+				}
+				_, err = ctrl.CreateOrUpdate(ctx, cl, resReq, emptyMutation)
 				if err != nil {
 					return nil, fmt.Errorf("could not create resourcerequirement '%v': %w", resReq.Name, err)
 				}

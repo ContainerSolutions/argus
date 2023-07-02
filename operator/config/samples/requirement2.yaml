@@ -1,0 +1,16 @@
+apiVersion: argus.io/v1alpha1
+kind: Requirement
+metadata:
+  labels:
+  name: requirement2
+spec:
+  definition: 
+    version: 1.0.0
+    code: REQ-02
+    class: "Security"
+    category: "Internal"
+  applicableResourceClasses:
+  - Myclass
+  requiredImplementationClasses:
+  - PreventativeControl
+  - DetectiveControl

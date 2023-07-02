@@ -82,7 +82,10 @@ func CreateOrUpdateResourceAttestations(ctx context.Context, cl client.Client, s
 					Namespace: res.Namespace,
 				},
 			}
-			controllerutil.SetControllerReference(res, &resAtt.ObjectMeta, scheme)
+			err := controllerutil.SetControllerReference(res, &resAtt.ObjectMeta, scheme)
+			if err != nil {
+				return nil, fmt.Errorf("could not set controller reference for resourceImplementation '%v': %w", resAtt.Name, err)
+			}
 			emptyMutation := func() error {
 				resAtt.Spec.ProviderRef = res.Spec.ProviderRef
 				resAtt.ObjectMeta.Labels = map[string]string{
@@ -93,7 +96,7 @@ func CreateOrUpdateResourceAttestations(ctx context.Context, cl client.Client, s
 				}
 				return nil
 			}
-			_, err := ctrl.CreateOrUpdate(ctx, cl, resAtt, emptyMutation)
+			_, err = ctrl.CreateOrUpdate(ctx, cl, resAtt, emptyMutation)
 			if err != nil {
 				return nil, fmt.Errorf("could not create ResourceAttestation '%v': %w", resAtt.Name, err)
 			}

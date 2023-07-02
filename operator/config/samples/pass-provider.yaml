@@ -7,8 +7,7 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: fake
+  name: pass
 spec:
   type: fake
-  providerConfig:
-    result: Fail
+  providerConfig: {}

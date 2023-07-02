@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: attestation-sample
+  name: attestation2-req2
 spec:
-  implementationRef: "implementation-sample"
+  implementationRef: "implementation2-req2"
   providerRef: 
-    name: fake
+    name: pass
     namespace: default

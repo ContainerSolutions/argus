@@ -114,8 +114,11 @@ func CreateOrUpdateResourceImplementations(ctx context.Context, cl client.Client
 			}
 			return nil
 		}
-		controllerutil.SetControllerReference(res, &resImp.ObjectMeta, scheme)
-		_, err := ctrl.CreateOrUpdate(ctx, cl, resImp, emptyMutation)
+		err := controllerutil.SetControllerReference(res, &resImp.ObjectMeta, scheme)
+		if err != nil {
+			return nil, fmt.Errorf("could not set controller reference for resourceImplementation '%v': %w", resImp.Name, err)
+		}
+		_, err = ctrl.CreateOrUpdate(ctx, cl, resImp, emptyMutation)
 		if err != nil {
 			return nil, fmt.Errorf("could not create resourceImplementation '%v': %w", resImp.Name, err)
 		}

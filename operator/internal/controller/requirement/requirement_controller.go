@@ -44,6 +44,7 @@ type RequirementReconciler struct {
 // +kubebuilder:rbac:groups=argus.io,resources=requirements,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=argus.io,resources=requirements/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=argus.io,resources=requirements/finalizers,verbs=update
+
 func (r *RequirementReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := r.Log.WithValues("ClusterExternalSecret", req.NamespacedName)
 	// Get Resource
