@@ -10,7 +10,7 @@ spec:
     class: "Security"
     category: "Internal"
   applicableResourceClasses:
-  - Myclass
+  - Myclass2
   requiredImplementationClasses:
   - PreventativeControl
   - DetectiveControl

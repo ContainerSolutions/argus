@@ -8,6 +8,14 @@ rules:
 - apiGroups:
   - argus.io
   resources:
+  - attestationproviders
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
   - attestations
   verbs:
   - create

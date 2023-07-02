@@ -43,6 +43,7 @@ type ResourceAttestationReconciler struct {
 //+kubebuilder:rbac:groups=argus.io,resources=resourceattestations,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=argus.io,resources=resourceattestations/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=argus.io,resources=resourceattestations/finalizers,verbs=update
+//+kubebuilder:rbac:groups=argus.io,resources=attestationproviders,verbs=get;list;watch
 
 func (r *ResourceAttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	var err error
