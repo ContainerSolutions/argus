@@ -22,6 +22,8 @@ import (
 	"time"
 
 	lib "github.com/ContainerSolutions/argus/operator/internal/resourceimplementation"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -63,11 +65,28 @@ func (r *ResourceImplementationReconciler) Reconcile(ctx context.Context, req ct
 	res.Status.ResourceAttestations = children
 	res.Status.TotalAttestations = len(children)
 	res.Status.PassedAttestations = valid
+	res.Status.RunAt = metav1.Now()
 	err = r.Client.Status().Patch(ctx, &res, client.MergeFrom(original))
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)
 	}
-	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
+	// Update ResourceRequirements metadata (force reconciliation)
+	list := argusiov1alpha1.ResourceRequirementList{}
+	err = r.Client.List(ctx, &list, client.MatchingLabels{"argus.io/requirement": res.Labels["argus.io/requirement"], "argus.io/resource": res.Labels["argus.io/resource"]})
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not get resourcerequirement: %w", err)
+	}
+	for _, resReq := range list.Items {
+		originalResReq := resReq.DeepCopy()
+		resReq.ObjectMeta.Annotations = map[string]string{fmt.Sprintf("%v.implementation.argus.io/lastRun", res.Name): time.Now().String()}
+		err = r.Client.Patch(ctx, &resReq, client.MergeFrom(originalResReq))
+		if err != nil {
+			return ctrl.Result{}, fmt.Errorf("could not trigger resourcerequirement reconciliation: %w", err)
+		}
+
+	}
+
+	return ctrl.Result{RequeueAfter: 1 * time.Hour}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

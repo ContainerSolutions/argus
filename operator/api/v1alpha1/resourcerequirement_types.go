@@ -38,6 +38,8 @@ type ResourceRequirementStatus struct {
 	Status string `json:"status,omitempty"`
 	//+optional
 	RequirementHash string `json:"requirementHash,omitempty"`
+	//+optional
+	RunAt metav1.Time `json:"runAt,omitempty"`
 }
 
 // ResourceRequirement is the Schema for the resourcerequirements API
@@ -45,6 +47,7 @@ type ResourceRequirementStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Total Implementations",type=integer,JSONPath=`.status.totalImplementations`
 // +kubebuilder:printcolumn:name="Valid Implementations",type=integer,JSONPath=`.status.validImplementations`
+// +kubebuilder:printcolumn:name="Last Run",type=string,JSONPath=`.status.runAt`
 type ResourceRequirement struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

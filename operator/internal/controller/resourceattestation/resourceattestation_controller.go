@@ -24,6 +24,7 @@ import (
 	lib "github.com/ContainerSolutions/argus/operator/internal/resourceattestation"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -81,7 +82,20 @@ func (r *ResourceAttestationReconciler) Reconcile(ctx context.Context, req ctrl.
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)
 	}
-	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
+	// Update resourceImplementation Metadata (to force reconciliation)
+	resImp := argusiov1alpha1.ResourceImplementation{}
+	resImpName := fmt.Sprintf("%v-%v", res.Labels["argus.io/implementation"], res.Labels["argus.io/resource"])
+	err = r.Client.Get(ctx, types.NamespacedName{Namespace: res.Namespace, Name: resImpName}, &resImp)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not get resourceImplementation: %w", err)
+	}
+	originalResImp := resImp.DeepCopy()
+	resImp.ObjectMeta.Annotations = map[string]string{fmt.Sprintf("%v.attestation.argus.io/lastRun", res.Name): time.Now().String()}
+	err = r.Client.Patch(ctx, &resImp, client.MergeFrom(originalResImp))
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not trigger resourceImplementation reconciliation: %w", err)
+	}
+	return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
