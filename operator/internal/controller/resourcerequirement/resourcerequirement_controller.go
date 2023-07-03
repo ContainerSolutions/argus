@@ -25,7 +25,9 @@ import (
 	lib "github.com/ContainerSolutions/argus/operator/internal/resourcerequirement"
 	"github.com/go-logr/logr"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -62,6 +64,7 @@ func (r *ResourceRequirementReconciler) Reconcile(ctx context.Context, req ctrl.
 	res.Status.TotalImplementations = len(implementations)
 	res.Status.ApplicableResourceImplementations = implementations
 	res.Status.Status = "Not Implemented"
+	res.Status.RunAt = metav1.Now()
 	if res.Status.TotalImplementations == res.Status.ValidImplementations && res.Status.TotalImplementations > 0 {
 		res.Status.Status = "Implemented"
 	}
@@ -69,7 +72,19 @@ func (r *ResourceRequirementReconciler) Reconcile(ctx context.Context, req ctrl.
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not update resourcerequirement status: %w", err)
 	}
-	return ctrl.Result{RequeueAfter: 4 * time.Minute}, nil
+	// Update Resource metadata (force reconciliation)
+	list := argusiov1alpha1.Resource{}
+	err = r.Client.Get(ctx, types.NamespacedName{Name: res.Labels["argus.io/resource"], Namespace: res.Namespace}, &list)
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not get resource: %w", err)
+	}
+	originalResReq := list.DeepCopy()
+	list.ObjectMeta.Annotations = map[string]string{fmt.Sprintf("%v.requirement.argus.io/lastRun", res.Name): time.Now().String()}
+	err = r.Client.Patch(ctx, &list, client.MergeFrom(originalResReq))
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not trigger resource reconciliation: %w", err)
+	}
+	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

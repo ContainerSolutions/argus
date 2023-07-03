@@ -84,6 +84,9 @@ spec:
                 type: array
               requirementHash:
                 type: string
+              runAt:
+                format: date-time
+                type: string
               status:
                 type: string
               totalImplementations:

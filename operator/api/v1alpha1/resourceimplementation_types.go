@@ -39,6 +39,8 @@ type ResourceImplementationStatus struct {
 	TotalAttestations int `json:"totalAttestations"`
 	//+kubebuilder:default=0
 	PassedAttestations int `json:"passedAttestations"`
+	//+optional
+	RunAt metav1.Time `json:"runAt,omitempty"`
 }
 
 // ResourceImplementation is the Schema for the resourceimplementations API

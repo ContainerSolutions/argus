@@ -38,6 +38,8 @@ type ResourceRequirementStatus struct {
 	Status string `json:"status,omitempty"`
 	//+optional
 	RequirementHash string `json:"requirementHash,omitempty"`
+	//+optional
+	RunAt metav1.Time `json:"runAt,omitempty"`
 }
 
 // ResourceRequirement is the Schema for the resourcerequirements API
