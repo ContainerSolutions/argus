@@ -6,6 +6,7 @@ import (
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 	"github.com/hashicorp/go-multierror"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -24,6 +25,15 @@ func UpdateRequirements(resourceRequirementList argusiov1alpha1.ResourceRequirem
 		reqs[name] = &status
 	}
 	resource.Status.Requirements = reqs
+	resource.Status.RunAt = metav1.Now()
+	resource.Status.TotalChildren = len(resource.Status.Children)
+	compliantChildren := 0
+	for _, child := range resource.Status.Children {
+		if child.Compliant {
+			compliantChildren = compliantChildren + 1
+		}
+	}
+	resource.Status.CompliantChildren = compliantChildren
 	resource.Status.TotalRequirements = len(resourceRequirementList.Items)
 	resource.Status.ImplementedRequirements = validRequirements
 	return resource

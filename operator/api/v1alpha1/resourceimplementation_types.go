@@ -48,6 +48,7 @@ type ResourceImplementationStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Total Attestations",type=integer,JSONPath=`.status.totalAttestations`
 // +kubebuilder:printcolumn:name="Passed Attestations",type=integer,JSONPath=`.status.passedAttestations`
+// +kubebuilder:printcolumn:name="Last Run",type=string,JSONPath=`.status.runAt`
 type ResourceImplementation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

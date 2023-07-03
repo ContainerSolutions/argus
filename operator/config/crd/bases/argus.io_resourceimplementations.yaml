@@ -22,6 +22,9 @@ spec:
     - jsonPath: .status.passedAttestations
       name: Passed Attestations
       type: integer
+    - jsonPath: .status.runAt
+      name: Last Run
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:

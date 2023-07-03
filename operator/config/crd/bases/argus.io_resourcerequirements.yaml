@@ -22,6 +22,9 @@ spec:
     - jsonPath: .status.validImplementations
       name: Valid Implementations
       type: integer
+    - jsonPath: .status.runAt
+      name: Last Run
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:

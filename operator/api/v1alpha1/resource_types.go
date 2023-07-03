@@ -41,6 +41,8 @@ type ResourceStatus struct {
 	TotalChildren int `json:"totalChildren"`
 	//+kubebuilder:default=0
 	CompliantChildren int `json:"compliantChildren"`
+	//+optional
+	RunAt metav1.Time `json:"runAt,omitempty"`
 }
 
 type ResourceRequirementCompliance struct {
@@ -61,6 +63,7 @@ type ResourceChild struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Total Requirements",type=integer,JSONPath=`.status.totalRequirements`
 // +kubebuilder:printcolumn:name="Implemented Requirements",type=integer,JSONPath=`.status.implementedRequirements`
+// +kubebuilder:printcolumn:name="Last Run",type=string,JSONPath=`.status.runAt`
 type Resource struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

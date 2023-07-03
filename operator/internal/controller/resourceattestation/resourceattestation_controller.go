@@ -95,7 +95,7 @@ func (r *ResourceAttestationReconciler) Reconcile(ctx context.Context, req ctrl.
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not trigger resourceImplementation reconciliation: %w", err)
 	}
-	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
+	return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

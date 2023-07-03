@@ -88,7 +88,7 @@ func (r *RequirementReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)
 	}
-	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
+	return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

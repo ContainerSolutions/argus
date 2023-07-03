@@ -74,7 +74,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	}
 	// Check Parents
 	// TODO Make this a configuration
-	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
+	return ctrl.Result{RequeueAfter: 1 * time.Hour}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

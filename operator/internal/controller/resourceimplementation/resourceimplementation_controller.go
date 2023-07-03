@@ -86,7 +86,7 @@ func (r *ResourceImplementationReconciler) Reconcile(ctx context.Context, req ct
 
 	}
 
-	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
+	return ctrl.Result{RequeueAfter: 1 * time.Hour}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
