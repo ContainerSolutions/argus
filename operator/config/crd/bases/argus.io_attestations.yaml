@@ -39,39 +39,22 @@ spec:
                 type: string
               providerRef:
                 properties:
-                  kind:
-                    type: string
                   name:
                     type: string
                   namespace:
                     type: string
                 required:
-                - kind
-                - name
-                - namespace
-                type: object
-              type:
-                properties:
-                  kind:
-                    type: string
-                  name:
-                    type: string
-                  namespace:
-                    type: string
-                required:
-                - kind
                 - name
                 - namespace
                 type: object
             required:
             - implementationRef
             - providerRef
-            - type
             type: object
           status:
             description: AttestationStatus defines the observed state of Attestation
             properties:
-              result:
+              children:
                 items:
                   properties:
                     name:
@@ -85,9 +68,6 @@ spec:
                 type: array
               status:
                 type: string
-            required:
-            - result
-            - status
             type: object
         type: object
     served: true

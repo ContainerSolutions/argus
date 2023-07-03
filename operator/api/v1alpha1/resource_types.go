@@ -29,18 +29,18 @@ type ResourceSpec struct {
 
 // ResourceStatus defines the observed state of Resource
 type ResourceStatus struct {
-	//+optional
-	TotalRequirements int `json:"totalRequirements,omitempty"`
-	//+optional
-	ImplementedRequirements int `json:"implementedRequirements,omitempty"`
+	//+kubebuilder:default=0
+	TotalRequirements int `json:"totalRequirements"`
+	//+kubebuilder:default=0
+	ImplementedRequirements int `json:"implementedRequirements"`
 	//+optional
 	Children map[string]ResourceChild `json:"children,omitempty"`
 	//+optional
 	Requirements map[string]*ResourceRequirementCompliance `json:"requirements,omitempty"`
-	//+optional
-	TotalChildren int `json:"totalChildren,omitempty"`
-	//+optional
-	CompliantChildren int `json:"compliantChildren,omitempty"`
+	//+kubebuilder:default=0
+	TotalChildren int `json:"totalChildren"`
+	//+kubebuilder:default=0
+	CompliantChildren int `json:"compliantChildren"`
 }
 
 type ResourceRequirementCompliance struct {
@@ -55,10 +55,12 @@ type ResourceChild struct {
 	Compliant bool `json:"compliant"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
 // Resource is the Schema for the resources API
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Total Requirements",type=integer,JSONPath=`.status.totalRequirements`
+// +kubebuilder:printcolumn:name="Implemented Requirements",type=integer,JSONPath=`.status.implementedRequirements`
 type Resource struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

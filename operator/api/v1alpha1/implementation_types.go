@@ -20,26 +20,13 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // ImplementationSpec defines the desired state of Implementation
 type ImplementationSpec struct {
 	Class string `json:"class"`
 	//+default="Cascade"
-	CascadePolicy  ImplementationCascadePolicy  `json:"cascadePolicy"`
-	RequirementRef ImplementationRequirementRef `json:"requirementRef"`
-	ResourceRef    []ImplementationResourceRef  `json:"resourceRef"`
-}
-
-// TODO - Use NamespacedName here
-type ImplementationRequirementRef struct {
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
-}
-type ImplementationResourceRef struct {
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
+	CascadePolicy  ImplementationCascadePolicy         `json:"cascadePolicy"`
+	RequirementRef ImplementationRequirementDefinition `json:"requirementRef"`
+	ResourceRef    []NamespacedName                    `json:"resourceRef"`
 }
 
 type ImplementationCascadePolicy string
@@ -51,13 +38,10 @@ const (
 
 // ImplementationStatus defines the observed state of Implementation
 type ImplementationStatus struct {
-	Childs []ResourceImplementationChilds `json:"childs"`
-	Status string                         `json:"status"`
-}
-
-type ResourceImplementationChilds struct {
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
+	//+optional
+	Children []NamespacedName `json:"children,omitempty"`
+	//+optional
+	Status string `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

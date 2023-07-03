@@ -37,11 +37,12 @@ type RequirementDefinition struct {
 
 // RequirementStatus defines the observed state of Requirement
 type RequirementStatus struct {
-	Childs          []ResourceRequirementChilds `json:"childs"`
-	RequirementHash string                      `json:"requirementHash"`
+	//+optional
+	Children        []NamespacedName `json:"children,omitempty"`
+	RequirementHash string           `json:"requirementHash"`
 }
 
-type ResourceRequirementChilds struct {
+type NamespacedName struct {
 	Name      string `json:"name"`
 	Namespace string `json:"namespace"`
 }

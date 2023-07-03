@@ -1,6 +1,6 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= controller:latest 
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.26.1
 
@@ -114,6 +114,10 @@ docker-buildx: test ## Build and push docker image for the manager for cross-pla
 ifndef ignore-not-found
   ignore-not-found = false
 endif
+
+.PHONY: deploy.examples
+deploy.examples:
+	kubectl apply -f ./config/samples
 
 .PHONY: install
 install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.

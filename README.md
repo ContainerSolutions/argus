@@ -72,6 +72,9 @@ It composes the following proposed Controllers:
     * Keeps track of Resource compliance to individual Requirement based on The ResourceImplementations
     available for that Resource
 
+## Information Flow diagram (i.e. how the Resource knows it is compliant?)
+![Information Flow Diagram](pics/flow-diagram-argus.png)
+
 ## Current Status
 
 Right now the Kubernetes implementation only contains part of the CRDs defined for these 

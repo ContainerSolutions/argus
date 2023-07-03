@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
-	"github.com/pkg/errors"
+	"github.com/hashicorp/go-multierror"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -30,8 +30,7 @@ func UpdateRequirements(resourceRequirementList argusiov1alpha1.ResourceRequirem
 }
 
 func UpdateChild(ctx context.Context, cl client.Client, resource *argusiov1alpha1.Resource) error {
-	var errorsA []error
-	var allErrors error
+	var allErrors *multierror.Error
 	for _, parentName := range resource.Spec.Parents {
 		parentResource := argusiov1alpha1.Resource{}
 		namespacedName := types.NamespacedName{
@@ -40,30 +39,24 @@ func UpdateChild(ctx context.Context, cl client.Client, resource *argusiov1alpha
 		}
 		err := cl.Get(ctx, namespacedName, &parentResource)
 		if err != nil {
-			errorsA = append(errorsA, fmt.Errorf("parent resource %v not found: %w", parentName, err))
+			allErrors = multierror.Append(allErrors, fmt.Errorf("parent resource %v not found: %w", parentName, err))
+			continue
 		}
 		original := parentResource.DeepCopy()
 		if parentResource.Status.Children == nil {
 			parentResource.Status.Children = make(map[string]argusiov1alpha1.ResourceChild)
 		}
 		parentResource.Status.Children[resource.Name] = argusiov1alpha1.ResourceChild{
-			Compliant: false,
+			Compliant: resource.Status.TotalRequirements == resource.Status.ImplementedRequirements,
 		}
-		parentResource.Status.CompliantChildren = 1
-		parentResource.Status.ImplementedRequirements = 1
-		parentResource.Status.TotalRequirements = 1
-		parentResource.Status.TotalChildren = 1
 		err = cl.Status().Patch(ctx, &parentResource, client.MergeFrom(original))
 		if err != nil {
-			errorsA = append(errorsA, fmt.Errorf("failed updating status for parent resource %v: %w", parentName, err))
+			allErrors = multierror.Append(allErrors, fmt.Errorf("failed updating status for parent resource %v: %w", parentName, err))
+			continue
 		}
 	}
-	if errorsA != nil {
-		for _, err := range errorsA {
-			allErrors = errors.Wrap(allErrors, fmt.Sprintf("error occurred: %v", err.Error()))
-		}
-
-		return fmt.Errorf("could not update parent resources: %v", errorsA)
+	if allErrors != nil {
+		return allErrors.ErrorOrNil()
 	}
-	return allErrors
+	return nil
 }

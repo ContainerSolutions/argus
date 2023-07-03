@@ -1,0 +1,19 @@
+apiVersion: argus.io/v1alpha1
+kind: Implementation
+metadata:
+  labels:
+    app.kubernetes.io/name: implementation
+    app.kubernetes.io/instance: implementation-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: implementation1-req2
+spec:
+  class: PreventativeControl
+  cascadePolicy: None
+  requirementRef:
+    code: REQ-02
+    version: 1.0.0
+  resourceRef:
+  - name: resource2
+    namespace: default

@@ -18,45 +18,75 @@ package resourceattestation
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	lib "github.com/ContainerSolutions/argus/operator/internal/resourceattestation"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
+	"github.com/go-logr/logr"
 )
 
 // ResourceAttestationReconciler reconciles a ResourceAttestation object
 type ResourceAttestationReconciler struct {
 	client.Client
+	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
 //+kubebuilder:rbac:groups=argus.io,resources=resourceattestations,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=argus.io,resources=resourceattestations/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=argus.io,resources=resourceattestations/finalizers,verbs=update
+//+kubebuilder:rbac:groups=argus.io,resources=attestationproviders,verbs=get;list;watch
 
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
-// move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the ResourceAttestation object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.4/pkg/reconcile
 func (r *ResourceAttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
-
-	// TODO(user): your logic here
-
-	return ctrl.Result{}, nil
+	var err error
+	log := r.Log.WithValues("ResourceAttestation", req.NamespacedName)
+	// Get Resource
+	res := argusiov1alpha1.ResourceAttestation{}
+	err = r.Client.Get(ctx, req.NamespacedName, &res)
+	if apierrors.IsNotFound(err) {
+		return ctrl.Result{}, nil
+	} else if err != nil {
+		log.Error(err, "could not get resource")
+		return ctrl.Result{}, nil
+	}
+	log.Info("Reconciling ResourceAttestation", "ResourceAttestation", res.Name)
+	// Get Attestation Client
+	attestationClient, err := lib.GetAttestationClient(ctx, r.Client, &res)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	defer func() {
+		e := attestationClient.Close()
+		if e != nil && err == nil {
+			err = fmt.Errorf("error closing client: %w", e)
+		}
+	}() // Prepare Call according to attestation provider logic
+	result, err := attestationClient.Attest()
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	// Update Status
+	original := res.DeepCopy()
+	res.Status.Result = result
+	res.Status.Status = "True"
+	err = r.Client.Status().Patch(ctx, &res, client.MergeFrom(original))
+	if err != nil {
+		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)
+	}
+	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *ResourceAttestationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&argusiov1alpha1.ResourceAttestation{}).
+		For(&argusiov1alpha1.ResourceAttestation{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }

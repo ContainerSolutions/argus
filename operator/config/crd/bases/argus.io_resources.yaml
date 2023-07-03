@@ -15,10 +15,16 @@ spec:
     singular: resource
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.totalRequirements
+      name: Total Requirements
+      type: integer
+    - jsonPath: .status.implementedRequirements
+      name: Implemented Requirements
+      type: integer
+    name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the resources API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -69,8 +75,10 @@ spec:
                   type: object
                 type: object
               compliantChildren:
+                default: 0
                 type: integer
               implementedRequirements:
+                default: 0
                 type: integer
               requirements:
                 additionalProperties:
@@ -82,9 +90,16 @@ spec:
                   type: object
                 type: object
               totalChildren:
+                default: 0
                 type: integer
               totalRequirements:
+                default: 0
                 type: integer
+            required:
+            - compliantChildren
+            - implementedRequirements
+            - totalChildren
+            - totalRequirements
             type: object
         type: object
     served: true

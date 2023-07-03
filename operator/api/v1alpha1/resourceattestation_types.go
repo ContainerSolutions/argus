@@ -22,12 +22,7 @@ import (
 
 // ResourceAttestationSpec defines the desired state of ResourceAttestation
 type ResourceAttestationSpec struct {
-	ProviderRef AttestationProvider `json:"providerRef"`
-	ResourceRef ResourceRef         `json:"resourceRef"`
-}
-
-type ResourceRef struct {
-	Name string `json:"name"`
+	ProviderRef AttestationProviderRef `json:"providerRef"`
 }
 
 // ResourceAttestationStatus defines the observed state of ResourceAttestation
@@ -40,8 +35,9 @@ type AttestationResult struct {
 	Logs   string                `json:"logs"`
 	Result AttestationResultType `json:"result"`
 	Reason string                `json:"reason"`
-	Err    string                `json:"err"`
-	RunAt  metav1.Time           `json:"runAt"`
+	//+optional
+	Err   string      `json:"err,omitempty"`
+	RunAt metav1.Time `json:"runAt"`
 }
 type AttestationResultType string
 
@@ -52,10 +48,11 @@ const (
 	AttestationResultTypeNotStarted AttestationResultType = "Not Started"
 )
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
 // ResourceAttestation is the Schema for the resourceattestations API
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Result",type=string,JSONPath=`.status.result.result`
+// +kubebuilder:printcolumn:name="Last Run",type=string,JSONPath=`.status.result.runAt`
 type ResourceAttestation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

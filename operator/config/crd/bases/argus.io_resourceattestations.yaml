@@ -15,7 +15,14 @@ spec:
     singular: resourceattestation
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.result.result
+      name: Result
+      type: string
+    - jsonPath: .status.result.runAt
+      name: Last Run
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: ResourceAttestation is the Schema for the resourceattestations
@@ -38,27 +45,16 @@ spec:
             properties:
               providerRef:
                 properties:
-                  kind:
-                    type: string
                   name:
                     type: string
                   namespace:
                     type: string
                 required:
-                - kind
                 - name
                 - namespace
                 type: object
-              resourceRef:
-                properties:
-                  name:
-                    type: string
-                required:
-                - name
-                type: object
             required:
             - providerRef
-            - resourceRef
             type: object
           status:
             description: ResourceAttestationStatus defines the observed state of ResourceAttestation
@@ -77,7 +73,6 @@ spec:
                     format: date-time
                     type: string
                 required:
-                - err
                 - logs
                 - reason
                 - result

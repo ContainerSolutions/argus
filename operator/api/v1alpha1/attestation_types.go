@@ -22,32 +22,21 @@ import (
 
 // AttestationSpec defines the desired state of Attestation
 type AttestationSpec struct {
-	Type              AttestationType     `json:"type"`
-	ImplementationRef string              `json:"implementationRef"`
-	ProviderRef       AttestationProvider `json:"providerRef"`
+	ImplementationRef string                 `json:"implementationRef"`
+	ProviderRef       AttestationProviderRef `json:"providerRef"`
 }
 
-type AttestationProvider struct {
-	Kind      string `json:"kind"`
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
-}
-
-type AttestationType struct {
-	Kind      string `json:"kind"`
+type AttestationProviderRef struct {
 	Name      string `json:"name"`
 	Namespace string `json:"namespace"`
 }
 
 // AttestationStatus defines the observed state of Attestation
 type AttestationStatus struct {
-	Childs []ResourceAttestationChild `json:"result"`
-	Status string                     `json:"status"`
-}
-
-type ResourceAttestationChild struct {
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
+	//+optional
+	Children []NamespacedName `json:"children,omitempty"`
+	//+optional
+	Status string `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

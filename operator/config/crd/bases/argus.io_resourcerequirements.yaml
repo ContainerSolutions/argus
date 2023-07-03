@@ -15,7 +15,14 @@ spec:
     singular: resourcerequirement
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.totalImplementations
+      name: Total Implementations
+      type: integer
+    - jsonPath: .status.validImplementations
+      name: Valid Implementations
+      type: integer
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: ResourceRequirement is the Schema for the resourcerequirements
@@ -80,13 +87,12 @@ spec:
               status:
                 type: string
               totalImplementations:
+                default: 0
                 type: integer
               validImplementations:
+                default: 0
                 type: integer
             required:
-            - applicableResourceImplementations
-            - requirementHash
-            - status
             - totalImplementations
             - validImplementations
             type: object

@@ -28,17 +28,23 @@ type ResourceRequirementSpec struct {
 
 // ResourceRequirementStatus defines the observed state of ResourceRequirement
 type ResourceRequirementStatus struct {
-	ApplicableResourceImplementations []ResourceRequirementChilds `json:"applicableResourceImplementations"`
-	TotalImplementations              int                         `json:"totalImplementations"`
-	ValidImplementations              int                         `json:"validImplementations"`
-	Status                            string                      `json:"status"`
-	RequirementHash                   string                      `json:"requirementHash"`
+	//+optional
+	ApplicableResourceImplementations []NamespacedName `json:"applicableResourceImplementations,omitempty"`
+	//+kubebuilder:default=0
+	TotalImplementations int `json:"totalImplementations"`
+	//+kubebuilder:default=0
+	ValidImplementations int `json:"validImplementations"`
+	//+optional
+	Status string `json:"status,omitempty"`
+	//+optional
+	RequirementHash string `json:"requirementHash,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
 // ResourceRequirement is the Schema for the resourcerequirements API
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Total Implementations",type=integer,JSONPath=`.status.totalImplementations`
+// +kubebuilder:printcolumn:name="Valid Implementations",type=integer,JSONPath=`.status.validImplementations`
 type ResourceRequirement struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

@@ -69,7 +69,7 @@ spec:
           status:
             description: RequirementStatus defines the observed state of Requirement
             properties:
-              childs:
+              children:
                 items:
                   properties:
                     name:
@@ -84,7 +84,6 @@ spec:
               requirementHash:
                 type: string
             required:
-            - childs
             - requirementHash
             type: object
         type: object

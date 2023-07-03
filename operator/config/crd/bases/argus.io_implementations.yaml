@@ -40,15 +40,14 @@ spec:
               class:
                 type: string
               requirementRef:
-                description: TODO - Use NamespacedName here
                 properties:
-                  name:
+                  code:
                     type: string
-                  namespace:
+                  version:
                     type: string
                 required:
-                - name
-                - namespace
+                - code
+                - version
                 type: object
               resourceRef:
                 items:
@@ -71,7 +70,7 @@ spec:
           status:
             description: ImplementationStatus defines the observed state of Implementation
             properties:
-              childs:
+              children:
                 items:
                   properties:
                     name:
@@ -85,9 +84,6 @@ spec:
                 type: array
               status:
                 type: string
-            required:
-            - childs
-            - status
             type: object
         type: object
     served: true

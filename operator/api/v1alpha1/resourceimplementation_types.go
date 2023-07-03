@@ -22,22 +22,30 @@ import (
 
 // ResourceImplementationSpec defines the desired state of ResourceImplementation
 type ResourceImplementationSpec struct {
-	Class          string                       `json:"class"`
-	RequirementRef ImplementationRequirementRef `json:"requirementRef"`
-	ResourceRef    ImplementationResourceRef    `json:"resourceRef"`
+	Class          string                              `json:"class"`
+	RequirementRef ImplementationRequirementDefinition `json:"requirementRef"`
+}
+
+type ImplementationRequirementDefinition struct {
+	Code    string `json:"code"`
+	Version string `json:"version"`
 }
 
 // ResourceImplementationStatus defines the observed state of ResourceImplementation
 type ResourceImplementationStatus struct {
-	ResourceAttestations []ResourceAttestation `json:"resourceAttestations"`
-	TotalAttestations    int                   `json:"totalAttestations"`
-	PassedAttestations   int                   `json:"passedAttestations"`
+	//+optional
+	ResourceAttestations []NamespacedName `json:"resourceAttestations,omitempty"`
+	//+kubebuilder:default=0
+	TotalAttestations int `json:"totalAttestations"`
+	//+kubebuilder:default=0
+	PassedAttestations int `json:"passedAttestations"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
 // ResourceImplementation is the Schema for the resourceimplementations API
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Total Attestations",type=integer,JSONPath=`.status.totalAttestations`
+// +kubebuilder:printcolumn:name="Passed Attestations",type=integer,JSONPath=`.status.passedAttestations`
 type ResourceImplementation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
