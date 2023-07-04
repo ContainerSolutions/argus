@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
+	"github.com/ContainerSolutions/argus/operator/internal/metrics"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -14,6 +15,7 @@ import (
 )
 
 func TestGetValidResourceImplementations(t *testing.T) {
+	metrics.SetUpMetrics()
 	commonScheme := runtime.NewScheme()
 	err := argusiov1alpha1.AddToScheme(commonScheme)
 	require.Nil(t, err)

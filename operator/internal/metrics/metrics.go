@@ -21,6 +21,10 @@ const (
 var gaugeVecMetrics = map[string]*prometheus.GaugeVec{}
 
 func SetUpMetrics() {
+	// Only register once
+	if len(gaugeVecMetrics) == 6 {
+		return
+	}
 	// Obtain the prometheus metrics and register
 	attestationsTotal := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Subsystem: "argus",
