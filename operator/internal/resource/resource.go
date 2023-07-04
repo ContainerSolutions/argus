@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
+	"github.com/ContainerSolutions/argus/operator/internal/metrics"
 	"github.com/hashicorp/go-multierror"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -36,6 +37,11 @@ func UpdateRequirements(resourceRequirementList argusiov1alpha1.ResourceRequirem
 	resource.Status.CompliantChildren = compliantChildren
 	resource.Status.TotalRequirements = len(resourceRequirementList.Items)
 	resource.Status.ImplementedRequirements = validRequirements
+	labels := map[string]string{
+		"resource": resource.Name,
+	}
+	metrics.GetGaugeVec(metrics.RequirementTotalKey).With(labels).Set(float64(resource.Status.TotalRequirements))
+	metrics.GetGaugeVec(metrics.RequirementValidKey).With(labels).Set(float64(resource.Status.ImplementedRequirements))
 	return resource
 }
 
