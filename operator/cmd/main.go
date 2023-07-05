@@ -40,6 +40,7 @@ import (
 	"github.com/ContainerSolutions/argus/operator/internal/controller/resourceattestation"
 	"github.com/ContainerSolutions/argus/operator/internal/controller/resourceimplementation"
 	"github.com/ContainerSolutions/argus/operator/internal/controller/resourcerequirement"
+	"github.com/ContainerSolutions/argus/operator/internal/metrics"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -61,6 +62,7 @@ func main() {
 	var probeAddr string
 	var lvl zapcore.Level
 	var enc zapcore.TimeEncoder
+	metrics.SetUpMetrics()
 	lvlErr := lvl.UnmarshalText([]byte("info"))
 	if lvlErr != nil {
 		setupLog.Error(lvlErr, "error unmarshalling loglevel")

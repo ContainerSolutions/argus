@@ -22,6 +22,7 @@ import (
 	"time"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
+	"github.com/ContainerSolutions/argus/operator/internal/metrics"
 	lib "github.com/ContainerSolutions/argus/operator/internal/resourcerequirement"
 	"github.com/go-logr/logr"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -65,6 +66,13 @@ func (r *ResourceRequirementReconciler) Reconcile(ctx context.Context, req ctrl.
 	res.Status.ApplicableResourceImplementations = implementations
 	res.Status.Status = "Not Implemented"
 	res.Status.RunAt = metav1.Now()
+	labels := map[string]string{
+		"resource":    res.Labels["argus.io/resource"],
+		"requirement": res.Labels["argus.io/requirement"],
+	}
+	metrics.GetGaugeVec(metrics.ImplementationTotalKey).With(labels).Set(float64(res.Status.TotalImplementations))
+	metrics.GetGaugeVec(metrics.ImplementationValidKey).With(labels).Set(float64(res.Status.ValidImplementations))
+
 	if res.Status.TotalImplementations == res.Status.ValidImplementations && res.Status.TotalImplementations > 0 {
 		res.Status.Status = "Implemented"
 	}

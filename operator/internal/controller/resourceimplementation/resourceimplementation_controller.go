@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ContainerSolutions/argus/operator/internal/metrics"
 	lib "github.com/ContainerSolutions/argus/operator/internal/resourceimplementation"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -66,6 +67,13 @@ func (r *ResourceImplementationReconciler) Reconcile(ctx context.Context, req ct
 	res.Status.TotalAttestations = len(children)
 	res.Status.PassedAttestations = valid
 	res.Status.RunAt = metav1.Now()
+	labels := map[string]string{
+		"resource":       res.Labels["argus.io/resource"],
+		"implementation": res.Labels["argus.io/implementation"],
+		"requirement":    res.Labels["argus.io/requirement"],
+	}
+	metrics.GetGaugeVec(metrics.AttestationTotalKey).With(labels).Set(float64(res.Status.TotalAttestations))
+	metrics.GetGaugeVec(metrics.AttestationValidKey).With(labels).Set(float64(res.Status.PassedAttestations))
 	err = r.Client.Status().Patch(ctx, &res, client.MergeFrom(original))
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)

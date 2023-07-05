@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
+	"github.com/ContainerSolutions/argus/operator/internal/metrics"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -14,6 +15,7 @@ import (
 )
 
 func TestUpdateRequirements(t *testing.T) {
+	metrics.SetUpMetrics()
 	testCases := []struct {
 		name                         string
 		expectedOutput               *argusiov1alpha1.Resource
@@ -94,6 +96,7 @@ func TestUpdateRequirements(t *testing.T) {
 }
 
 func TestUpdateChild(t *testing.T) {
+	metrics.SetUpMetrics()
 	err := argusiov1alpha1.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
 	testCases := []struct {
