@@ -8,6 +8,162 @@ rules:
 - apiGroups:
   - argus.io
   resources:
+  - Assessments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - Assessments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - Assessments/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - ComponentAssessments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - ComponentAssessments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - ComponentAssessments/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - ComponentControls
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - ComponentControls/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - ComponentControls/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - Componentattestations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - Componentattestations/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - Componentattestations/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - Components
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - Components/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - Components/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - Controls
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - Controls/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - Controls/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
   - attestationproviders
   verbs:
   - get
@@ -35,162 +191,6 @@ rules:
   - argus.io
   resources:
   - attestations/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - implementations
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - implementations/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - implementations/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - requirements
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - requirements/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - requirements/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - resourceattestations
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - resourceattestations/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - resourceattestations/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - resourceimplementations
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - resourceimplementations/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - resourceimplementations/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - resourcerequirements
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - resourcerequirements/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - resourcerequirements/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - resources
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - resources/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - resources/status
   verbs:
   - get
   - patch

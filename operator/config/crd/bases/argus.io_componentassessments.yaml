@@ -5,20 +5,31 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.3
   creationTimestamp: null
-  name: attestations.argus.io
+  name: componentassessments.argus.io
 spec:
   group: argus.io
   names:
-    kind: Attestation
-    listKind: AttestationList
-    plural: attestations
-    singular: attestation
+    kind: ComponentAssessment
+    listKind: ComponentAssessmentList
+    plural: componentassessments
+    singular: componentassessment
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.totalAttestations
+      name: Total Attestations
+      type: integer
+    - jsonPath: .status.passedAttestations
+      name: Passed Attestations
+      type: integer
+    - jsonPath: .status.runAt
+      name: Last Run
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Attestation is the Schema for the attestations API
+        description: ComponentAssessment is the Schema for the ComponentAssessments
+          API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,28 +44,28 @@ spec:
           metadata:
             type: object
           spec:
-            description: AttestationSpec defines the desired state of Attestation
+            description: ComponentAssessmentSpec defines the desired state of ComponentAssessment
             properties:
-              assessmentRef:
-                type: string
-              providerRef:
+              ControlRef:
                 properties:
-                  name:
+                  code:
                     type: string
-                  namespace:
+                  version:
                     type: string
                 required:
-                - name
-                - namespace
+                - code
+                - version
                 type: object
+              class:
+                type: string
             required:
-            - assessmentRef
-            - providerRef
+            - ControlRef
+            - class
             type: object
           status:
-            description: AttestationStatus defines the observed state of Attestation
+            description: ComponentAssessmentStatus defines the observed state of ComponentAssessment
             properties:
-              children:
+              ComponentAttestations:
                 items:
                   properties:
                     name:
@@ -66,8 +77,18 @@ spec:
                   - namespace
                   type: object
                 type: array
-              status:
+              passedAttestations:
+                default: 0
+                type: integer
+              runAt:
+                format: date-time
                 type: string
+              totalAttestations:
+                default: 0
+                type: integer
+            required:
+            - passedAttestations
+            - totalAttestations
             type: object
         type: object
     served: true

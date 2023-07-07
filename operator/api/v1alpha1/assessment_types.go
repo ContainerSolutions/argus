@@ -20,19 +20,24 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// AttestationSpec defines the desired state of Attestation
-type AttestationSpec struct {
-	AssessmentRef string                 `json:"assessmentRef"`
-	ProviderRef   AttestationProviderRef `json:"providerRef"`
+// AssessmentSpec defines the desired state of Assessment
+type AssessmentSpec struct {
+	Class string `json:"class"`
+	//+default="Cascade"
+	CascadePolicy AssessmentCascadePolicy     `json:"cascadePolicy"`
+	ControlRef    AssessmentControlDefinition `json:"controlRef"`
+	ComponentRef  []NamespacedName            `json:"componentRef"`
 }
 
-type AttestationProviderRef struct {
-	Name      string `json:"name"`
-	Namespace string `json:"namespace"`
-}
+type AssessmentCascadePolicy string
 
-// AttestationStatus defines the observed state of Attestation
-type AttestationStatus struct {
+const (
+	CascadingPolicyCascade AssessmentCascadePolicy = "Cascade"
+	CascadingPolicyNone    AssessmentCascadePolicy = "None"
+)
+
+// AssessmentStatus defines the observed state of Assessment
+type AssessmentStatus struct {
 	//+optional
 	Children []NamespacedName `json:"children,omitempty"`
 	//+optional
@@ -42,24 +47,24 @@ type AttestationStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// Attestation is the Schema for the attestations API
-type Attestation struct {
+// Assessment is the Schema for the Assessments API
+type Assessment struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   AttestationSpec   `json:"spec,omitempty"`
-	Status AttestationStatus `json:"status,omitempty"`
+	Spec   AssessmentSpec   `json:"spec,omitempty"`
+	Status AssessmentStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// AttestationList contains a list of Attestation
-type AttestationList struct {
+// AssessmentList contains a list of Assessment
+type AssessmentList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Attestation `json:"items"`
+	Items           []Assessment `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Attestation{}, &AttestationList{})
+	SchemeBuilder.Register(&Assessment{}, &AssessmentList{})
 }

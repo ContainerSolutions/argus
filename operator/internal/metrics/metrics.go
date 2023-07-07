@@ -5,17 +5,17 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/metrics"
 )
 
-var implementationLabels = []string{"resource", "implementation", "requirement"}
-var requirementLabels = []string{"resource", "requirement"}
-var resourceLabels = []string{"resource"}
+var AssessmentLabels = []string{"Component", "Assessment", "Control"}
+var ControlLabels = []string{"Component", "Control"}
+var ComponentLabels = []string{"Component"}
 
 const (
-	AttestationTotalKey    = "attestations_total"
-	AttestationValidKey    = "attestations_valid"
-	ImplementationTotalKey = "implementations_total"
-	ImplementationValidKey = "implementations_valid"
-	RequirementTotalKey    = "requirements_total"
-	RequirementValidKey    = "requirements_valid"
+	AttestationTotalKey = "attestations_total"
+	AttestationValidKey = "attestations_valid"
+	AssessmentTotalKey  = "Assessments_total"
+	AssessmentValidKey  = "Assessments_valid"
+	ControlTotalKey     = "Controls_total"
+	ControlValidKey     = "Controls_valid"
 )
 
 var gaugeVecMetrics = map[string]*prometheus.GaugeVec{}
@@ -30,45 +30,45 @@ func SetUpMetrics() {
 		Subsystem: "argus",
 		Name:      "attestations_total",
 		Help:      "Total number of Attestations",
-	}, implementationLabels)
+	}, AssessmentLabels)
 	attestationsValid := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Subsystem: "argus",
 		Name:      "attestations_valid",
 		Help:      "Total number of Attestations",
-	}, implementationLabels)
-	implementationsTotal := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+	}, AssessmentLabels)
+	AssessmentsTotal := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Subsystem: "argus",
-		Name:      "implementations_total",
-		Help:      "Total number of Implementations",
-	}, requirementLabels)
+		Name:      "Assessments_total",
+		Help:      "Total number of Assessments",
+	}, ControlLabels)
 	// Obtain the prometheus metrics and register
-	implementationsValid := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+	AssessmentsValid := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Subsystem: "argus",
-		Name:      "implementations_valid",
-		Help:      "Number of valid Implementations",
-	}, requirementLabels)
-	requirementsTotal := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name:      "Assessments_valid",
+		Help:      "Number of valid Assessments",
+	}, ControlLabels)
+	ControlsTotal := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Subsystem: "argus",
-		Name:      "requirements_total",
-		Help:      "Total number of Requirements",
-	}, resourceLabels)
-	requirementsValid := prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name:      "Controls_total",
+		Help:      "Total number of Controls",
+	}, ComponentLabels)
+	ControlsValid := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Subsystem: "argus",
-		Name:      "requirements_valid",
-		Help:      "Number of valid Requirements",
-	}, resourceLabels)
+		Name:      "Controls_valid",
+		Help:      "Number of valid Controls",
+	}, ComponentLabels)
 	metrics.Registry.MustRegister(
 		attestationsTotal, attestationsValid,
-		implementationsTotal, implementationsValid,
-		requirementsTotal, requirementsValid)
+		AssessmentsTotal, AssessmentsValid,
+		ControlsTotal, ControlsValid)
 
 	gaugeVecMetrics = map[string]*prometheus.GaugeVec{
-		AttestationTotalKey:    attestationsTotal,
-		AttestationValidKey:    attestationsValid,
-		ImplementationTotalKey: implementationsTotal,
-		ImplementationValidKey: implementationsValid,
-		RequirementTotalKey:    requirementsTotal,
-		RequirementValidKey:    requirementsValid,
+		AttestationTotalKey: attestationsTotal,
+		AttestationValidKey: attestationsValid,
+		AssessmentTotalKey:  AssessmentsTotal,
+		AssessmentValidKey:  AssessmentsValid,
+		ControlTotalKey:     ControlsTotal,
+		ControlValidKey:     ControlsValid,
 	}
 }
 

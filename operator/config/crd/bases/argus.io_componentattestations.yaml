@@ -5,20 +5,28 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.3
   creationTimestamp: null
-  name: attestations.argus.io
+  name: componentattestations.argus.io
 spec:
   group: argus.io
   names:
-    kind: Attestation
-    listKind: AttestationList
-    plural: attestations
-    singular: attestation
+    kind: ComponentAttestation
+    listKind: ComponentAttestationList
+    plural: componentattestations
+    singular: componentattestation
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.result.result
+      name: Result
+      type: string
+    - jsonPath: .status.result.runAt
+      name: Last Run
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Attestation is the Schema for the attestations API
+        description: ComponentAttestation is the Schema for the Componentattestations
+          API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,10 +41,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: AttestationSpec defines the desired state of Attestation
+            description: ComponentAttestationSpec defines the desired state of ComponentAttestation
             properties:
-              assessmentRef:
-                type: string
               providerRef:
                 properties:
                   name:
@@ -48,26 +54,36 @@ spec:
                 - namespace
                 type: object
             required:
-            - assessmentRef
             - providerRef
             type: object
           status:
-            description: AttestationStatus defines the observed state of Attestation
+            description: ComponentAttestationStatus defines the observed state of
+              ComponentAttestation
             properties:
-              children:
-                items:
-                  properties:
-                    name:
-                      type: string
-                    namespace:
-                      type: string
-                  required:
-                  - name
-                  - namespace
-                  type: object
-                type: array
+              result:
+                properties:
+                  err:
+                    type: string
+                  logs:
+                    type: string
+                  reason:
+                    type: string
+                  result:
+                    type: string
+                  runAt:
+                    format: date-time
+                    type: string
+                required:
+                - logs
+                - reason
+                - result
+                - runAt
+                type: object
               status:
                 type: string
+            required:
+            - result
+            - status
             type: object
         type: object
     served: true

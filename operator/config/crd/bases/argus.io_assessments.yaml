@@ -5,20 +5,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.3
   creationTimestamp: null
-  name: attestations.argus.io
+  name: assessments.argus.io
 spec:
   group: argus.io
   names:
-    kind: Attestation
-    listKind: AttestationList
-    plural: attestations
-    singular: attestation
+    kind: Assessment
+    listKind: AssessmentList
+    plural: assessments
+    singular: assessment
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Attestation is the Schema for the attestations API
+        description: Assessment is the Schema for the Assessments API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,26 +33,42 @@ spec:
           metadata:
             type: object
           spec:
-            description: AttestationSpec defines the desired state of Attestation
+            description: AssessmentSpec defines the desired state of Assessment
             properties:
-              assessmentRef:
+              cascadePolicy:
                 type: string
-              providerRef:
+              class:
+                type: string
+              componentRef:
+                items:
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                  required:
+                  - name
+                  - namespace
+                  type: object
+                type: array
+              controlRef:
                 properties:
-                  name:
+                  code:
                     type: string
-                  namespace:
+                  version:
                     type: string
                 required:
-                - name
-                - namespace
+                - code
+                - version
                 type: object
             required:
-            - assessmentRef
-            - providerRef
+            - cascadePolicy
+            - class
+            - componentRef
+            - controlRef
             type: object
           status:
-            description: AttestationStatus defines the observed state of Attestation
+            description: AssessmentStatus defines the observed state of Assessment
             properties:
               children:
                 items:

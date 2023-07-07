@@ -1,21 +1,21 @@
 apiVersion: argus.io/v1alpha1
-kind: Requirement
+kind: Control
 metadata:
   labels:
-    app.kubernetes.io/name: requirement
-    app.kubernetes.io/instance: requirement-sample
+    app.kubernetes.io/name: control
+    app.kubernetes.io/instance: control-sample
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: requirement-sample
+  name: control-sample
 spec:
   definition: 
     version: 1.0.0
     code: REQ-01
     class: "Security"
     category: "Internal"
-  applicableResourceClasses:
+  applicableComponentClasses:
   - Myclass
 # - Myclass2
-  requiredImplementationClasses:
+  requiredAssessmentClasses:
   - PreventativeControl

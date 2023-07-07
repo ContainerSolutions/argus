@@ -1,19 +1,19 @@
 apiVersion: argus.io/v1alpha1
-kind: Implementation
+kind: Assessment
 metadata:
   labels:
-    app.kubernetes.io/name: implementation
-    app.kubernetes.io/instance: implementation-sample
+    app.kubernetes.io/name: assessment
+    app.kubernetes.io/instance: assessment-sample
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: implementation1-req2
+  name: assessment1-req2
 spec:
   class: PreventativeControl
   cascadePolicy: None
-  requirementRef:
+  controlRef:
     code: REQ-02
     version: 1.0.0
-  resourceRef:
-  - name: resource2
+  componentRef:
+  - name: component2
     namespace: default

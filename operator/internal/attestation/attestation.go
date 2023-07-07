@@ -13,46 +13,46 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-func GetResourceAttestations(ctx context.Context, cl client.Client, res *argusiov1alpha1.Attestation) (map[string]argusiov1alpha1.ResourceAttestation, error) {
-	resourceAttestationList := argusiov1alpha1.ResourceAttestationList{}
-	err := cl.List(ctx, &resourceAttestationList, client.MatchingLabels{"argus.io/attestation": res.Name})
+func GetComponentAttestations(ctx context.Context, cl client.Client, res *argusiov1alpha1.Attestation) (map[string]argusiov1alpha1.ComponentAttestation, error) {
+	ComponentAttestationList := argusiov1alpha1.ComponentAttestationList{}
+	err := cl.List(ctx, &ComponentAttestationList, client.MatchingLabels{"argus.io/attestation": res.Name})
 	if err != nil {
-		return nil, fmt.Errorf("could not list ResourceAttestation: %w", err)
+		return nil, fmt.Errorf("could not list ComponentAttestation: %w", err)
 	}
-	resReqs := make(map[string]argusiov1alpha1.ResourceAttestation)
-	for _, item := range resourceAttestationList.Items {
+	resReqs := make(map[string]argusiov1alpha1.ComponentAttestation)
+	for _, item := range ComponentAttestationList.Items {
 		resReqs[item.Name] = item
 	}
 	return resReqs, nil
 }
 
-func LifecycleResourceAttestations(ctx context.Context, cl client.Client, implementationRef string, resources []argusiov1alpha1.ResourceImplementation, items map[string]argusiov1alpha1.ResourceAttestation) error {
-	resourceNames := []string{}
-	for _, resource := range resources {
-		label, ok := resource.ObjectMeta.Labels["argus.io/resource"]
+func LifecycleComponentAttestations(ctx context.Context, cl client.Client, AssessmentRef string, Components []argusiov1alpha1.ComponentAssessment, items map[string]argusiov1alpha1.ComponentAttestation) error {
+	ComponentNames := []string{}
+	for _, Component := range Components {
+		label, ok := Component.ObjectMeta.Labels["argus.io/Component"]
 		if !ok {
-			return fmt.Errorf("resource implementation '%v' does not contain expected label 'argus.io/resource'", resource.Name)
+			return fmt.Errorf("Component Assessment '%v' does not contain expected label 'argus.io/Component'", Component.Name)
 		}
-		resourceNames = append(resourceNames, label)
+		ComponentNames = append(ComponentNames, label)
 	}
 	for _, item := range items {
-		// if item does not belong anymore to the same implementation ref, delete it (as the attestation was updated)
-		if item.Labels["argus.io/implementation"] != implementationRef {
+		// if item does not belong anymore to the same Assessment ref, delete it (as the attestation was updated)
+		if item.Labels["argus.io/Assessment"] != AssessmentRef {
 			err := cl.Delete(ctx, &item)
 			if err != nil {
-				return fmt.Errorf("could not delete ResourceAttestation '%v': %w", item.Name, err)
+				return fmt.Errorf("could not delete ComponentAttestation '%v': %w", item.Name, err)
 			}
 			continue
 		}
-		refResource, ok := item.ObjectMeta.Labels["argus.io/resource"]
+		refComponent, ok := item.ObjectMeta.Labels["argus.io/Component"]
 		if !ok {
-			return fmt.Errorf("object '%v' does not contain expected label 'argus.io/resource'", item.Name)
+			return fmt.Errorf("object '%v' does not contain expected label 'argus.io/Component'", item.Name)
 		}
-		// If resource does not exist, it was deleted - we need to delete resourceRequirement
-		if !utils.Contains(resourceNames, refResource) {
+		// If Component does not exist, it was deleted - we need to delete ComponentControl
+		if !utils.Contains(ComponentNames, refComponent) {
 			err := cl.Delete(ctx, &item)
 			if err != nil {
-				return fmt.Errorf("could not delete ResourceAttestation '%v': %w", item.Name, err)
+				return fmt.Errorf("could not delete ComponentAttestation '%v': %w", item.Name, err)
 			}
 		}
 	}
@@ -60,45 +60,45 @@ func LifecycleResourceAttestations(ctx context.Context, cl client.Client, implem
 
 }
 
-func CreateOrUpdateResourceAttestations(ctx context.Context, cl client.Client, scheme *runtime.Scheme, res *argusiov1alpha1.Attestation, resources []argusiov1alpha1.ResourceImplementation) ([]argusiov1alpha1.NamespacedName, error) {
+func CreateOrUpdateComponentAttestations(ctx context.Context, cl client.Client, scheme *runtime.Scheme, res *argusiov1alpha1.Attestation, Components []argusiov1alpha1.ComponentAssessment) ([]argusiov1alpha1.NamespacedName, error) {
 	all := []argusiov1alpha1.NamespacedName{}
-	for _, resource := range resources {
-		implementationName, ok := resource.ObjectMeta.Labels["argus.io/implementation"]
+	for _, Component := range Components {
+		AssessmentName, ok := Component.ObjectMeta.Labels["argus.io/Assessment"]
 		if !ok {
-			return nil, fmt.Errorf("resource implementation '%v' does not contain expected label 'argus.io/implementation'", resource.Name)
+			return nil, fmt.Errorf("Component Assessment '%v' does not contain expected label 'argus.io/Assessment'", Component.Name)
 		}
-		if res.Spec.ImplementationRef == implementationName {
-			resourceName, ok := resource.ObjectMeta.Labels["argus.io/resource"]
+		if res.Spec.AssessmentRef == AssessmentName {
+			ComponentName, ok := Component.ObjectMeta.Labels["argus.io/Component"]
 			if !ok {
-				return nil, fmt.Errorf("resource implementation '%v' does not contain expected label 'argus.io/resource'", resource.Name)
+				return nil, fmt.Errorf("Component Assessment '%v' does not contain expected label 'argus.io/Component'", Component.Name)
 			}
-			requirementName, ok := resource.ObjectMeta.Labels["argus.io/requirement"]
+			ControlName, ok := Component.ObjectMeta.Labels["argus.io/Control"]
 			if !ok {
-				return nil, fmt.Errorf("resource implementation '%v' does not contain expected label 'argus.io/requirement'", resource.Name)
+				return nil, fmt.Errorf("Component Assessment '%v' does not contain expected label 'argus.io/Control'", Component.Name)
 			}
-			resAtt := &argusiov1alpha1.ResourceAttestation{
+			resAtt := &argusiov1alpha1.ComponentAttestation{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      fmt.Sprintf("%v-%v", res.Name, resourceName),
+					Name:      fmt.Sprintf("%v-%v", res.Name, ComponentName),
 					Namespace: res.Namespace,
 				},
 			}
 			err := controllerutil.SetControllerReference(res, &resAtt.ObjectMeta, scheme)
 			if err != nil {
-				return nil, fmt.Errorf("could not set controller reference for resourceImplementation '%v': %w", resAtt.Name, err)
+				return nil, fmt.Errorf("could not set controller reference for ComponentAssessment '%v': %w", resAtt.Name, err)
 			}
 			emptyMutation := func() error {
 				resAtt.Spec.ProviderRef = res.Spec.ProviderRef
 				resAtt.ObjectMeta.Labels = map[string]string{
-					"argus.io/implementation": res.Spec.ImplementationRef,
-					"argus.io/attestation":    res.Name,
-					"argus.io/resource":       resourceName,
-					"argus.io/requirement":    requirementName,
+					"argus.io/Assessment":  res.Spec.AssessmentRef,
+					"argus.io/attestation": res.Name,
+					"argus.io/Component":   ComponentName,
+					"argus.io/Control":     ControlName,
 				}
 				return nil
 			}
 			_, err = ctrl.CreateOrUpdate(ctx, cl, resAtt, emptyMutation)
 			if err != nil {
-				return nil, fmt.Errorf("could not create ResourceAttestation '%v': %w", resAtt.Name, err)
+				return nil, fmt.Errorf("could not create ComponentAttestation '%v': %w", resAtt.Name, err)
 			}
 			child := argusiov1alpha1.NamespacedName{
 				Name:      resAtt.Name,
