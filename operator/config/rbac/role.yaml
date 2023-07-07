@@ -8,7 +8,7 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - Assessments
+  - assessments
   verbs:
   - create
   - delete
@@ -20,143 +20,13 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - Assessments/finalizers
+  - assessments/finalizers
   verbs:
   - update
 - apiGroups:
   - argus.io
   resources:
-  - Assessments/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - ComponentAssessments
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - ComponentAssessments/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - ComponentAssessments/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - ComponentControls
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - ComponentControls/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - ComponentControls/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - Componentattestations
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - Componentattestations/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - Componentattestations/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - Components
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - Components/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - Components/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - Controls
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - Controls/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - Controls/status
+  - assessments/status
   verbs:
   - get
   - patch
@@ -191,6 +61,136 @@ rules:
   - argus.io
   resources:
   - attestations/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - componentassessments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - componentassessments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - componentassessments/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - componentattestations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - componentattestations/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - componentattestations/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - componentcontrols
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - componentcontrols/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - componentcontrols/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - components
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - components/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - components/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - controls
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - controls/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - controls/status
   verbs:
   - get
   - patch

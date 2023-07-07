@@ -41,9 +41,9 @@ type ComponentAttestationReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=argus.io,resources=Componentattestations,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=argus.io,resources=Componentattestations/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=argus.io,resources=Componentattestations/finalizers,verbs=update
+//+kubebuilder:rbac:groups=argus.io,resources=componentattestations,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=argus.io,resources=componentattestations/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=argus.io,resources=componentattestations/finalizers,verbs=update
 //+kubebuilder:rbac:groups=argus.io,resources=attestationproviders,verbs=get;list;watch
 
 func (r *ComponentAttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {

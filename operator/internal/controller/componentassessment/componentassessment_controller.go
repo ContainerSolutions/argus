@@ -41,9 +41,9 @@ type ComponentAssessmentReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=argus.io,resources=ComponentAssessments,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=argus.io,resources=ComponentAssessments/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=argus.io,resources=ComponentAssessments/finalizers,verbs=update
+//+kubebuilder:rbac:groups=argus.io,resources=componentassessments,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=argus.io,resources=componentassessments/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=argus.io,resources=componentassessments/finalizers,verbs=update
 
 func (r *ComponentAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := r.Log.WithValues("ComponentAssessment", req.NamespacedName)

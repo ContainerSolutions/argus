@@ -40,9 +40,9 @@ type ComponentControlReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=argus.io,resources=ComponentControls,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=argus.io,resources=ComponentControls/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=argus.io,resources=ComponentControls/finalizers,verbs=update
+//+kubebuilder:rbac:groups=argus.io,resources=componentcontrols,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=argus.io,resources=componentcontrols/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=argus.io,resources=componentcontrols/finalizers,verbs=update
 
 func (r *ComponentControlReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := r.Log.WithValues("ComponentControl", req.NamespacedName)

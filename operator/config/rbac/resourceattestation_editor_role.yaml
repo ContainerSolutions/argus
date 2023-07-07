@@ -14,7 +14,7 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resourceattestations
+  - componentattestations
   verbs:
   - create
   - delete
@@ -26,6 +26,6 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resourceattestations/status
+  - componentattestations/status
   verbs:
   - get

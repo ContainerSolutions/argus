@@ -41,9 +41,9 @@ type ControlReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=argus.io,resources=Controls,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=argus.io,resources=Controls/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=argus.io,resources=Controls/finalizers,verbs=update
+// +kubebuilder:rbac:groups=argus.io,resources=controls,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=argus.io,resources=controls/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=argus.io,resources=controls/finalizers,verbs=update
 
 func (r *ControlReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := r.Log.WithValues("Control", req.NamespacedName)

@@ -37,9 +37,9 @@ type Reconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=argus.io,resources=Components,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=argus.io,resources=Components/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=argus.io,resources=Components/finalizers,verbs=update
+//+kubebuilder:rbac:groups=argus.io,resources=components,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=argus.io,resources=components/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=argus.io,resources=components/finalizers,verbs=update
 
 func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := r.Log.WithValues("Component", req.NamespacedName)

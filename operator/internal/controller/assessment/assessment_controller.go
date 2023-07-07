@@ -38,9 +38,9 @@ type AssessmentReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=argus.io,resources=Assessments,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=argus.io,resources=Assessments/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=argus.io,resources=Assessments/finalizers,verbs=update
+// +kubebuilder:rbac:groups=argus.io,resources=assessments,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=argus.io,resources=assessments/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=argus.io,resources=assessments/finalizers,verbs=update
 
 func (r *AssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := r.Log.WithValues("Assessment", req.NamespacedName)
