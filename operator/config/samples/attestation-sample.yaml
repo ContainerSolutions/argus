@@ -11,5 +11,5 @@ metadata:
 spec:
   assessmentRef: "implementation-sample"
   providerRef: 
-    name: fail
+    name: random
     namespace: default

@@ -28,6 +28,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
@@ -55,7 +56,7 @@ func (r *AttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "could not get Component")
 		return ctrl.Result{}, nil
 	}
-	log.Info("Reconciling Attestation", "Attestation", res.Name)
+	//log.Info("Reconciling Attestation", "Attestation", res.Name)
 	ComponentList := argusiov1alpha1.ComponentAssessmentList{}
 	err = r.Client.List(ctx, &ComponentList)
 	if err != nil {
@@ -85,8 +86,9 @@ func (r *AttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *AttestationReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *AttestationReconciler) SetupWithManager(mgr ctrl.Manager, opts controller.Options) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&argusiov1alpha1.Attestation{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		WithOptions(opts).
 		Complete(r)
 }

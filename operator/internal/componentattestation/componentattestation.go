@@ -26,7 +26,7 @@ func GetAttestationClient(ctx context.Context, cl client.Client, res *argusiov1a
 	if err != nil {
 		return nil, fmt.Errorf("could not get provider '%v': %w", req.Name, err)
 	}
-	attestationClient, err := prov.New(&providerSpec.Spec)
+	attestationClient, err := prov.New(res.Name, &providerSpec.Spec)
 	if err != nil {
 		return nil, fmt.Errorf("could not instantiate client for provider '%v': %w", req.Name, err)
 	}

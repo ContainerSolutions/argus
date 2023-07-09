@@ -24,10 +24,10 @@ import (
 	lib "github.com/ContainerSolutions/argus/operator/internal/componentattestation"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
@@ -58,7 +58,7 @@ func (r *ComponentAttestationReconciler) Reconcile(ctx context.Context, req ctrl
 		log.Error(err, "could not get Component")
 		return ctrl.Result{}, nil
 	}
-	log.Info("Reconciling ComponentAttestation", "ComponentAttestation", res.Name)
+	//log.Info("Reconciling ComponentAttestation", "ComponentAttestation", res.Name)
 	// Get Attestation Client
 	attestationClient, err := lib.GetAttestationClient(ctx, r.Client, &res)
 	if err != nil {
@@ -82,25 +82,26 @@ func (r *ComponentAttestationReconciler) Reconcile(ctx context.Context, req ctrl
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not update Control status: %w", err)
 	}
-	// Update ComponentAssessment Metadata (to force reconciliation)
-	resImp := argusiov1alpha1.ComponentAssessment{}
-	resImpName := fmt.Sprintf("%v-%v", res.Labels["argus.io/Assessment"], res.Labels["argus.io/Component"])
-	err = r.Client.Get(ctx, types.NamespacedName{Namespace: res.Namespace, Name: resImpName}, &resImp)
-	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("could not get ComponentAssessment: %w", err)
-	}
-	originalResImp := resImp.DeepCopy()
-	resImp.ObjectMeta.Annotations = map[string]string{fmt.Sprintf("%v.attestation.argus.io/lastRun", res.Name): time.Now().String()}
-	err = r.Client.Patch(ctx, &resImp, client.MergeFrom(originalResImp))
-	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("could not trigger ComponentAssessment reconciliation: %w", err)
-	}
+	// // Update ComponentAssessment Metadata (to force reconciliation)
+	// resImp := argusiov1alpha1.ComponentAssessment{}
+	// resImpName := fmt.Sprintf("%v-%v", res.Labels["argus.io/Assessment"], res.Labels["argus.io/Component"])
+	// err = r.Client.Get(ctx, types.NamespacedName{Namespace: res.Namespace, Name: resImpName}, &resImp)
+	// if err != nil {
+	// 	return ctrl.Result{}, fmt.Errorf("could not get ComponentAssessment: %w", err)
+	// }
+	// originalResImp := resImp.DeepCopy()
+	// resImp.ObjectMeta.Annotations = map[string]string{fmt.Sprintf("%v.attestation.argus.io/lastRun", res.Name): time.Now().String()}
+	// err = r.Client.Patch(ctx, &resImp, client.MergeFrom(originalResImp))
+	// if err != nil {
+	// 	return ctrl.Result{}, fmt.Errorf("could not trigger ComponentAssessment reconciliation: %w", err)
+	// }
 	return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *ComponentAttestationReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *ComponentAttestationReconciler) SetupWithManager(mgr ctrl.Manager, opts controller.Options) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&argusiov1alpha1.ComponentAttestation{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		WithOptions(opts).
 		Complete(r)
 }

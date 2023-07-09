@@ -29,6 +29,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 	"github.com/go-logr/logr"
@@ -50,7 +51,7 @@ func (r *ControlReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	// Get Component
 	Control := argusiov1alpha1.Control{}
 	err := r.Client.Get(ctx, req.NamespacedName, &Control)
-	log.Info("Reconciling Control", "Control", Control.Name)
+	//log.Info("Reconciling Control", "Control", Control.Name)
 	if apierrors.IsNotFound(err) {
 		return ctrl.Result{}, nil
 	} else if err != nil {
@@ -92,8 +93,9 @@ func (r *ControlReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *ControlReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *ControlReconciler) SetupWithManager(mgr ctrl.Manager, opts controller.Options) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&argusiov1alpha1.Control{}).
+		WithOptions(opts).
 		Complete(r)
 }

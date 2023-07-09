@@ -11,5 +11,5 @@ metadata:
 spec:
   assessmentRef: "assessment1-req2"
   providerRef: 
-    name: pass
+    name: random
     namespace: default

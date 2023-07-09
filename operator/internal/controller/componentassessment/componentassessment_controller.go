@@ -29,6 +29,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 	"github.com/go-logr/logr"
@@ -56,7 +57,7 @@ func (r *ComponentAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.
 		log.Error(err, "could not get Component")
 		return ctrl.Result{}, nil
 	}
-	log.Info("Reconciling ComponentAssessment", "ComponentAssessment", res.Name)
+	//log.Info("Reconciling ComponentAssessment", "ComponentAssessment", res.Name)
 	attestations, err := lib.ListComponentAttestations(ctx, r.Client, &res)
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not list ComponentAttestations: %w", err)
@@ -78,28 +79,29 @@ func (r *ComponentAssessmentReconciler) Reconcile(ctx context.Context, req ctrl.
 	if err != nil {
 		return ctrl.Result{}, fmt.Errorf("could not update Control status: %w", err)
 	}
-	// Update ComponentControls metadata (force reconciliation)
-	list := argusiov1alpha1.ComponentControlList{}
-	err = r.Client.List(ctx, &list, client.MatchingLabels{"argus.io/Control": res.Labels["argus.io/Control"], "argus.io/Component": res.Labels["argus.io/Component"]})
-	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("could not get ComponentControl: %w", err)
-	}
-	for _, resReq := range list.Items {
-		originalResReq := resReq.DeepCopy()
-		resReq.ObjectMeta.Annotations = map[string]string{fmt.Sprintf("%v.Assessment.argus.io/lastRun", res.Name): time.Now().String()}
-		err = r.Client.Patch(ctx, &resReq, client.MergeFrom(originalResReq))
-		if err != nil {
-			return ctrl.Result{}, fmt.Errorf("could not trigger ComponentControl reconciliation: %w", err)
-		}
+	// // Update ComponentControls metadata (force reconciliation)
+	// list := argusiov1alpha1.ComponentControlList{}
+	// err = r.Client.List(ctx, &list, client.MatchingLabels{"argus.io/Control": res.Labels["argus.io/Control"], "argus.io/Component": res.Labels["argus.io/Component"]})
+	// if err != nil {
+	// 	return ctrl.Result{}, fmt.Errorf("could not get ComponentControl: %w", err)
+	// }
+	// for _, resReq := range list.Items {
+	// 	originalResReq := resReq.DeepCopy()
+	// 	resReq.ObjectMeta.Annotations = map[string]string{fmt.Sprintf("%v.Assessment.argus.io/lastRun", res.Name): time.Now().String()}
+	// 	err = r.Client.Patch(ctx, &resReq, client.MergeFrom(originalResReq))
+	// 	if err != nil {
+	// 		return ctrl.Result{}, fmt.Errorf("could not trigger ComponentControl reconciliation: %w", err)
+	// 	}
 
-	}
+	// }
 
-	return ctrl.Result{RequeueAfter: 1 * time.Hour}, nil
+	return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *ComponentAssessmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *ComponentAssessmentReconciler) SetupWithManager(mgr ctrl.Manager, opts controller.Options) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&argusiov1alpha1.ComponentAssessment{}).
+		WithOptions(opts).
 		Complete(r)
 }

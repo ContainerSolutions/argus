@@ -25,6 +25,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 	"github.com/go-logr/logr"
@@ -45,7 +46,7 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	log := r.Log.WithValues("Component", req.NamespacedName)
 	// Get Component
 	Component := argusiov1alpha1.Component{}
-	log.Info("Reconciling Component", "Component", Component.Name)
+	//log.Info("Reconciling Component", "Component", Component.Name)
 	err := r.Client.Get(ctx, req.NamespacedName, &Component)
 	if apierrors.IsNotFound(err) {
 		return ctrl.Result{}, nil
@@ -74,12 +75,13 @@ func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	}
 	// Check Parents
 	// TODO Make this a configuration
-	return ctrl.Result{RequeueAfter: 1 * time.Hour}, nil
+	return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *Reconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *Reconciler) SetupWithManager(mgr ctrl.Manager, opts controller.Options) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&argusiov1alpha1.Component{}).
+		WithOptions(opts).
 		Complete(r)
 }

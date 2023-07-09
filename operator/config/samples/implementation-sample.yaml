@@ -17,5 +17,5 @@ spec:
   componentRef:
   - name: component1
     namespace: default
- - name: component2
-   namespace: default
+  - name: component2
+    namespace: default

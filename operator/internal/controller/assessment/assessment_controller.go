@@ -25,6 +25,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 	lib "github.com/ContainerSolutions/argus/operator/internal/assessment"
@@ -53,7 +54,7 @@ func (r *AssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		log.Error(err, "could not get Component")
 		return ctrl.Result{}, nil
 	}
-	log.Info("Reconciling Assessment", "Assessment", res.Name)
+	//log.Info("Reconciling Assessment", "Assessment", res.Name)
 	ComponentList := argusiov1alpha1.ComponentList{}
 	err = r.Client.List(ctx, &ComponentList)
 	if err != nil {
@@ -88,8 +89,9 @@ func (r *AssessmentReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *AssessmentReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *AssessmentReconciler) SetupWithManager(mgr ctrl.Manager, opts controller.Options) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&argusiov1alpha1.Assessment{}).
+		WithOptions(opts).
 		Complete(r)
 }

@@ -33,7 +33,7 @@ type MockProvider struct {
 	NewFn func(*argusiov1alpha1.AttestationProviderSpec) (schema.AttestationClient, error)
 }
 
-func (m *MockProvider) New(a *argusiov1alpha1.AttestationProviderSpec) (schema.AttestationClient, error) {
+func (m *MockProvider) New(_ string, a *argusiov1alpha1.AttestationProviderSpec) (schema.AttestationClient, error) {
 	return m.NewFn(a)
 }
 
