@@ -1,20 +1,20 @@
-# permissions for end users to view resourcerequirements.
+# permissions for end users to view componentcontrols.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/instance: resourcerequirement-viewer-role
+    app.kubernetes.io/instance: componentcontrol-viewer-role
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: operator
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
-  name: resourcerequirement-viewer-role
+  name: componentcontrol-viewer-role
 rules:
 - apiGroups:
   - argus.io
   resources:
-  - resourcerequirements
+  - componentcontrols
   verbs:
   - get
   - list
@@ -22,6 +22,6 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resourcerequirements/status
+  - componentcontrols/status
   verbs:
   - get

@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/created-by: operator
   name: attestation-sample
 spec:
-  implementationRef: "implementation-sample"
+  assessmentRef: "implementation-sample"
   providerRef: 
-    name: fail
+    name: random
     namespace: default

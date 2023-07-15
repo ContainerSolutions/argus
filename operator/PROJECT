@@ -7,7 +7,7 @@ layout:
 - go.kubebuilder.io/v4
 projectName: operator
 repo: github.com/ContainerSolutions/argus/operator
-resources:
+Components:
 - api:
     crdVersion: v1
     namespaced: true
@@ -21,7 +21,7 @@ resources:
     namespaced: true
   controller: true
   domain: argus.io
-  kind: Implementation
+  kind: Assessment
   path: github.com/ContainerSolutions/argus/operator/api/v1alpha1
   version: v1alpha1
 - api:
@@ -29,7 +29,7 @@ resources:
     namespaced: true
   controller: true
   domain: argus.io
-  kind: Requirement
+  kind: Control
   path: github.com/ContainerSolutions/argus/operator/api/v1alpha1
   version: v1alpha1
 - api:
@@ -37,7 +37,7 @@ resources:
     namespaced: true
   controller: true
   domain: argus.io
-  kind: Resource
+  kind: Component
   path: github.com/ContainerSolutions/argus/operator/api/v1alpha1
   version: v1alpha1
 - api:
@@ -45,7 +45,7 @@ resources:
     namespaced: true
   controller: true
   domain: argus.io
-  kind: ResourceRequirement
+  kind: ComponentControl
   path: github.com/ContainerSolutions/argus/operator/api/v1alpha1
   version: v1alpha1
 - api:
@@ -53,7 +53,7 @@ resources:
     namespaced: true
   controller: true
   domain: argus.io
-  kind: ResourceAttestation
+  kind: ComponentAttestation
   path: github.com/ContainerSolutions/argus/operator/api/v1alpha1
   version: v1alpha1
 - api:
@@ -61,7 +61,7 @@ resources:
     namespaced: true
   controller: true
   domain: argus.io
-  kind: ResourceImplementation
+  kind: ComponentAssessment
   path: github.com/ContainerSolutions/argus/operator/api/v1alpha1
   version: v1alpha1
 - api:

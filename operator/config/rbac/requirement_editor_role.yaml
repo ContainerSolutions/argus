@@ -1,20 +1,20 @@
-# permissions for end users to edit requirements.
+# permissions for end users to edit controls.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/instance: requirement-editor-role
+    app.kubernetes.io/instance: control-editor-role
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: operator
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
-  name: requirement-editor-role
+  name: control-editor-role
 rules:
 - apiGroups:
   - argus.io
   resources:
-  - requirements
+  - controls
   verbs:
   - create
   - delete
@@ -26,6 +26,6 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - requirements/status
+  - controls/status
   verbs:
   - get

@@ -3,12 +3,12 @@
 # It should be run by config/default
 resources:
 - bases/argus.io_attestations.yaml
-- bases/argus.io_implementations.yaml
-- bases/argus.io_requirements.yaml
-- bases/argus.io_resources.yaml
-- bases/argus.io_resourcerequirements.yaml
-- bases/argus.io_resourceattestations.yaml
-- bases/argus.io_resourceimplementations.yaml
+- bases/argus.io_assessments.yaml
+- bases/argus.io_controls.yaml
+- bases/argus.io_components.yaml
+- bases/argus.io_componentcontrols.yaml
+- bases/argus.io_componentattestations.yaml
+- bases/argus.io_componentassessments.yaml
 - bases/argus.io_attestationproviders.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 

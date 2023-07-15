@@ -28,6 +28,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
@@ -52,41 +53,42 @@ func (r *AttestationReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if apierrors.IsNotFound(err) {
 		return ctrl.Result{}, nil
 	} else if err != nil {
-		log.Error(err, "could not get resource")
+		log.Error(err, "could not get Component")
 		return ctrl.Result{}, nil
 	}
-	log.Info("Reconciling Attestation", "Attestation", res.Name)
-	resourceList := argusiov1alpha1.ResourceImplementationList{}
-	err = r.Client.List(ctx, &resourceList)
+	//log.Info("Reconciling Attestation", "Attestation", res.Name)
+	ComponentList := argusiov1alpha1.ComponentAssessmentList{}
+	err = r.Client.List(ctx, &ComponentList)
 	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("could not list Resources CR: %w", err)
+		return ctrl.Result{}, fmt.Errorf("could not list Components CR: %w", err)
 	}
-	resources := resourceList.Items
-	currentAttestations, err := lib.GetResourceAttestations(ctx, r.Client, &res)
+	Components := ComponentList.Items
+	currentAttestations, err := lib.GetComponentAttestations(ctx, r.Client, &res)
 	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("could not get ResourceImplementation for requirement '%v': %w", res.Name, err)
+		return ctrl.Result{}, fmt.Errorf("could not get ComponentAssessment for Control '%v': %w", res.Name, err)
 	}
-	err = lib.LifecycleResourceAttestations(ctx, r.Client, res.Spec.ImplementationRef, resources, currentAttestations)
+	err = lib.LifecycleComponentAttestations(ctx, r.Client, res.Spec.AssessmentRef, Components, currentAttestations)
 	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("could not remove uneeded resourcerequirements: %w", err)
+		return ctrl.Result{}, fmt.Errorf("could not remove uneeded ComponentControls: %w", err)
 	}
-	children, err := lib.CreateOrUpdateResourceAttestations(ctx, r.Client, r.Scheme, &res, resources)
+	children, err := lib.CreateOrUpdateComponentAttestations(ctx, r.Client, r.Scheme, &res, Components)
 	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("could not create ResourceImplementation for requirement '%v': %w", res.Name, err)
+		return ctrl.Result{}, fmt.Errorf("could not create ComponentAssessment for Control '%v': %w", res.Name, err)
 	}
-	// Update Requirement Status
+	// Update Control Status
 	original := res.DeepCopy()
 	res.Status.Children = children
 	err = r.Client.Status().Patch(ctx, &res, client.MergeFrom(original))
 	if err != nil {
-		return ctrl.Result{}, fmt.Errorf("could not update requirement status: %w", err)
+		return ctrl.Result{}, fmt.Errorf("could not update Control status: %w", err)
 	}
 	return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *AttestationReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *AttestationReconciler) SetupWithManager(mgr ctrl.Manager, opts controller.Options) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&argusiov1alpha1.Attestation{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		WithOptions(opts).
 		Complete(r)
 }

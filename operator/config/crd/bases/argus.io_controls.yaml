@@ -1,0 +1,93 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.3
+  creationTimestamp: null
+  name: controls.argus.io
+spec:
+  group: argus.io
+  names:
+    kind: Control
+    listKind: ControlList
+    plural: controls
+    singular: control
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Control is the Schema for the Controls API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ControlSpec defines the desired state of Control
+            properties:
+              applicableComponentClasses:
+                description: TODO define classes objects instead of a free string?
+                  Strong typing means better validation
+                items:
+                  type: string
+                type: array
+              definition:
+                properties:
+                  category:
+                    type: string
+                  class:
+                    type: string
+                  code:
+                    type: string
+                  version:
+                    type: string
+                required:
+                - category
+                - class
+                - code
+                - version
+                type: object
+              requiredAssessmentClasses:
+                items:
+                  type: string
+                type: array
+            required:
+            - applicableComponentClasses
+            - definition
+            - requiredAssessmentClasses
+            type: object
+          status:
+            description: ControlStatus defines the observed state of Control
+            properties:
+              ControlHash:
+                type: string
+              children:
+                items:
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                  required:
+                  - name
+                  - namespace
+                  type: object
+                type: array
+            required:
+            - ControlHash
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

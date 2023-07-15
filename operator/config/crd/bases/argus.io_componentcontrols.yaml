@@ -1,0 +1,108 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.3
+  creationTimestamp: null
+  name: componentcontrols.argus.io
+spec:
+  group: argus.io
+  names:
+    kind: ComponentControl
+    listKind: ComponentControlList
+    plural: componentcontrols
+    singular: componentcontrol
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.totalAssessments
+      name: Total Assessments
+      type: integer
+    - jsonPath: .status.validAssessments
+      name: Valid Assessments
+      type: integer
+    - jsonPath: .status.runAt
+      name: Last Run
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ComponentControl is the Schema for the ComponentControls API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ComponentControlSpec defines the desired state of ComponentControl
+            properties:
+              definition:
+                properties:
+                  category:
+                    type: string
+                  class:
+                    type: string
+                  code:
+                    type: string
+                  version:
+                    type: string
+                required:
+                - category
+                - class
+                - code
+                - version
+                type: object
+              requiredAssessmentClasses:
+                items:
+                  type: string
+                type: array
+            required:
+            - definition
+            - requiredAssessmentClasses
+            type: object
+          status:
+            description: ComponentControlStatus defines the observed state of ComponentControl
+            properties:
+              ControlHash:
+                type: string
+              applicableComponentAssessments:
+                items:
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                  required:
+                  - name
+                  - namespace
+                  type: object
+                type: array
+              runAt:
+                format: date-time
+                type: string
+              status:
+                type: string
+              totalAssessments:
+                default: 0
+                type: integer
+              validAssessments:
+                default: 0
+                type: integer
+            required:
+            - totalAssessments
+            - validAssessments
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

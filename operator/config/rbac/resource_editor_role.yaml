@@ -14,7 +14,7 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resources
+  - components
   verbs:
   - create
   - delete
@@ -26,6 +26,6 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resources/status
+  - components/status
   verbs:
   - get

@@ -13,14 +13,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-func TestGetResourceAttestations(t *testing.T) {
+func TestGetComponentAttestations(t *testing.T) {
 	commonScheme := runtime.NewScheme()
 	err := argusiov1alpha1.AddToScheme(commonScheme)
 	require.Nil(t, err)
 	testCases := []struct {
 		name           string
 		attestation    *argusiov1alpha1.Attestation
-		expectedOutput map[string]argusiov1alpha1.ResourceAttestation
+		expectedOutput map[string]argusiov1alpha1.ComponentAttestation
 		expectedError  string
 		cl             client.Client
 	}{
@@ -28,28 +28,28 @@ func TestGetResourceAttestations(t *testing.T) {
 			name:           "no op",
 			cl:             fake.NewClientBuilder().WithScheme(commonScheme).Build(),
 			attestation:    makeAttestation(),
-			expectedOutput: map[string]argusiov1alpha1.ResourceAttestation{},
+			expectedOutput: map[string]argusiov1alpha1.ComponentAttestation{},
 		},
 		{
 			name:        "returns attestation",
-			cl:          fake.NewClientBuilder().WithScheme(commonScheme).WithObjects(makeResourceAttestation()).Build(),
+			cl:          fake.NewClientBuilder().WithScheme(commonScheme).WithObjects(makeComponentAttestation()).Build(),
 			attestation: makeAttestation(),
-			expectedOutput: map[string]argusiov1alpha1.ResourceAttestation{
-				"test": *makeResourceAttestation(),
+			expectedOutput: map[string]argusiov1alpha1.ComponentAttestation{
+				"test": *makeComponentAttestation(),
 			},
 		},
 		{
 			name:          "failed listing",
 			cl:            fake.NewClientBuilder().WithScheme(runtime.NewScheme()).Build(),
 			attestation:   makeAttestation(),
-			expectedError: "could not list ResourceAttestation",
+			expectedError: "could not list ComponentAttestation",
 		},
 	}
 	for i := range testCases {
 		testCase := testCases[i]
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			output, err := GetResourceAttestations(context.Background(), testCase.cl, testCase.attestation)
+			output, err := GetComponentAttestations(context.Background(), testCase.cl, testCase.attestation)
 			if testCase.expectedError == "" {
 				require.NoError(t, err)
 				assert.Equal(t, testCase.expectedOutput, output)
@@ -60,82 +60,82 @@ func TestGetResourceAttestations(t *testing.T) {
 	}
 }
 
-func TestLifecycleResourceAttestations(t *testing.T) {
+func TestLifecycleComponentAttestations(t *testing.T) {
 	commonScheme := runtime.NewScheme()
 	err := argusiov1alpha1.AddToScheme(commonScheme)
 	require.Nil(t, err)
 	testCases := []struct {
-		name              string
-		resources         []argusiov1alpha1.ResourceImplementation
-		attestations      map[string]argusiov1alpha1.ResourceAttestation
-		expectedError     string
-		implementationRef string
-		cl                client.Client
+		name          string
+		Components    []argusiov1alpha1.ComponentAssessment
+		attestations  map[string]argusiov1alpha1.ComponentAttestation
+		expectedError string
+		AssessmentRef string
+		cl            client.Client
 	}{
 		{
-			name:              "no op",
-			implementationRef: "implementation",
-			cl:                fake.NewClientBuilder().WithScheme(commonScheme).Build(),
-			attestations: map[string]argusiov1alpha1.ResourceAttestation{
-				"foo": *makeResourceAttestation(),
+			name:          "no op",
+			AssessmentRef: "Assessment",
+			cl:            fake.NewClientBuilder().WithScheme(commonScheme).Build(),
+			attestations: map[string]argusiov1alpha1.ComponentAttestation{
+				"foo": *makeComponentAttestation(),
 			},
-			resources: []argusiov1alpha1.ResourceImplementation{*makeResourceImplementation()},
+			Components: []argusiov1alpha1.ComponentAssessment{*makeComponentAssessment()},
 		},
 		{
-			name:              "no resource implementation label",
-			implementationRef: "implementation",
-			cl:                fake.NewClientBuilder().WithScheme(commonScheme).Build(),
-			attestations: map[string]argusiov1alpha1.ResourceAttestation{
-				"foo": *makeResourceAttestation(),
+			name:          "no Component Assessment label",
+			AssessmentRef: "Assessment",
+			cl:            fake.NewClientBuilder().WithScheme(commonScheme).Build(),
+			attestations: map[string]argusiov1alpha1.ComponentAttestation{
+				"foo": *makeComponentAttestation(),
 			},
-			resources:     []argusiov1alpha1.ResourceImplementation{*makeResourceImplementation(WithLabels(map[string]string{}))},
-			expectedError: "resource implementation 'test' does not contain expected label 'argus.io/resource'",
+			Components:    []argusiov1alpha1.ComponentAssessment{*makeComponentAssessment(WithLabels(map[string]string{}))},
+			expectedError: "Component Assessment 'test' does not contain expected label 'argus.io/Component'",
 		},
 		{
-			name:              "no resource label",
-			implementationRef: "implementation",
-			cl:                fake.NewClientBuilder().WithScheme(commonScheme).Build(),
-			attestations: map[string]argusiov1alpha1.ResourceAttestation{
-				"foo": *makeResourceAttestation(AttWithLabels(map[string]string{"argus.io/implementation": "implementation"})),
+			name:          "no Component label",
+			AssessmentRef: "Assessment",
+			cl:            fake.NewClientBuilder().WithScheme(commonScheme).Build(),
+			attestations: map[string]argusiov1alpha1.ComponentAttestation{
+				"foo": *makeComponentAttestation(AttWithLabels(map[string]string{"argus.io/Assessment": "Assessment"})),
 			},
-			resources:     []argusiov1alpha1.ResourceImplementation{*makeResourceImplementation()},
-			expectedError: "object 'test' does not contain expected label 'argus.io/resource'",
+			Components:    []argusiov1alpha1.ComponentAssessment{*makeComponentAssessment()},
+			expectedError: "object 'test' does not contain expected label 'argus.io/Component'",
 		},
 		{
-			name:              "implementation mismatch",
-			implementationRef: "implementation2",
-			cl:                fake.NewClientBuilder().WithScheme(commonScheme).WithObjects(makeResourceAttestation()).Build(),
-			attestations: map[string]argusiov1alpha1.ResourceAttestation{
-				"foo": *makeResourceAttestation(AttWithLabels(map[string]string{})),
+			name:          "Assessment mismatch",
+			AssessmentRef: "Assessment2",
+			cl:            fake.NewClientBuilder().WithScheme(commonScheme).WithObjects(makeComponentAttestation()).Build(),
+			attestations: map[string]argusiov1alpha1.ComponentAttestation{
+				"foo": *makeComponentAttestation(AttWithLabels(map[string]string{})),
 			},
-			resources: []argusiov1alpha1.ResourceImplementation{*makeResourceImplementation()},
+			Components: []argusiov1alpha1.ComponentAssessment{*makeComponentAssessment()},
 		},
 		{
-			name:              "deletes",
-			implementationRef: "implementation",
-			cl:                fake.NewClientBuilder().WithScheme(commonScheme).WithObjects(makeResourceAttestation()).Build(),
-			attestations: map[string]argusiov1alpha1.ResourceAttestation{
-				"foo": *makeResourceAttestation(),
+			name:          "deletes",
+			AssessmentRef: "Assessment",
+			cl:            fake.NewClientBuilder().WithScheme(commonScheme).WithObjects(makeComponentAttestation()).Build(),
+			attestations: map[string]argusiov1alpha1.ComponentAttestation{
+				"foo": *makeComponentAttestation(),
 			},
 			expectedError: "",
-			resources:     []argusiov1alpha1.ResourceImplementation{},
+			Components:    []argusiov1alpha1.ComponentAssessment{},
 		},
 		{
-			name:              "fails to delete",
-			implementationRef: "implementation",
-			cl:                fake.NewClientBuilder().WithScheme(runtime.NewScheme()).Build(),
-			attestations: map[string]argusiov1alpha1.ResourceAttestation{
-				"foo": *makeResourceAttestation(),
+			name:          "fails to delete",
+			AssessmentRef: "Assessment",
+			cl:            fake.NewClientBuilder().WithScheme(runtime.NewScheme()).Build(),
+			attestations: map[string]argusiov1alpha1.ComponentAttestation{
+				"foo": *makeComponentAttestation(),
 			},
-			resources:     []argusiov1alpha1.ResourceImplementation{},
-			expectedError: "could not delete ResourceAttestation",
+			Components:    []argusiov1alpha1.ComponentAssessment{},
+			expectedError: "could not delete ComponentAttestation",
 		},
 	}
 	for i := range testCases {
 		testCase := testCases[i]
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			err := LifecycleResourceAttestations(context.Background(), testCase.cl, testCase.implementationRef, testCase.resources, testCase.attestations)
+			err := LifecycleComponentAttestations(context.Background(), testCase.cl, testCase.AssessmentRef, testCase.Components, testCase.attestations)
 			if testCase.expectedError == "" {
 				require.NoError(t, err)
 			} else {
@@ -145,13 +145,13 @@ func TestLifecycleResourceAttestations(t *testing.T) {
 	}
 }
 
-func TestCreateOrUpdateResourceAttestations(t *testing.T) {
+func TestCreateOrUpdateComponentAttestations(t *testing.T) {
 	commonScheme := runtime.NewScheme()
 	err := argusiov1alpha1.AddToScheme(commonScheme)
 	require.Nil(t, err)
 	testCases := []struct {
 		name           string
-		resources      []argusiov1alpha1.ResourceImplementation
+		Components     []argusiov1alpha1.ComponentAssessment
 		attestation    *argusiov1alpha1.Attestation
 		expectedError  string
 		expectedOutput []argusiov1alpha1.NamespacedName
@@ -161,17 +161,17 @@ func TestCreateOrUpdateResourceAttestations(t *testing.T) {
 			name:           "no op",
 			cl:             fake.NewClientBuilder().WithScheme(commonScheme).Build(),
 			attestation:    makeAttestation(),
-			resources:      []argusiov1alpha1.ResourceImplementation{},
+			Components:     []argusiov1alpha1.ComponentAssessment{},
 			expectedOutput: []argusiov1alpha1.NamespacedName{},
 		},
 		{
 			name:        "create one",
 			cl:          fake.NewClientBuilder().WithScheme(commonScheme).Build(),
 			attestation: makeAttestation(),
-			resources:   []argusiov1alpha1.ResourceImplementation{*makeResourceImplementation()},
+			Components:  []argusiov1alpha1.ComponentAssessment{*makeComponentAssessment()},
 			expectedOutput: []argusiov1alpha1.NamespacedName{
 				{
-					Name:      "test-resource",
+					Name:      "test-Component",
 					Namespace: "default",
 				},
 			},
@@ -180,36 +180,36 @@ func TestCreateOrUpdateResourceAttestations(t *testing.T) {
 			name:          "fail create",
 			cl:            fake.NewClientBuilder().WithScheme(runtime.NewScheme()).Build(),
 			attestation:   makeAttestation(),
-			resources:     []argusiov1alpha1.ResourceImplementation{*makeResourceImplementation()},
-			expectedError: "could not create ResourceAttestation 'test-resource'",
+			Components:    []argusiov1alpha1.ComponentAssessment{*makeComponentAssessment()},
+			expectedError: "could not create ComponentAttestation 'test-Component'",
 		},
 		{
-			name:          "fail no implementation labels",
+			name:          "fail no Assessment labels",
 			cl:            fake.NewClientBuilder().WithScheme(commonScheme).Build(),
 			attestation:   makeAttestation(),
-			resources:     []argusiov1alpha1.ResourceImplementation{*makeResourceImplementation(WithLabels(map[string]string{}))},
-			expectedError: "resource implementation 'test' does not contain expected label 'argus.io/implementation'",
+			Components:    []argusiov1alpha1.ComponentAssessment{*makeComponentAssessment(WithLabels(map[string]string{}))},
+			expectedError: "Component Assessment 'test' does not contain expected label 'argus.io/Assessment'",
 		},
 		{
-			name:          "fail no resource labels",
+			name:          "fail no Component labels",
 			cl:            fake.NewClientBuilder().WithScheme(commonScheme).Build(),
 			attestation:   makeAttestation(),
-			resources:     []argusiov1alpha1.ResourceImplementation{*makeResourceImplementation(WithLabels(map[string]string{"argus.io/implementation": "implementation"}))},
-			expectedError: "resource implementation 'test' does not contain expected label 'argus.io/resource'",
+			Components:    []argusiov1alpha1.ComponentAssessment{*makeComponentAssessment(WithLabels(map[string]string{"argus.io/Assessment": "Assessment"}))},
+			expectedError: "Component Assessment 'test' does not contain expected label 'argus.io/Component'",
 		},
 		{
-			name:          "fail no requirement labels",
+			name:          "fail no Control labels",
 			cl:            fake.NewClientBuilder().WithScheme(commonScheme).Build(),
 			attestation:   makeAttestation(),
-			resources:     []argusiov1alpha1.ResourceImplementation{*makeResourceImplementation(WithLabels(map[string]string{"argus.io/implementation": "implementation", "argus.io/resource": "resource"}))},
-			expectedError: "resource implementation 'test' does not contain expected label 'argus.io/requirement'",
+			Components:    []argusiov1alpha1.ComponentAssessment{*makeComponentAssessment(WithLabels(map[string]string{"argus.io/Assessment": "Assessment", "argus.io/Component": "Component"}))},
+			expectedError: "Component Assessment 'test' does not contain expected label 'argus.io/Control'",
 		},
 	}
 	for i := range testCases {
 		testCase := testCases[i]
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			ouput, err := CreateOrUpdateResourceAttestations(context.Background(), testCase.cl, commonScheme, testCase.attestation, testCase.resources)
+			ouput, err := CreateOrUpdateComponentAttestations(context.Background(), testCase.cl, commonScheme, testCase.attestation, testCase.Components)
 			if testCase.expectedError == "" {
 				require.NoError(t, err)
 				assert.Equal(t, testCase.expectedOutput, ouput)
@@ -233,7 +233,7 @@ func makeAttestation(f ...attestationMutationFn) *argusiov1alpha1.Attestation {
 			APIVersion: "argus.io/v1alpha1",
 		},
 		Spec: argusiov1alpha1.AttestationSpec{
-			ImplementationRef: "implementation",
+			AssessmentRef: "Assessment",
 			ProviderRef: argusiov1alpha1.AttestationProviderRef{
 				Name:      "bar",
 				Namespace: "bing",
@@ -247,47 +247,47 @@ func makeAttestation(f ...attestationMutationFn) *argusiov1alpha1.Attestation {
 	return res
 }
 
-type resourceAttestationMutationFn func(*argusiov1alpha1.ResourceAttestation)
+type ComponentAttestationMutationFn func(*argusiov1alpha1.ComponentAttestation)
 
-func AttWithLabels(labels map[string]string) resourceAttestationMutationFn {
-	return func(r *argusiov1alpha1.ResourceAttestation) {
+func AttWithLabels(labels map[string]string) ComponentAttestationMutationFn {
+	return func(r *argusiov1alpha1.ComponentAttestation) {
 		r.Labels = labels
 	}
 }
 
-func WithName(name string) resourceAttestationMutationFn {
-	return func(r *argusiov1alpha1.ResourceAttestation) {
+func WithName(name string) ComponentAttestationMutationFn {
+	return func(r *argusiov1alpha1.ComponentAttestation) {
 		r.Name = name
 	}
 }
-func WithResult(result argusiov1alpha1.AttestationResultType) resourceAttestationMutationFn {
-	return func(r *argusiov1alpha1.ResourceAttestation) {
+func WithResult(result argusiov1alpha1.AttestationResultType) ComponentAttestationMutationFn {
+	return func(r *argusiov1alpha1.ComponentAttestation) {
 		r.Status.Result.Result = result
 	}
 }
-func makeResourceAttestation(f ...resourceAttestationMutationFn) *argusiov1alpha1.ResourceAttestation {
-	res := &argusiov1alpha1.ResourceAttestation{
+func makeComponentAttestation(f ...ComponentAttestationMutationFn) *argusiov1alpha1.ComponentAttestation {
+	res := &argusiov1alpha1.ComponentAttestation{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "test",
 			Namespace: "test",
 			Labels: map[string]string{
-				"argus.io/resource":       "resource",
-				"argus.io/implementation": "implementation",
-				"argus.io/attestation":    "test",
+				"argus.io/Component":   "Component",
+				"argus.io/Assessment":  "Assessment",
+				"argus.io/attestation": "test",
 			},
 			ResourceVersion: "999",
 		},
 		TypeMeta: metav1.TypeMeta{
-			Kind:       "ResourceAttestation",
+			Kind:       "ComponentAttestation",
 			APIVersion: "argus.io/v1alpha1",
 		},
-		Spec: argusiov1alpha1.ResourceAttestationSpec{
+		Spec: argusiov1alpha1.ComponentAttestationSpec{
 			ProviderRef: argusiov1alpha1.AttestationProviderRef{
 				Name:      "test",
 				Namespace: "test",
 			},
 		},
-		Status: argusiov1alpha1.ResourceAttestationStatus{
+		Status: argusiov1alpha1.ComponentAttestationStatus{
 			Result: argusiov1alpha1.AttestationResult{
 				Result: argusiov1alpha1.AttestationResultTypePass,
 			},
@@ -299,32 +299,32 @@ func makeResourceAttestation(f ...resourceAttestationMutationFn) *argusiov1alpha
 	return res
 }
 
-type resourceImplementationMutationFn func(*argusiov1alpha1.ResourceImplementation)
+type ComponentAssessmentMutationFn func(*argusiov1alpha1.ComponentAssessment)
 
-func WithLabels(labels map[string]string) resourceImplementationMutationFn {
-	return func(r *argusiov1alpha1.ResourceImplementation) {
+func WithLabels(labels map[string]string) ComponentAssessmentMutationFn {
+	return func(r *argusiov1alpha1.ComponentAssessment) {
 		r.Labels = labels
 	}
 }
-func makeResourceImplementation(f ...resourceImplementationMutationFn) *argusiov1alpha1.ResourceImplementation {
-	res := &argusiov1alpha1.ResourceImplementation{
+func makeComponentAssessment(f ...ComponentAssessmentMutationFn) *argusiov1alpha1.ComponentAssessment {
+	res := &argusiov1alpha1.ComponentAssessment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "test",
 			Namespace: "test",
 			Labels: map[string]string{
-				"argus.io/resource":       "resource",
-				"argus.io/implementation": "implementation",
-				"argus.io/requirement":    "foo_v1",
+				"argus.io/Component":  "Component",
+				"argus.io/Assessment": "Assessment",
+				"argus.io/Control":    "foo_v1",
 			},
 			ResourceVersion: "999",
 		},
 		TypeMeta: metav1.TypeMeta{
-			Kind:       "ResourceImplementation",
+			Kind:       "ComponentAssessment",
 			APIVersion: "argus.io/v1alpha1",
 		},
-		Spec: argusiov1alpha1.ResourceImplementationSpec{
+		Spec: argusiov1alpha1.ComponentAssessmentSpec{
 			Class: "test",
-			RequirementRef: argusiov1alpha1.ImplementationRequirementDefinition{
+			ControlRef: argusiov1alpha1.AssessmentControlDefinition{
 				Code:    "foo",
 				Version: "v1",
 			},

@@ -8,6 +8,32 @@ rules:
 - apiGroups:
   - argus.io
   resources:
+  - assessments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argus.io
+  resources:
+  - assessments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - argus.io
+  resources:
+  - assessments/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argus.io
+  resources:
   - attestationproviders
   verbs:
   - get
@@ -42,7 +68,7 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - implementations
+  - componentassessments
   verbs:
   - create
   - delete
@@ -54,13 +80,13 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - implementations/finalizers
+  - componentassessments/finalizers
   verbs:
   - update
 - apiGroups:
   - argus.io
   resources:
-  - implementations/status
+  - componentassessments/status
   verbs:
   - get
   - patch
@@ -68,7 +94,7 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - requirements
+  - componentattestations
   verbs:
   - create
   - delete
@@ -80,13 +106,13 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - requirements/finalizers
+  - componentattestations/finalizers
   verbs:
   - update
 - apiGroups:
   - argus.io
   resources:
-  - requirements/status
+  - componentattestations/status
   verbs:
   - get
   - patch
@@ -94,7 +120,7 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resourceattestations
+  - componentcontrols
   verbs:
   - create
   - delete
@@ -106,13 +132,13 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resourceattestations/finalizers
+  - componentcontrols/finalizers
   verbs:
   - update
 - apiGroups:
   - argus.io
   resources:
-  - resourceattestations/status
+  - componentcontrols/status
   verbs:
   - get
   - patch
@@ -120,7 +146,7 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resourceimplementations
+  - components
   verbs:
   - create
   - delete
@@ -132,13 +158,13 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resourceimplementations/finalizers
+  - components/finalizers
   verbs:
   - update
 - apiGroups:
   - argus.io
   resources:
-  - resourceimplementations/status
+  - components/status
   verbs:
   - get
   - patch
@@ -146,7 +172,7 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resourcerequirements
+  - controls
   verbs:
   - create
   - delete
@@ -158,39 +184,13 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - resourcerequirements/finalizers
+  - controls/finalizers
   verbs:
   - update
 - apiGroups:
   - argus.io
   resources:
-  - resourcerequirements/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - resources
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argus.io
-  resources:
-  - resources/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - argus.io
-  resources:
-  - resources/status
+  - controls/status
   verbs:
   - get
   - patch

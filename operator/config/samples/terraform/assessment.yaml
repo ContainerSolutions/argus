@@ -1,0 +1,38 @@
+apiVersion: argus.io/v1alpha1
+kind: Assessment
+metadata:
+  labels:
+    app.kubernetes.io/name: assessment
+    app.kubernetes.io/instance: assessment-sample
+    app.kubernetes.io/pa${type}-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: ${name}
+  namespace: default
+spec:
+  class: ${class}
+  cascadePolicy: None
+  controlRef:
+    code: ${code}
+    version: ${version}
+  componentRef:
+  - name: ${type}-1
+    namespace: default
+  - name: ${type}-2
+    namespace: default
+  - name: ${type}-3
+    namespace: default
+  - name: ${type}-4
+    namespace: default
+  - name: ${type}-5
+    namespace: default
+  - name: ${type}-6
+    namespace: default
+  - name: ${type}-7
+    namespace: default
+  - name: ${type}-8
+    namespace: default
+  - name: ${type}-9
+    namespace: default
+  - name: ${type}-10
+    namespace: default

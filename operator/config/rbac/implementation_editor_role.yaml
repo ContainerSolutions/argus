@@ -1,20 +1,20 @@
-# permissions for end users to edit implementations.
+# permissions for end users to edit assessments.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/instance: implementation-editor-role
+    app.kubernetes.io/instance: assessment-editor-role
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: operator
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
-  name: implementation-editor-role
+  name: assessment-editor-role
 rules:
 - apiGroups:
   - argus.io
   resources:
-  - implementations
+  - assessments
   verbs:
   - create
   - delete
@@ -26,6 +26,6 @@ rules:
 - apiGroups:
   - argus.io
   resources:
-  - implementations/status
+  - assessments/status
   verbs:
   - get

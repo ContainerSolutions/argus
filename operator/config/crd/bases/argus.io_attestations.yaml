@@ -35,7 +35,7 @@ spec:
           spec:
             description: AttestationSpec defines the desired state of Attestation
             properties:
-              implementationRef:
+              assessmentRef:
                 type: string
               providerRef:
                 properties:
@@ -48,7 +48,7 @@ spec:
                 - namespace
                 type: object
             required:
-            - implementationRef
+            - assessmentRef
             - providerRef
             type: object
           status:
