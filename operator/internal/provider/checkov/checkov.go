@@ -63,7 +63,7 @@ func (c *Client) Close() error {
 
 type Provider struct{}
 
-func (p *Provider) New(spec *argusiov1alpha1.AttestationProviderSpec) (provider.AttestationClient, error) {
+func (p *Provider) New(_ string, spec *argusiov1alpha1.AttestationProviderSpec) (provider.AttestationClient, error) {
 	c := &Client{}
 	repourl_value, ok := spec.ProviderConfig["repo"]
 
