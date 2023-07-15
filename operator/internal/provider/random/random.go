@@ -48,6 +48,8 @@ func (c *Client) Close() error {
 type Provider struct{}
 
 func (p *Provider) New(name string, spec *argusiov1alpha1.AttestationProviderSpec) (provider.AttestationClient, error) {
+	mu.Lock()
+	defer mu.Unlock()
 	if client, exists := clients[name]; exists {
 		return client, nil
 	}
@@ -64,9 +66,7 @@ func (p *Provider) New(name string, spec *argusiov1alpha1.AttestationProviderSpe
 		return nil, err
 	}
 	client := &Client{reroll: reroll}
-	mu.Lock()
 	clients[name] = client
-	defer mu.Unlock()
 	return client, nil
 }
 

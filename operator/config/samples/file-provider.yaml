@@ -1,0 +1,17 @@
+apiVersion: argus.io/v1alpha1
+kind: AttestationProvider
+metadata:
+  labels:
+    app.kubernetes.io/name: attestationprovider
+    app.kubernetes.io/instance: attestationprovider-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: file
+spec:
+  type: file
+  providerConfig:
+    url: https://github.com/external-secrets/external-secrets/blob/main/pkg/find/find.go
+    positiveRegexp: 'regexp\.Compile'
+    minPositiveMatches: "2"
+    negativeRegexp: '\.TODO\(\)'
