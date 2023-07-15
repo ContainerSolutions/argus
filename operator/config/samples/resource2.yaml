@@ -1,16 +1,16 @@
 apiVersion: argus.io/v1alpha1
-kind: Resource
+kind: Component
 metadata:
   labels:
-    app.kubernetes.io/name: resource
-    app.kubernetes.io/instance: resource-sample
+    app.kubernetes.io/name: component
+    app.kubernetes.io/instance: component-sample
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: resource2
+  name: component2
 spec:
-  type: my-resource
+  type: my-component
   classes:
   - Myclass2
   parents:
-  - resource1
+  - component1

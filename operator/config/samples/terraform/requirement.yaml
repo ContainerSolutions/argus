@@ -1,0 +1,23 @@
+apiVersion: argus.io/v1alpha1
+kind: Control
+metadata:
+  labels:
+    app.kubernetes.io/name: control
+    app.kubernetes.io/instance: control-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: ${name}
+  namespace: default
+spec:
+  definition: 
+    version: ${version}
+    code: ${code}
+    class: "Security"
+    category: "Internal"
+  applicableComponentClasses:
+  - ${componentclass}
+  requiredAssessmentClasses:
+  - PreventativeControl
+  - DetectiveControl
+  - ReactiveControl

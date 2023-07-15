@@ -1,0 +1,97 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.3
+  creationTimestamp: null
+  name: componentassessments.argus.io
+spec:
+  group: argus.io
+  names:
+    kind: ComponentAssessment
+    listKind: ComponentAssessmentList
+    plural: componentassessments
+    singular: componentassessment
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.totalAttestations
+      name: Total Attestations
+      type: integer
+    - jsonPath: .status.passedAttestations
+      name: Passed Attestations
+      type: integer
+    - jsonPath: .status.runAt
+      name: Last Run
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ComponentAssessment is the Schema for the ComponentAssessments
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ComponentAssessmentSpec defines the desired state of ComponentAssessment
+            properties:
+              ControlRef:
+                properties:
+                  code:
+                    type: string
+                  version:
+                    type: string
+                required:
+                - code
+                - version
+                type: object
+              class:
+                type: string
+            required:
+            - ControlRef
+            - class
+            type: object
+          status:
+            description: ComponentAssessmentStatus defines the observed state of ComponentAssessment
+            properties:
+              ComponentAttestations:
+                items:
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                  required:
+                  - name
+                  - namespace
+                  type: object
+                type: array
+              passedAttestations:
+                default: 0
+                type: integer
+              runAt:
+                format: date-time
+                type: string
+              totalAttestations:
+                default: 0
+                type: integer
+            required:
+            - passedAttestations
+            - totalAttestations
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

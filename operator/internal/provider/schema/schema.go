@@ -11,7 +11,7 @@ var Builder map[string]Provider
 var buildlock sync.RWMutex
 
 type Provider interface {
-	New(spec *argusiov1alpha1.AttestationProviderSpec) (AttestationClient, error)
+	New(name string, spec *argusiov1alpha1.AttestationProviderSpec) (AttestationClient, error)
 }
 
 type AttestationClient interface {

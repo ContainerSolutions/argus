@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/created-by: operator
   name: attestation1-req2
 spec:
-  implementationRef: "implementation1-req2"
+  assessmentRef: "assessment1-req2"
   providerRef: 
-    name: pass
+    name: random
     namespace: default

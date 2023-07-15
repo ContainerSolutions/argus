@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	_ "github.com/ContainerSolutions/argus/operator/internal/provider/fake"
+	_ "github.com/ContainerSolutions/argus/operator/internal/provider/file"
+	_ "github.com/ContainerSolutions/argus/operator/internal/provider/random"
 	"github.com/ContainerSolutions/argus/operator/internal/provider/schema"
 )
 
