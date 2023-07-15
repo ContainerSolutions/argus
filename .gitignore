@@ -9,6 +9,10 @@ bin
 testbin/*
 Dockerfile.cross
 
+# Terraform
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
 # Test binary, build with `go test -c`
 *.test
 
