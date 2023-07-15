@@ -49,12 +49,15 @@ spec:
                     type: string
                   code:
                     type: string
+                  description:
+                    type: string
                   version:
                     type: string
                 required:
                 - category
                 - class
                 - code
+                - description
                 - version
                 type: object
               requiredAssessmentClasses:

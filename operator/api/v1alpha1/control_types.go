@@ -29,10 +29,11 @@ type ControlSpec struct {
 }
 
 type ControlDefinition struct {
-	Version  string `json:"version"`
-	Code     string `json:"code"`
-	Class    string `json:"class"`
-	Category string `json:"category"`
+	Version     string `json:"version"`
+	Code        string `json:"code"`
+	Class       string `json:"class"`
+	Category    string `json:"category"`
+	Description string `json:"description"`
 }
 
 // ControlStatus defines the observed state of Control

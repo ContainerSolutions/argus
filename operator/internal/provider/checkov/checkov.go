@@ -5,11 +5,14 @@ import (
 	"os"
 
 	"os/exec"
+	"sync"
 
 	argusiov1alpha1 "github.com/ContainerSolutions/argus/operator/api/v1alpha1"
 	provider "github.com/ContainerSolutions/argus/operator/internal/provider/schema"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
+
+var mu = sync.Mutex{}
 
 type Client struct {
 	RepoUrl string
@@ -18,16 +21,19 @@ type Client struct {
 }
 
 func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
+	mu.Lock()
 	// ToDo: generate unique file names for clone_location and output_file_path
+	defer os.RemoveAll("/tmp/location")
+	defer mu.Unlock()
 	clone_location := "/tmp/location"
 	cmd := exec.Command("git", "clone", c.RepoUrl, clone_location)
-	defer os.RemoveAll("/tmp/location")
-	_, err := cmd.CombinedOutput()
+	out, err := cmd.CombinedOutput()
 
 	if err != nil {
 		res := argusiov1alpha1.AttestationResult{
 			Result: argusiov1alpha1.AttestationResultTypeUnknown,
-			Logs:   err.Error(), // Logs has to be type string
+			Logs:   string(out),
+			Err:    err.Error(), // Logs has to be type string
 			RunAt:  v1.Now(),
 			Reason: fmt.Sprintf("could not get source repo for '%v'", c.RepoUrl),
 		}
@@ -36,7 +42,7 @@ func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
 
 	checkov_cmd := exec.Command("checkov", "-d", clone_location, "--check", c.Checks, "-o", "cli")
 
-	out, err := checkov_cmd.CombinedOutput()
+	out, err = checkov_cmd.CombinedOutput()
 
 	// Distinguish between execution and validation failure
 	res := argusiov1alpha1.AttestationResult{
