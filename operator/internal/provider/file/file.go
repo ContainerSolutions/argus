@@ -7,7 +7,7 @@ package file
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -60,7 +60,7 @@ func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
 	if err != nil {
 		return newUnknownResult(fmt.Sprintf("could not GET url '%v'", c.url), err), err
 	}
-	resBody, err := ioutil.ReadAll(resp.Body)
+	resBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return newUnknownResult(fmt.Sprintf("could read response body for url '%v'", c.url), err), err
 	}
