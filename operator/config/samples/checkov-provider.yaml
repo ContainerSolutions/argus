@@ -12,4 +12,4 @@ spec:
   type: checkov
   providerConfig:
     repo: https://github.com/InfobyAdrienne/tf-samples
-    checks: CKV_AZURE_113, CKV_AZURE_52
+    checks: CKV_AZURE_113 #,CKV_AZURE_52

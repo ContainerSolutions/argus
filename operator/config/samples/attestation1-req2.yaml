@@ -11,5 +11,5 @@ metadata:
 spec:
   implementationRef: "implementation1-req2"
   providerRef: 
-    name: pass
+    name: checkov
     namespace: default
