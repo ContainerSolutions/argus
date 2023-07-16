@@ -1,0 +1,15 @@
+apiVersion: argus.io/v1alpha1
+kind: Component
+metadata:
+  labels:
+    app.kubernetes.io/name: component
+    app.kubernetes.io/instance: component-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: sql-server-01
+spec:
+  type: sql
+  classes:
+  - MSSQL
+  parents: []

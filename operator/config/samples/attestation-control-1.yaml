@@ -1,0 +1,15 @@
+apiVersion: argus.io/v1alpha1
+kind: Attestation
+metadata:
+  labels:
+    app.kubernetes.io/name: attestation
+    app.kubernetes.io/instance: attestation-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: attestation-ctrl1
+spec:
+  assessmentRef: "assessment-mssql-ctrl1"
+  providerRef: 
+    name: checkov-ctrl1
+    namespace: default

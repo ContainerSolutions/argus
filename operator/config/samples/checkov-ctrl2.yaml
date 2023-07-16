@@ -1,0 +1,15 @@
+apiVersion: argus.io/v1alpha1
+kind: AttestationProvider
+metadata:
+  labels:
+    app.kubernetes.io/name: attestationprovider
+    app.kubernetes.io/instance: attestationprovider-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: checkov-ctrl2
+spec:
+  type: checkov
+  providerConfig:
+    repo: https://github.com/InfobyAdrienne/tf-samples
+    checks: CKV_AZURE_52

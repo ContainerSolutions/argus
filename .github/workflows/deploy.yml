@@ -1,0 +1,33 @@
+name: deploy-image
+on:
+  push:
+    branches:
+      - main
+      - release-*
+    pull_request: {}
+jobs:
+    deploy:
+        name: Setup Gcloud Account
+        runs-on: ubuntu-latest
+        env:
+          IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/argus/argus:${{ github.sha }}
+        steps:
+        - name: Login
+          uses: google-github-actions/setup-gcloud@v0
+          with:
+            project_id: ${{ secrets.GCP_PROJECT_ID }}
+            service_account_email: ${{ secrets.GCP_EMAIL }}
+            service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+        - name: Configure Docker
+          run: gcloud auth configure-docker --quiet
+
+        - name: Checkout repository
+          uses: actions/checkout@v2
+
+        - name: Build Docker image
+          run: docker build . -t $IMAGE_NAME
+
+        - name: Push Docker image
+          run: docker push $IMAGE_NAME
+
