@@ -26,7 +26,7 @@ jobs:
           uses: actions/checkout@v2
 
         - name: Build Docker image
-          run: docker build . -t $IMAGE_NAME
+          run: docker build ./operator -t $IMAGE_NAME
 
         - name: Push Docker image
           run: docker push $IMAGE_NAME
