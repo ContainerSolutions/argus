@@ -22,8 +22,10 @@ type Client struct {
 
 func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
 	mu.Lock()
-	defer mu.Unlock()
-	defer os.RemoveAll("/tmp/location")
+	defer func() {
+		os.RemoveAll("/tmp/location")
+		mu.Unlock()
+	}()
 	clone_location := "/tmp/location"
 	cmd := exec.Command("git", "clone", c.RepoUrl, clone_location)
 	out, err := cmd.CombinedOutput()
