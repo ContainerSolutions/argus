@@ -10,14 +10,15 @@ jobs:
         name: Setup Gcloud Account
         runs-on: ubuntu-latest
         env:
-          IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/argus/argus:${{ github.sha }}
+          IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/argus:${{ github.sha }}
         steps:
-        - name: Login
-          uses: google-github-actions/setup-gcloud@v0
+        - id: 'auth'
+          uses: 'google-github-actions/auth@v1'
           with:
-            project_id: ${{ secrets.GCP_PROJECT_ID }}
-            service_account_email: ${{ secrets.GCP_EMAIL }}
-            service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+            credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+            project: ${{ secrets.GCP_PROJECT_ID }}
+        - name: 'Set up Cloud SDK'
+          uses: 'google-github-actions/setup-gcloud@v1'
 
         - name: Configure Docker
           run: gcloud auth configure-docker --quiet
