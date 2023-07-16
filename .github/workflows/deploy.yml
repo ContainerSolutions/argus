@@ -1,0 +1,26 @@
+name: deploy-image
+on:
+  pull_request: {}
+jobs:
+    deploy:
+        name: Deploy Image
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+        - id: 'auth'
+          uses: 'google-github-actions/auth@v1'
+          with:
+            credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+        - name: 'Set up Cloud SDK'
+          uses: 'google-github-actions/setup-gcloud@v1'
+
+        - name: Configure Docker
+          run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+        - name: Build Docker image
+          run: docker build ./operator -t us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:${{ github.sha }}
+
+        - name: Push Docker image
+          run: docker push us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:${{ github.sha }}
+

@@ -1,0 +1,15 @@
+apiVersion: argus.io/v1alpha1
+kind: Control
+metadata:
+  name: mssql-req-02
+spec:
+  definition: 
+    version: 1.0.0
+    code: MSSQL-REQ-02
+    class: "Security"
+    category: "Internal"
+    description: "Ensure that SQL server disables public network access"
+  applicableComponentClasses:
+  - MSSQL
+  requiredAssessmentClasses:
+  - CentralizedDeployment
