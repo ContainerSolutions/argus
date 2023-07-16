@@ -6,7 +6,7 @@ jobs:
         name: Deploy Image
         runs-on: ubuntu-latest
         env:
-          IMAGE_NAME: us-central1-docker.pkg.dev/${{ env.GCP_PROJECT }}/argus/controller:${{ github.sha }}
+          IMAGE_NAME: us-central1-docker.pkg.dev/${GCP_PROJECT}/argus/controller:${{ github.sha }}
         steps:
         - name: Checkout Repository
           uses: actions/checkout@v2
