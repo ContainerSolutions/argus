@@ -7,10 +7,9 @@ jobs:
     deploy:
         name: Release
         runs-on: ubuntu-latest
-        env:
-          IMAGE_NAME: us-central1-docker.pkg.dev/gfc-personal-use/argus/controller:${{ github.sha }}
         steps:
-        - uses: actions/checkout@v2
+        - name: Checkout repository
+          uses: actions/checkout@v2
 
         - name: Bump version and push tag
           id: tag_version
@@ -29,19 +28,15 @@ jobs:
           uses: 'google-github-actions/auth@v1'
           with:
             credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-            project: ${{ secrets.GCP_PROJECT_ID }}
         - name: 'Set up Cloud SDK'
           uses: 'google-github-actions/setup-gcloud@v1'
 
         - name: Configure Docker
           run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
-        - name: Checkout repository
-          uses: actions/checkout@v2
-
         - name: Build Docker image
-          run: docker build ./operator -t $IMAGE_NAME:${{steps.tag_version.outputs.new_tag}} -t $IMAGE_NAME:latest
+          run: docker build ./operator -t us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:${{steps.tag_version.outputs.new_tag}} -t us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:latest
 
         - name: Push Docker image
-          run: docker push $IMAGE_NAME -t $IMAGE_NAME:${{steps.tag_version.outputs.new_tag}} -t $IMAGE_NAME:latest
+          run: docker push us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:${{steps.tag_version.outputs.new_tag}} us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:latest
 
