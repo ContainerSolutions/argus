@@ -8,19 +8,18 @@ jobs:
         env:
           IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/argus/controller:${{ github.sha }}
         steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
         - id: 'auth'
           uses: 'google-github-actions/auth@v1'
           with:
             credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-            project: ${{ secrets.GCP_PROJECT_ID }}
+            project_id: ${{ secrets.GCP_PROJECT_ID }}
         - name: 'Set up Cloud SDK'
           uses: 'google-github-actions/setup-gcloud@v1'
 
         - name: Configure Docker
           run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
-
-        - name: Checkout repository
-          uses: actions/checkout@v2
 
         - name: Build Docker image
           run: docker build ./operator -t $IMAGE_NAME
