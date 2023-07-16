@@ -7,7 +7,7 @@ on:
   pull_request: {}
 jobs:
     deploy:
-        name: Setup Gcloud Account
+        name: Deploy Image
         runs-on: ubuntu-latest
         env:
           IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/argus/controller:${{ github.sha }}
@@ -21,7 +21,7 @@ jobs:
           uses: 'google-github-actions/setup-gcloud@v1'
 
         - name: Configure Docker
-          run: gcloud auth configure-docker --quiet
+          run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
         - name: Checkout repository
           uses: actions/checkout@v2
