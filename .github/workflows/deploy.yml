@@ -5,8 +5,6 @@ jobs:
     deploy:
         name: Deploy Image
         runs-on: ubuntu-latest
-        env:
-          IMAGE_NAME: us-central1-docker.pkg.dev/${GCP_PROJECT}/argus/controller:${{ github.sha }}
         steps:
         - name: Checkout Repository
           uses: actions/checkout@v2
@@ -21,8 +19,8 @@ jobs:
           run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
         - name: Build Docker image
-          run: docker build ./operator -t $IMAGE_NAME
+          run: docker build ./operator -t us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:${{ github.sha }}
 
         - name: Push Docker image
-          run: docker push $IMAGE_NAME
+          run: docker push us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:${{ github.sha }}
 
