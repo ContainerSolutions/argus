@@ -38,5 +38,8 @@ jobs:
           run: docker build ./operator -t us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:${{steps.tag_version.outputs.new_tag}} -t us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:latest
 
         - name: Push Docker image
-          run: docker push us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:${{steps.tag_version.outputs.new_tag}} us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:latest
+          run: docker push us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:${{steps.tag_version.outputs.new_tag}} 
+
+        - name: Push Latest
+          run: docker push us-central1-docker.pkg.dev/$GCP_PROJECT/argus/controller:latest
 
