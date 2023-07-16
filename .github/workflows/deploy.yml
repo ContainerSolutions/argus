@@ -10,7 +10,7 @@ jobs:
         name: Setup Gcloud Account
         runs-on: ubuntu-latest
         env:
-          IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/argus:${{ github.sha }}
+          IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/argus/controller:${{ github.sha }}
         steps:
         - id: 'auth'
           uses: 'google-github-actions/auth@v1'
