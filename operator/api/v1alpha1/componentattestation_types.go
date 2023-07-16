@@ -32,11 +32,14 @@ type ComponentAttestationStatus struct {
 }
 
 type AttestationResult struct {
-	Logs   string                `json:"logs"`
-	Result AttestationResultType `json:"result"`
-	Reason string                `json:"reason"`
 	//+optional
-	Err   string      `json:"err,omitempty"`
+	Logs   string                `json:"logs,omitempty"`
+	Result AttestationResultType `json:"result"`
+	//+optional
+	Reason string `json:"reason"`
+	//+optional
+	Err string `json:"err,omitempty"`
+	//+optional
 	RunAt metav1.Time `json:"runAt"`
 }
 type AttestationResultType string

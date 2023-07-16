@@ -49,7 +49,7 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   node_count = 3
 
   node_config {
-    machine_type = "e2-medium"
+    machine_type = "e2-standard-4"
 
     service_account = google_service_account.default.email
     oauth_scopes    = [

@@ -15,6 +15,7 @@ spec:
     code: ${code}
     class: "Security"
     category: "Internal"
+    description: ${description}
   applicableComponentClasses:
   - ${componentclass}
   requiredAssessmentClasses:

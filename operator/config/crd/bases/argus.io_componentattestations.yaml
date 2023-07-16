@@ -74,10 +74,7 @@ spec:
                     format: date-time
                     type: string
                 required:
-                - logs
-                - reason
                 - result
-                - runAt
                 type: object
               status:
                 type: string
