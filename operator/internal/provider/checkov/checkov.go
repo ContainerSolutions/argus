@@ -38,7 +38,7 @@ func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
 			RunAt:  v1.Now(),
 			Reason: fmt.Sprintf("could not get source repo for '%v'", c.RepoUrl),
 		}
-		return res, nil
+		return res, err
 	}
 
 	checkov_cmd := exec.Command("checkov", "-d", clone_location, "--check", c.Checks, "-o", "cli")
@@ -55,7 +55,6 @@ func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
 		res.Result = argusiov1alpha1.AttestationResultTypeUnknown
 		res.Err = err.Error()
 		res.Reason = "checkov execution returned error"
-		return res, err
 	}
 	if checkov_cmd.ProcessState.ExitCode() != 0 {
 		res.Result = argusiov1alpha1.AttestationResultTypeFail
