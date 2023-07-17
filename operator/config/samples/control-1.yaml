@@ -8,7 +8,7 @@ spec:
     code: MSSQL-REQ-01
     class: "Security"
     category: "Internal"
-    description: "Ensure MSSQL is using the latest version of TLS encryption"
+    description: "Ensure that SQL server disables public network access"
   applicableComponentClasses:
   - MSSQL
   requiredAssessmentClasses:
