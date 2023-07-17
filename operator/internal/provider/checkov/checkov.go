@@ -22,9 +22,10 @@ type Client struct {
 
 func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
 	mu.Lock()
-	// ToDo: generate unique file names for clone_location and output_file_path
-	defer os.RemoveAll("/tmp/location")
-	defer mu.Unlock()
+	defer func() {
+		os.RemoveAll("/tmp/location")
+		mu.Unlock()
+	}()
 	clone_location := "/tmp/location"
 	cmd := exec.Command("git", "clone", c.RepoUrl, clone_location)
 	out, err := cmd.CombinedOutput()
@@ -33,7 +34,7 @@ func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
 		res := argusiov1alpha1.AttestationResult{
 			Result: argusiov1alpha1.AttestationResultTypeUnknown,
 			Logs:   string(out),
-			Err:    err.Error(), // Logs has to be type string
+			Err:    err.Error(),
 			RunAt:  v1.Now(),
 			Reason: fmt.Sprintf("could not get source repo for '%v'", c.RepoUrl),
 		}
@@ -44,7 +45,6 @@ func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
 
 	out, err = checkov_cmd.CombinedOutput()
 
-	// Distinguish between execution and validation failure
 	res := argusiov1alpha1.AttestationResult{
 		Result: argusiov1alpha1.AttestationResultTypePass,
 		Logs:   string(out),
@@ -55,6 +55,7 @@ func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
 		res.Result = argusiov1alpha1.AttestationResultTypeUnknown
 		res.Err = err.Error()
 		res.Reason = "checkov execution returned error"
+		return res, err
 	}
 	if checkov_cmd.ProcessState.ExitCode() != 0 {
 		res.Result = argusiov1alpha1.AttestationResultTypeFail
@@ -69,7 +70,8 @@ func (c *Client) Close() error {
 
 type Provider struct{}
 
-func (p *Provider) New(_ string, spec *argusiov1alpha1.AttestationProviderSpec) (provider.AttestationClient, error) {
+func (p *Provider) New(name string, spec *argusiov1alpha1.AttestationProviderSpec) (provider.AttestationClient, error) {
+
 	c := &Client{}
 	repourl_value, ok := spec.ProviderConfig["repo"]
 

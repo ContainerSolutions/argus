@@ -72,7 +72,7 @@ spec:
         - --leader-elect
         image: controller:latest
         name: manager
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
           name: metrics
@@ -97,10 +97,10 @@ spec:
         # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
         resources:
           limits:
-            cpu: 500m
-            memory: 128Mi
+            cpu: 2000m
+            memory: 2Gi
           requests:
-            cpu: 10m
-            memory: 64Mi
+            cpu: 1000m
+            memory: 1Gi
       serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10

@@ -1,11 +1,10 @@
 resource "kubernetes_manifest" "network_control_1" {
   manifest = yamldecode(templatefile("requirement.yaml", 
   {
-#    name="Auto routing should be disabled",
+    description="Auto routing should be disabled",
     name="net-req-01"
     code="NET-REQ-01",
     version="1.0.0",
-    description="Auto routing can be used to propagate information",
     componentclass="NetworkElement",
     }
     ))
@@ -14,11 +13,10 @@ resource "kubernetes_manifest" "network_control_1" {
 resource "kubernetes_manifest" "network_control_2" {
   manifest = yamldecode(templatefile("requirement.yaml",
     {
-#    name="Outbound traffic should be sent to NSEC device",
+    description="Outbound traffic should be sent to NSEC device",
     name="net-req-02"
     code="NET-REQ-02",
     version="1.0.0",
-    description="",
     componentclass="NetworkElement",
     }
 ))
@@ -27,11 +25,10 @@ resource "kubernetes_manifest" "network_control_2" {
 resource "kubernetes_manifest" "network_control_3" {
   manifest = yamldecode(templatefile("requirement.yaml",
     {
-#    name="Public IP Addresses must not be used",
+    description="Public IP Addresses must not be used",
     name="net-req-03"
     code="NET-REQ-03",
     version="1.0.0",
-    description="",
     componentclass="NetworkElement",
     }
 ))
@@ -40,11 +37,10 @@ resource "kubernetes_manifest" "network_control_3" {
 resource "kubernetes_manifest" "network_control_4" {
   manifest = yamldecode(templatefile("requirement.yaml",
     {
-#    name="Inbound internet facing communication must be behind central firewall",
+    description="Inbound internet facing communication must be behind central firewall",
     name="net-req-04"
     code="NET-REQ-04",
     version="1.0.0",
-    description="",
     componentclass="NetworkElement",
     }
 ))
@@ -53,11 +49,10 @@ resource "kubernetes_manifest" "network_control_4" {
 resource "kubernetes_manifest" "network_control_5" {
   manifest = yamldecode(templatefile("requirement.yaml",
     {
-#    name="DNS requests must be microsegmented between network environments",
+    description="DNS requests must be microsegmented between network environments",
     name="net-req-05"
     code="NET-REQ-05",
     version="1.0.0",
-    description="",
     componentclass="NetworkElement",
     }
 ))
@@ -66,11 +61,10 @@ resource "kubernetes_manifest" "network_control_5" {
 resource "kubernetes_manifest" "network_control_6" {
   manifest = yamldecode(templatefile("requirement.yaml",
     {
-#    name="Any Inbound traffic needs to be properly managed behind firewall rules",
     name="net-req-06"
     code="NET-REQ-06",
     version="1.0.0",
-    description="",
+    description="Any Inbound traffic needs to be properly managed behind firewall rules",
     componentclass="NetworkElement",
     }
 ))
@@ -79,11 +73,10 @@ resource "kubernetes_manifest" "network_control_6" {
 resource "kubernetes_manifest" "network_control_7" {
   manifest = yamldecode(templatefile("requirement.yaml",
     {
-#    name="Networking design needs to ensure network isolation between different applications",
+    description="Networking design needs to ensure network isolation between different applications",
     name="net-req-07"
     code="NET-REQ-07",
     version="1.0.0",
-    description="",
     componentclass="NetworkElement",
     }
 ))
@@ -92,11 +85,10 @@ resource "kubernetes_manifest" "network_control_7" {
 resource "kubernetes_manifest" "network_control_8" {
   manifest = yamldecode(templatefile("requirement.yaml",
     {
-#    name="Network traffic cannot leave the same bounded region/datacenter",
+    description="Network traffic cannot leave the same bounded region/datacenter",
     name="net-req-08"
     code="NET-REQ-08",
     version="1.0.0",
-    description="",
     componentclass="NetworkElement",
     }
 ))
@@ -110,7 +102,7 @@ resource "kubernetes_manifest" "preventative_control" {
     class= "PreventativeControl",
     code= "NET-REQ-0${count.index+1}",
     version="1.0.0",
-    type="rt"
+    type="router"
     }
   ))
 }
@@ -123,7 +115,7 @@ resource "kubernetes_manifest" "detective_control" {
     class= "DetectiveControl",
     code= "NET-REQ-0${count.index+1}",
     version="1.0.0",
-    type="rt"
+    type="router"
     }
   ))
 }
@@ -136,7 +128,7 @@ resource "kubernetes_manifest" "reactive_control" {
     class= "ReactiveControl",
     code= "NET-REQ-0${count.index+1}",
     version="1.0.0",
-    type="rt"
+    type="router"
     }
   ))
 }
@@ -145,8 +137,8 @@ resource "kubernetes_manifest" "reasoning_attestation" {
     count = 8
   manifest = yamldecode(templatefile("attestation.yaml",
     {
-    name="req${count.index+1}-reasoning",
-    implementation = "req${count.index+1}-preventative",
+    name="req${count.index+1}-detective",
+    implementation = "req${count.index+1}-detective",
     }
   ))
 }
@@ -155,7 +147,7 @@ resource "kubernetes_manifest" "deployed_attestation" {
     count = 8
   manifest = yamldecode(templatefile("attestation.yaml",
     {
-    name="req${count.index+1}-prev-deployed",
+    name="req${count.index+1}-preventative",
     implementation = "req${count.index+1}-preventative",
     }
   ))
