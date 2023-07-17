@@ -11,5 +11,5 @@ metadata:
 spec:
   type: checkov
   providerConfig:
-    repo: https://github.com/InfobyAdrienne/tf-samples
+    repo: https://github.com/gusfcarvalho/tf-samples
     checks: CKV_AZURE_113
