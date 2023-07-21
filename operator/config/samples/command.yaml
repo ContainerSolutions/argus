@@ -11,5 +11,5 @@ metadata:
 spec:
   type: command
   providerConfig:
-    cmd: "/home/gustavo/repos/argus/operator/test.sh"
+    cmd: "/scripts/test.sh"
     expectedStatusCode: "0"
