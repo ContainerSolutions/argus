@@ -95,6 +95,7 @@ spec:
           name: metrics
         securityContext:
           allowPrivilegeEscalation: false
+          runAsUser: 1000
           capabilities:
             drop:
               - "ALL"
