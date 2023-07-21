@@ -11,5 +11,5 @@ metadata:
 spec:
   type: command
   providerConfig:
-    cmd: "/scripts/test.sh"
+    cmd: "/scripts/pexpect_example.py"
     expectedStatusCode: "0"
