@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	_ "github.com/ContainerSolutions/argus/operator/internal/provider/checkov"
+	_ "github.com/ContainerSolutions/argus/operator/internal/provider/command"
 	_ "github.com/ContainerSolutions/argus/operator/internal/provider/fake"
 	_ "github.com/ContainerSolutions/argus/operator/internal/provider/file"
 	_ "github.com/ContainerSolutions/argus/operator/internal/provider/random"

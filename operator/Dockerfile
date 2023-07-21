@@ -30,7 +30,8 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build -
 FROM bridgecrew/checkov:2.3.320
 WORKDIR /
 COPY --from=builder /workspace/manager .
-
+COPY scripts /scripts
+RUN chmod +x /scripts/*
 RUN apt update -y && apt install -y python3-pip openssh-client curl
 RUN pip3 install pexpect
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
