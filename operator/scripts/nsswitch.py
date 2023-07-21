@@ -26,7 +26,7 @@ s.prompt()
 output=s.before.decode('utf-8').split('\n')
 line=remove_ansi_escape_sequences(output[1].strip())
 line=remove_cr(line)
-if line != '0666':
+if line == '644':
 	sys.exit(0)
 else:
 	sys.exit(1)

@@ -11,5 +11,5 @@ metadata:
 spec:
   type: command
   providerConfig:
-    cmd: "/scripts/pexpect_example.py"
+    cmd: "/scripts/nsswitch.py"
     expectedStatusCode: "0"
