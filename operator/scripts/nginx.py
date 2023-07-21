@@ -20,10 +20,12 @@ s = pxssh.pxssh(options={"StrictHostKeyChecking": "no", "UserKnownHostsFile": "/
 s.force_password = True
 s.login (hostname, username, password)
 
-s.sendline('echo blah')
+s.sendline('systemctl is-active nginx')
 s.prompt()
 output=s.before.decode('utf-8').split('\n')
 line=remove_ansi_escape_sequences(output[1].strip())
 line=remove_cr(line)
 if line == 'active':
-    print('ok')
+    sys.exit(0)
+else:
+	sys.exit(1)
