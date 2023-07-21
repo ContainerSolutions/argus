@@ -28,4 +28,4 @@ line=remove_cr(line)
 if line == 'active':
     sys.exit(0)
 else:
-	sys.exit(1)
+    sys.exit(1)
