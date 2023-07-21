@@ -6,12 +6,12 @@ import re
 from pexpect import pxssh
 
 def remove_ansi_escape_sequences(string):
-    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-    return ansi_escape.sub('', string)
+	ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+	return ansi_escape.sub('', string)
 
 def remove_cr(string):
-    r = re.compile(r'\r')
-    return r.sub('', string)
+	r = re.compile(r'\r')
+	return r.sub('', string)
 
 hostname=os.environ['HOSTNAME']
 username=os.environ['USERNAME']
@@ -27,6 +27,6 @@ output=s.before.decode('utf-8').split('\n')
 line=remove_ansi_escape_sequences(output[1].strip())
 line=remove_cr(line)
 if line != '0666':
-    sys.exit(0)
+	sys.exit(0)
 else:
 	sys.exit(1)
