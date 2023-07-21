@@ -71,7 +71,24 @@ spec:
         args:
         - --leader-elect
         image: controller:latest
-        name: manager
+        name: manager          
+        env: 
+        - name: HOSTNAME
+          valueFrom:
+            secretKeyRef:
+              name: argus
+              key: hostname
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: argus
+              key: password
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: argus
+              key: username
+
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
