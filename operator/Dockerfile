@@ -34,7 +34,7 @@ COPY scripts /scripts
 RUN chmod +x /scripts/*
 RUN apt update -y && apt install -y python3-pip openssh-client curl
 RUN pip3 install pexpect
-RUN useradd -g 1000 -d /home/argus argus
+RUN useradd -u 1000 -d /home/argus argus
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 USER 1000
