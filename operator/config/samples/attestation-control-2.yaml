@@ -11,5 +11,5 @@ metadata:
 spec:
   assessmentRef: "assessment-mssql-ctrl2"
   providerRef: 
-    name: checkov-ctrl2
+    name: command
     namespace: default
