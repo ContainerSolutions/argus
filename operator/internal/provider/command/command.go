@@ -1,6 +1,7 @@
 package command
 
 import (
+	"os"
 	"os/exec"
 	"strconv"
 
@@ -16,6 +17,7 @@ type Client struct {
 
 func (c *Client) Attest() (argusiov1alpha1.AttestationResult, error) {
 	cmd := exec.Command(c.Command)
+	cmd.Env = os.Environ()
 	out, err := cmd.CombinedOutput()
 	result := argusiov1alpha1.AttestationResultTypePass
 	if cmd.ProcessState.ExitCode() != c.ExpectedStatusCode {
