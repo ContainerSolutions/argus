@@ -1,7 +1,7 @@
 #! /bin/bash
 
 set -euo pipefail
-#az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID >> /dev/null
+az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID >> /dev/null
 state=$(az policy state list --resource-group argus --query "[?policyDefinitionId=='/providers/microsoft.authorization/policydefinitions/d0793b48-0edc-4296-a390-4c75d1bdfd71']" | jq -r '.[].complianceState')
 
 if [[ $state == "Compliant" ]]; then
