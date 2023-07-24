@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: checkov-ctrl1
+  name: postgres
 spec:
-  type: checkov
+  type: command
   providerConfig:
-    repo: https://github.com/gusfcarvalho/tf-samples
-    checks: CKV_AZURE_113
+    cmd: "/scripts/postgres.py"
+    expectedStatusCode: "0"

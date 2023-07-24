@@ -1,0 +1,15 @@
+apiVersion: argus.io/v1alpha1
+kind: Control
+metadata:
+  name: vm-cfg-ctrl-01
+spec:
+  definition: 
+    version: 1.0.0
+    code: VM-CFG-REQ-01
+    class: "Configuration"
+    category: "Internal"
+    description: "/etc/nsswitch.conf file must be permissioned with 0644"
+  applicableComponentClasses:
+  - VirtualMachine
+  requiredAssessmentClasses:
+  - DetectiveControl

@@ -1,0 +1,17 @@
+apiVersion: argus.io/v1alpha1
+kind: Control
+metadata:
+  name: sql-ops-ctrl-01
+spec:
+  definition: 
+    version: 1.0.0
+    code: SQL-OPS-CTRL-01
+    class: "OperationalResiliency"
+    category: "Internal"
+    description: "SQL Server must contain at least one valid data input"
+  applicableComponentClasses:
+  - MySQL
+  - SQLServer
+  - PostgreSQL
+  requiredAssessmentClasses:
+  - DetectiveControl

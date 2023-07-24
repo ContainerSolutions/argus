@@ -7,13 +7,13 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: assessment-mssql-ctrl2
+  name: assessment-nsswitch
 spec:
-  class: CentralizedDeployment
+  class: DetectiveControl
   cascadePolicy: None
   controlRef:
-    code: MSSQL-REQ-02
+    code: VM-CFG-REQ-01
     version: 1.0.0
   componentRef:
-  - name: sql-server-01
+  - name: vm-01
     namespace: default
