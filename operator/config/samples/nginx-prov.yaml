@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: command
+  name: nginx
 spec:
   type: command
   providerConfig:
-    cmd: "/scripts/nsswitch.py"
+    cmd: "/scripts/nginx.py"
     expectedStatusCode: "0"

@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: attestation-ctrl1
+  name: attestation-nginx
 spec:
-  assessmentRef: "assessment-mssql-ctrl1"
+  assessmentRef: "assessment-nginx"
   providerRef: 
-    name: checkov-ctrl1
+    name: nginx
     namespace: default

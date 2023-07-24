@@ -1,15 +1,15 @@
 apiVersion: argus.io/v1alpha1
 kind: Control
 metadata:
-  name: mssql-req-01
+  name: sec-pol-ctrl-01
 spec:
   definition: 
     version: 1.0.0
-    code: MSSQL-REQ-01
+    code: SEC-POL-CTRL-01
     class: "Security"
     category: "Internal"
-    description: "Ensure that SQL server disables public network access"
+    description: "Container Registries must run in a private network"
   applicableComponentClasses:
-  - MSSQL
+  - ContainerRegistry
   requiredAssessmentClasses:
-  - CentralizedDeployment
+  - PreventativeControl

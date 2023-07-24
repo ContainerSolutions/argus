@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: sql-server-01
+  name: vm-01
 spec:
-  type: sql
+  type: vm
   classes:
-  - MSSQL
+  - VirtualMachine
   parents: []

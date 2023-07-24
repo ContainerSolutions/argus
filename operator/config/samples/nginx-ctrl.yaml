@@ -1,0 +1,16 @@
+apiVersion: argus.io/v1alpha1
+kind: Control
+metadata:
+  name: opres-cfg-ctrl-01
+spec:
+  definition: 
+    version: 1.0.0
+    code: OPRES-CFG-REQ-01
+    class: "OperationalResiliency"
+    category: "Internal"
+    description: "Application load balancers must be running"
+  applicableComponentClasses:
+  - VirtualMachine
+  - LoadBalancer
+  requiredAssessmentClasses:
+  - DetectiveControl
