@@ -27,14 +27,14 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build -
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
 
 # FROM gcr.io/distroless/static:nonroot
-FROM bridgecrew/checkov:2.3.320
+FROM bridgecrew/checkov
 WORKDIR /
 COPY --from=builder /workspace/manager .
 COPY scripts /scripts
 RUN chmod +x /scripts/*
-RUN apt update -y && apt install -y python3-pip openssh-client curl
+RUN apt update -y && apt install -y python3-pip openssh-client curl jq
 RUN pip3 install pexpect
-RUN useradd -u 1000 -d /home/argus argus
+RUN mkdir /home/argus && useradd -u 1000 -d /home/argus argus && chown argus:argus /home/argus
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 USER 1000
