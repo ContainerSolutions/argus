@@ -1,0 +1,19 @@
+apiVersion: argus.io/v1alpha1
+kind: Assessment
+metadata:
+  labels:
+    app.kubernetes.io/name: assessment
+    app.kubernetes.io/instance: assessment-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: assessment-argussecond
+spec:
+  class: PreventativeControl
+  cascadePolicy: None
+  controlRef:
+    code: SEC-POL-CTRL-01
+    version: 1.0.0
+  componentRef:
+  - name: argussecond
+    namespace: default
