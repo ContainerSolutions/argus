@@ -6,3 +6,6 @@ provider "google" {
 variable "project_id" {
     type = string
 }
+variable "password" {
+    type = string
+}
