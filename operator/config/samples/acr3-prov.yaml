@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: azure
+  name: acr-3
 spec:
   type: command
   providerConfig:
-    cmd: "/scripts/azure.sh"
+    cmd: "/scripts/third.sh"
     expectedStatusCode: "0"

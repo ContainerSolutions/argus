@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: attestation-azure
+  name: attestation-argusthird
 spec:
-  assessmentRef: "assessment-azure"
+  assessmentRef: "assessment-argusthird"
   providerRef: 
-    name: azure
+    name: acr-3
     namespace: default
